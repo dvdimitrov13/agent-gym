@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Environment
+.env
+.venv/
+env/
+
+# Data & models (large files)
+data/*.jsonl
+data/*.json
+checkpoints/
+*.pt
+*.bin
+*.safetensors
+
+# Results (regenerable)
+results/
+
+# Weights & Biases
+wandb/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Cache
+.cache/
+search_cache/

@@ -1,0 +1,19 @@
+# Core ML
+torch==2.10.0
+transformers==5.3.0
+trl==0.29.1
+peft==0.18.1
+accelerate==1.6.0
+datasets>=3.5
+
+# Search & extraction
+duckduckgo-search>=7.0
+trafilatura>=2.0
+
+# Utilities
+pyyaml>=6.0
+jmespath>=1.0
+wandb>=0.19
+
+# Testing
+pytest>=8.0

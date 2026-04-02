@@ -1,0 +1,18 @@
+[project]
+name = "agent-gym"
+version = "0.1.0"
+description = "RL-trained agentic web search model using GRPO"
+requires-python = ">=3.12"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests that hit live APIs (deselect with '-m \"not slow\"')",
+]

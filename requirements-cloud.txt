@@ -1,0 +1,6 @@
+# Everything from local
+-r requirements.txt
+
+# CUDA-only dependencies
+vllm>=0.8
+flash-attn>=2.7
