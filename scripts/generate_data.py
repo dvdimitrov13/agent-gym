@@ -86,6 +86,7 @@ def main():
             "trajectory": example["trajectory"],
             "judgment": example.get("judgment", {}),
             "seed_topic": example["seed_topic"],
+            "expanded_from": example.get("expanded_from"),
         }
 
         generated.append(training_example)

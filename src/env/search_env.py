@@ -1,4 +1,8 @@
-from src.config import CACHE_DIR, DEFAULT_SEARCH_MAX_RESULTS, FETCH_PAGE_SIZE
+import re
+
+from rapidfuzz import fuzz
+
+from src.config import CACHE_DIR, DEFAULT_SEARCH_MAX_RESULTS
 from src.env.cache import SearchCache
 from src.env.extraction import fetch_and_extract
 from src.env.providers.base import SearchProvider
@@ -8,51 +12,68 @@ from src.env.providers.duckduckgo import DuckDuckGoProvider
 _search_cache = SearchCache(cache_dir=CACHE_DIR / "search")
 _page_cache = SearchCache(cache_dir=CACHE_DIR / "pages")
 
+MAX_MATCHES = 5
+CONTEXT_WORDS = 100
+MIN_SCORE = 40  # minimum rapidfuzz score to count as a match
+
+
+def _split_paragraphs(text: str) -> list[str]:
+    """Split text into paragraphs on double newlines."""
+    raw = re.split(r"\n{2,}", text)
+    return [p.strip() for p in raw if p.strip()]
+
+
+def _score_paragraph(paragraph: str, keywords: str) -> float:
+    """Score a paragraph against keywords using rapidfuzz partial ratio."""
+    return fuzz.partial_ratio(keywords.lower(), paragraph.lower())
+
+
+def _trim_paragraph(paragraph: str) -> str:
+    """Trim very long paragraphs to ~200 words."""
+    words = paragraph.split()
+    if len(words) <= CONTEXT_WORDS * 2:
+        return paragraph
+    return " ".join(words[:CONTEXT_WORDS]) + " [...] " + " ".join(words[-CONTEXT_WORDS:])
+
 
 class SearchEnvironment:
     """Web search environment for TRL's environment_factory protocol.
 
-    Public methods (search, fetch) are discovered by TRL via inspect and
-    exposed as tools to the model. Type hints and docstrings are required —
-    TRL uses them to generate tool schemas.
-
-    fetch() works like reading pages in a book — each call returns the next
-    ~500 words. The model decides whether to keep reading or move on.
+    Two tools:
+    - search(query) → titles, URLs, and snippets from the web
+    - read(url, keywords) → fuzzy keyword search within a page, returns top matching paragraphs
     """
 
-    def __init__(self, provider: SearchProvider | None = None, page_size: int = FETCH_PAGE_SIZE):
+    def __init__(self, provider: SearchProvider | None = None):
         self._provider = provider or DuckDuckGoProvider()
-        self._page_size = page_size
         self._search_count = 0
-        self._fetch_count = 0
+        self._read_count = 0
         self._urls_seen: list[str] = []
 
     def reset(self, **kwargs) -> str | None:
         """Reset per-episode state. Called by TRL between episodes.
         Caches persist — only per-episode counters and URL tracking reset."""
         self._search_count = 0
-        self._fetch_count = 0
+        self._read_count = 0
         self._urls_seen = []
         return None
 
     def search(self, query: str, max_results: int = DEFAULT_SEARCH_MAX_RESULTS) -> str:
-        """Search the web and return a list of results with titles and URLs.
+        """Search the web and return a list of results with titles, URLs, and snippets.
 
         Args:
             query: The search query.
             max_results: Maximum number of results to return.
 
         Returns:
-            Formatted search results with titles and URLs.
+            Formatted search results with titles, URLs, and snippets.
         """
         self._search_count += 1
 
-        # Check cache
         cached = _search_cache.get("search", query, str(max_results))
         if cached:
             return cached
 
-        # Live search
         try:
             results = self._provider.search(query, max_results=max_results)
         except Exception as e:
@@ -65,26 +86,28 @@ class SearchEnvironment:
             for i, r in enumerate(results, 1):
                 lines.append(f"[{i}] {r.title}")
                 lines.append(f"    {r.url}")
+                lines.append(f"    {r.snippet}")
                 lines.append("")
             output = "\n".join(lines).strip()
 
         _search_cache.set("search", query, str(max_results), value=output)
         return output
 
-    def fetch(self, url: str, page: int = 1) -> str:
-        """Read a specific page of content from a URL, like reading a book.
+    def read(self, url: str, keywords: str) -> str:
+        """Read a web page and find sections matching the given keywords.
 
-        Content is split into pages of ~500 words each. Page 1 is the
-        beginning of the article, page 2 is the next section, and so on.
+        Fetches the page (cached after first call), then finds the paragraphs
+        that best match the keywords using fuzzy word-level matching.
+        Returns up to 5 best matching excerpts.
 
         Args:
             url: The URL to read.
-            page: Which page to read (1-indexed). Defaults to 1.
+            keywords: Keywords to search for within the page.
 
         Returns:
-            The requested page of content (~500 words).
+            Top matching paragraphs from the page, or a message if no matches.
         """
-        self._fetch_count += 1
+        self._read_count += 1
         if url not in self._urls_seen:
             self._urls_seen.append(url)
 
@@ -94,15 +117,25 @@ class SearchEnvironment:
             full_text = fetch_and_extract(url)
             _page_cache.set("page", url, value=full_text)
 
-        total_pages = max(1, (len(full_text) + self._page_size - 1) // self._page_size)
+        if full_text.startswith("[Error"):
+            return full_text
 
-        if page < 1 or page > total_pages:
-            return f"[Invalid page {page}. This document has {total_pages} page(s).]"
+        # Split into paragraphs and score each with rapidfuzz
+        paragraphs = _split_paragraphs(full_text)
+        if not paragraphs:
+            return "No matches found."
 
-        start = (page - 1) * self._page_size
-        end = start + self._page_size
-        chunk = full_text[start:end]
+        scored = [(para, _score_paragraph(para, keywords)) for para in paragraphs]
+        scored = [(para, score) for para, score in scored if score >= MIN_SCORE]
+        scored.sort(key=lambda x: x[1], reverse=True)
 
-        chunk += f"\n\n[Page {page} of {total_pages}]"
+        if not scored:
+            return "No matches found."
 
-        return chunk
+        top = scored[:MAX_MATCHES]
+        excerpts = [_trim_paragraph(para) for para, _ in top]
+
+        header = f"Found {len(scored)} matching section(s). Top {len(excerpts)}:\n"
+        body = "\n\n---\n\n".join(f"[{i+1}]\n{ex}" for i, ex in enumerate(excerpts))
+
+        return header + body

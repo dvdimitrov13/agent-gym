@@ -25,7 +25,7 @@ class TestSearchEnvironment:
         result = env.search("test query")
         assert "[1]" in result
         assert "example.com" in result
-        assert "snippet" not in result  # search returns titles+URLs only, no snippets
+        assert "snippet" in result
 
     def test_search_caches_results(self):
         env = SearchEnvironment(provider=FakeProvider())
@@ -33,49 +33,50 @@ class TestSearchEnvironment:
         r2 = env.search("cached query")
         assert r1 == r2
 
-    def test_fetch_page_1(self):
+    def test_read_finds_keywords(self):
         from src.env.search_env import _page_cache
-        _page_cache.set("page", "https://example.com/book", value="A" * 10000)
+        _page_cache.set("page", "https://example.com/read", value=(
+            "Introduction to the topic.\n\n"
+            "The capital of France is Paris. It is a major European city.\n\n"
+            "Other facts about geography."
+        ))
 
-        env = SearchEnvironment(provider=FakeProvider(), page_size=100)
-        result = env.fetch("https://example.com/book", page=1)
-        assert result.startswith("A" * 100)
-        assert "[Page 1 of 100]" in result
+        env = SearchEnvironment(provider=FakeProvider())
+        result = env.read("https://example.com/read", "Paris")
+        assert "Paris" in result
+        assert "capital of France" in result
+        # Best match should be first
+        assert result.index("capital of France") < result.index("---")
 
-    def test_fetch_page_2(self):
+    def test_read_no_matches(self):
         from src.env.search_env import _page_cache
-        content = "A" * 100 + "B" * 100 + "C" * 100
-        _page_cache.set("page", "https://example.com/pages", value=content)
+        _page_cache.set("page", "https://example.com/nomatch", value="Nothing relevant here.")
 
-        env = SearchEnvironment(provider=FakeProvider(), page_size=100)
-        p2 = env.fetch("https://example.com/pages", page=2)
-        assert p2.startswith("B" * 100)
-        assert "[Page 2 of 3]" in p2
+        env = SearchEnvironment(provider=FakeProvider())
+        result = env.read("https://example.com/nomatch", "Tokyo")
+        assert result == "No matches found."
 
-    def test_fetch_last_page(self):
+    def test_read_multiple_matches(self):
         from src.env.search_env import _page_cache
-        _page_cache.set("page", "https://example.com/short", value="A" * 250)
+        content = "\n\n".join([
+            f"Section {i}: The Rhine river flows through Germany."
+            for i in range(10)
+        ])
+        _page_cache.set("page", "https://example.com/multi", value=content)
 
-        env = SearchEnvironment(provider=FakeProvider(), page_size=100)
-        p3 = env.fetch("https://example.com/short", page=3)
-        assert p3.startswith("A" * 50)
-        assert "[Page 3 of 3]" in p3
+        env = SearchEnvironment(provider=FakeProvider())
+        result = env.read("https://example.com/multi", "Rhine")
+        assert "[1]" in result
+        assert "Top 5" in result  # capped at 5
 
-    def test_fetch_invalid_page(self):
+    def test_read_case_insensitive(self):
         from src.env.search_env import _page_cache
-        _page_cache.set("page", "https://example.com/tiny", value="hello")
+        _page_cache.set("page", "https://example.com/case", value="The YANGTZE river is long.")
 
-        env = SearchEnvironment(provider=FakeProvider(), page_size=100)
-        result = env.fetch("https://example.com/tiny", page=5)
-        assert "[Invalid page 5" in result
-
-    def test_fetch_default_page_is_1(self):
-        from src.env.search_env import _page_cache
-        _page_cache.set("page", "https://example.com/default", value="X" * 500)
-
-        env = SearchEnvironment(provider=FakeProvider(), page_size=100)
-        result = env.fetch("https://example.com/default")
-        assert "[Page 1 of 5]" in result
+        env = SearchEnvironment(provider=FakeProvider())
+        result = env.read("https://example.com/case", "yangtze")
+        assert "YANGTZE" in result
+        assert "Found 1 match" in result
 
     def test_reset_clears_episode_state(self):
         env = SearchEnvironment(provider=FakeProvider())
