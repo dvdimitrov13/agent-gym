@@ -54,24 +54,24 @@ TOOLS = [
 ]
 
 
-QUESTION_PROMPT = """\
-Generate a multi-hop question that requires chaining EXACTLY 3 facts together.
-Topic: {seed_topic}
+QUESTION_EXAMPLES = {
+    1: """\
+Examples:
+Hop 1: tallest building in the world → Burj Khalifa
+Question: What is the tallest building in the world?
 
-First, design the 3-hop chain, then write the question.
+Hop 1: chemical symbol for gold → Au
+Question: What is the chemical symbol for gold?""",
+    2: """\
+Examples:
+Hop 1: inventor of dynamite → Alfred Nobel
+Hop 2: Nobel born in → Sweden
+Question: In which country was the inventor of dynamite born?
 
-Format your response EXACTLY like this:
-Hop 1: [what to look up] → [answer]
-Hop 2: [what to look up using hop 1 result] → [answer]
-Hop 3: [what to look up using hop 2 result] → [answer]
-Question: [the question whose answer is hop 3's result]
-
-Rules:
-- The final answer must be SHORT (a name, number, date, or place)
-- Each hop must depend on the previous hop's answer
-- Use stable facts (geography, history, science)
-- The question must be unambiguous with exactly one correct answer
-
+Hop 1: longest river in Africa → Nile
+Hop 2: the Nile empties into → Mediterranean Sea
+Question: Into which body of water does the longest river in Africa empty?""",
+    3: """\
 Examples:
 Hop 1: inventor of dynamite → Alfred Nobel
 Hop 2: Nobel born in → Sweden
@@ -81,7 +81,31 @@ Question: What is the capital of the country where the inventor of dynamite was 
 Hop 1: director of Parasite (2019 Best Picture) → Bong Joon-ho
 Hop 2: Bong Joon-ho born in → Daegu, South Korea
 Hop 3: river flowing through Daegu → Geumho River
-Question: What river flows through the birthplace of the director of the film that won Best Picture at the 2020 Academy Awards?\
+Question: What river flows through the birthplace of the director of the film that won Best Picture at the 2020 Academy Awards?""",
+}
+
+HOP_FORMAT = {
+    1: "Hop 1: [what to look up] → [answer]\nQuestion: [the question whose answer is hop 1's result]",
+    2: "Hop 1: [what to look up] → [answer]\nHop 2: [what to look up using hop 1 result] → [answer]\nQuestion: [the question whose answer is hop 2's result]",
+    3: "Hop 1: [what to look up] → [answer]\nHop 2: [what to look up using hop 1 result] → [answer]\nHop 3: [what to look up using hop 2 result] → [answer]\nQuestion: [the question whose answer is hop 3's result]",
+}
+
+QUESTION_PROMPT = """\
+Generate a question that requires chaining EXACTLY {num_hops} fact(s) together.
+Topic: {seed_topic}
+
+First, design the {num_hops}-hop chain, then write the question.
+
+Format your response EXACTLY like this:
+{hop_format}
+
+Rules:
+- The final answer must be SHORT (a name, number, date, or place)
+{chaining_rule}
+- Use stable facts (geography, history, science)
+- The question must be unambiguous with exactly one correct answer
+
+{examples}\
 """
 
 
@@ -330,14 +354,23 @@ def step_generate_question(
     client: anthropic.Anthropic,
     seed_topic: str,
     model: str = DEFAULT_MODEL,
+    num_hops: int = 3,
 ) -> str | None:
-    """Step 1: Generate a 3-hop question. Extracts the Question: line from the response."""
+    """Step 1: Generate a question with the specified number of hops."""
+    chaining_rule = (
+        "- Each hop must depend on the previous hop's answer"
+        if num_hops > 1 else "- The question should require one clear lookup"
+    )
+    prompt = QUESTION_PROMPT.format(
+        num_hops=num_hops,
+        seed_topic=seed_topic,
+        hop_format=HOP_FORMAT[num_hops],
+        chaining_rule=chaining_rule,
+        examples=QUESTION_EXAMPLES[num_hops],
+    )
     response = client.messages.create(
         model=model, max_tokens=512,
-        messages=[{
-            "role": "user",
-            "content": QUESTION_PROMPT.format(seed_topic=seed_topic),
-        }],
+        messages=[{"role": "user", "content": prompt}],
     )
     text = response.content[0].text.strip()
 
@@ -517,6 +550,7 @@ def generate_training_example(
     question_type: str,
     model: str = DEFAULT_MODEL,
     max_judge_retries: int = 2,
+    num_hops: int = 3,
 ) -> dict | None:
     """Full pipeline: generate question → search → judge → (retry with feedback) → save.
 
@@ -525,8 +559,8 @@ def generate_training_example(
     """
 
     # Step 1: Generate question
-    print("  Step 1: generating question...", flush=True)
-    question = step_generate_question(client, seed_topic, model=model)
+    print(f"  Step 1: generating {num_hops}-hop question...", flush=True)
+    question = step_generate_question(client, seed_topic, model=model, num_hops=num_hops)
     if not question:
         print("  Step 1: failed to generate question", flush=True)
         return None
@@ -584,6 +618,7 @@ def generate_training_example(
             return {
                 "question": expanded["question"],
                 "question_type": question_type,
+                "num_hops": num_hops,
                 "answer": expanded["answer"],
                 "trajectory": expanded["trajectory"],
                 "judgment": judgment,
@@ -594,6 +629,7 @@ def generate_training_example(
     return {
         "question": question,
         "question_type": question_type,
+        "num_hops": num_hops,
         "answer": judgment.get("verified_answer", answer),
         "trajectory": trajectory,
         "judgment": judgment,
