@@ -25,7 +25,7 @@ class TestSearchEnvironment:
         result = env.search("test query")
         assert "[1]" in result
         assert "example.com" in result
-        assert "snippet" in result
+        assert "snippet" not in result  # search returns titles+URLs only, no snippets
 
     def test_search_caches_results(self):
         env = SearchEnvironment(provider=FakeProvider())
@@ -33,26 +33,49 @@ class TestSearchEnvironment:
         r2 = env.search("cached query")
         assert r1 == r2
 
-    def test_fetch_with_windowing(self):
-        env = SearchEnvironment(provider=FakeProvider())
-        # Manually populate page cache to avoid network calls
+    def test_fetch_page_1(self):
         from src.env.search_env import _page_cache
-        _page_cache.set("page", "https://example.com/test", value="A" * 10000)
+        _page_cache.set("page", "https://example.com/book", value="A" * 10000)
 
-        result = env.fetch("https://example.com/test", max_chars=100, offset=0)
-        assert len(result.split("\n\n[Content truncated")[0]) == 100
-        assert "characters remaining" in result
+        env = SearchEnvironment(provider=FakeProvider(), page_size=100)
+        result = env.fetch("https://example.com/book", page=1)
+        assert result.startswith("A" * 100)
+        assert "[Page 1 of 100]" in result
 
-    def test_fetch_offset_continues(self):
+    def test_fetch_page_2(self):
         from src.env.search_env import _page_cache
-        _page_cache.set("page", "https://example.com/offset", value="ABCDE" * 100)
+        content = "A" * 100 + "B" * 100 + "C" * 100
+        _page_cache.set("page", "https://example.com/pages", value=content)
 
-        env = SearchEnvironment(provider=FakeProvider())
-        r1 = env.fetch("https://example.com/offset", max_chars=10, offset=0)
-        assert r1.startswith("ABCDEABCDE")
+        env = SearchEnvironment(provider=FakeProvider(), page_size=100)
+        p2 = env.fetch("https://example.com/pages", page=2)
+        assert p2.startswith("B" * 100)
+        assert "[Page 2 of 3]" in p2
 
-        r2 = env.fetch("https://example.com/offset", max_chars=10, offset=10)
-        assert r2.startswith("ABCDEABCDE")
+    def test_fetch_last_page(self):
+        from src.env.search_env import _page_cache
+        _page_cache.set("page", "https://example.com/short", value="A" * 250)
+
+        env = SearchEnvironment(provider=FakeProvider(), page_size=100)
+        p3 = env.fetch("https://example.com/short", page=3)
+        assert p3.startswith("A" * 50)
+        assert "[Page 3 of 3]" in p3
+
+    def test_fetch_invalid_page(self):
+        from src.env.search_env import _page_cache
+        _page_cache.set("page", "https://example.com/tiny", value="hello")
+
+        env = SearchEnvironment(provider=FakeProvider(), page_size=100)
+        result = env.fetch("https://example.com/tiny", page=5)
+        assert "[Invalid page 5" in result
+
+    def test_fetch_default_page_is_1(self):
+        from src.env.search_env import _page_cache
+        _page_cache.set("page", "https://example.com/default", value="X" * 500)
+
+        env = SearchEnvironment(provider=FakeProvider(), page_size=100)
+        result = env.fetch("https://example.com/default")
+        assert "[Page 1 of 5]" in result
 
     def test_reset_clears_episode_state(self):
         env = SearchEnvironment(provider=FakeProvider())
@@ -73,7 +96,6 @@ class TestCache:
     def test_disk_cache(self, tmp_path):
         cache = SearchCache(cache_dir=tmp_path / "cache")
         cache.set("x", "y", value="disk_value")
-        # New cache instance reads from disk
         cache2 = SearchCache(cache_dir=tmp_path / "cache")
         assert cache2.get("x", "y") == "disk_value"
 

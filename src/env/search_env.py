@@ -1,4 +1,4 @@
-from src.config import CACHE_DIR, DEFAULT_SEARCH_MAX_RESULTS, DEFAULT_FETCH_MAX_CHARS
+from src.config import CACHE_DIR, DEFAULT_SEARCH_MAX_RESULTS, FETCH_PAGE_SIZE
 from src.env.cache import SearchCache
 from src.env.extraction import fetch_and_extract
 from src.env.providers.base import SearchProvider
@@ -15,10 +15,14 @@ class SearchEnvironment:
     Public methods (search, fetch) are discovered by TRL via inspect and
     exposed as tools to the model. Type hints and docstrings are required —
     TRL uses them to generate tool schemas.
+
+    fetch() works like reading pages in a book — each call returns the next
+    ~500 words. The model decides whether to keep reading or move on.
     """
 
-    def __init__(self, provider: SearchProvider | None = None):
+    def __init__(self, provider: SearchProvider | None = None, page_size: int = FETCH_PAGE_SIZE):
         self._provider = provider or DuckDuckGoProvider()
+        self._page_size = page_size
         self._search_count = 0
         self._fetch_count = 0
         self._urls_seen: list[str] = []
@@ -32,14 +36,14 @@ class SearchEnvironment:
         return None
 
     def search(self, query: str, max_results: int = DEFAULT_SEARCH_MAX_RESULTS) -> str:
-        """Search the web and return a list of results with titles, URLs, and snippets.
+        """Search the web and return a list of results with titles and URLs.
 
         Args:
             query: The search query.
             max_results: Maximum number of results to return.
 
         Returns:
-            Formatted search results with titles, URLs, and snippets.
+            Formatted search results with titles and URLs.
         """
         self._search_count += 1
 
@@ -60,28 +64,25 @@ class SearchEnvironment:
             lines = []
             for i, r in enumerate(results, 1):
                 lines.append(f"[{i}] {r.title}")
-                lines.append(f"    URL: {r.url}")
-                lines.append(f"    {r.snippet}")
+                lines.append(f"    {r.url}")
                 lines.append("")
             output = "\n".join(lines).strip()
 
         _search_cache.set("search", query, str(max_results), value=output)
         return output
 
-    def fetch(self, url: str, max_chars: int = DEFAULT_FETCH_MAX_CHARS, offset: int = 0) -> str:
-        """Fetch and extract the text content of a web page.
+    def fetch(self, url: str, page: int = 1) -> str:
+        """Read a specific page of content from a URL, like reading a book.
 
-        First call fetches the full page and caches it. Returns a window of
-        max_chars characters starting at offset. If content is truncated,
-        includes a note with remaining character count.
+        Content is split into pages of ~500 words each. Page 1 is the
+        beginning of the article, page 2 is the next section, and so on.
 
         Args:
-            url: The URL to fetch.
-            max_chars: Maximum characters to return in this window.
-            offset: Character offset to start reading from.
+            url: The URL to read.
+            page: Which page to read (1-indexed). Defaults to 1.
 
         Returns:
-            Extracted page content (Markdown when available, plain text otherwise).
+            The requested page of content (~500 words).
         """
         self._fetch_count += 1
         if url not in self._urls_seen:
@@ -93,11 +94,15 @@ class SearchEnvironment:
             full_text = fetch_and_extract(url)
             _page_cache.set("page", url, value=full_text)
 
-        # Apply windowing
-        window = full_text[offset:offset + max_chars]
-        remaining = len(full_text) - (offset + max_chars)
+        total_pages = max(1, (len(full_text) + self._page_size - 1) // self._page_size)
 
-        if remaining > 0:
-            window += f"\n\n[Content truncated. {remaining} characters remaining. Call fetch with offset={offset + max_chars} to continue.]"
+        if page < 1 or page > total_pages:
+            return f"[Invalid page {page}. This document has {total_pages} page(s).]"
 
-        return window
+        start = (page - 1) * self._page_size
+        end = start + self._page_size
+        chunk = full_text[start:end]
+
+        chunk += f"\n\n[Page {page} of {total_pages}]"
+
+        return chunk
