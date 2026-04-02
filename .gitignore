@@ -20,8 +20,9 @@ checkpoints/
 *.bin
 *.safetensors
 
-# Results (regenerable)
-results/
+# Results (keep JSON baselines, ignore large files)
+results/*.log
+results/*.csv
 
 # Weights & Biases
 wandb/
