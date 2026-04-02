@@ -7,7 +7,7 @@ accelerate==1.6.0
 datasets>=3.5
 
 # Search & extraction
-duckduckgo-search>=7.0
+ddgs>=8.0
 trafilatura>=2.0
 
 # Utilities
