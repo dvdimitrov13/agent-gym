@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""M6: GRPO training with tool-calling via TRL.
+"""M6: GRPO training with tool-calling via Unsloth + TRL.
 
-Wires together: model + dataset + rewards + SearchEnvironment.
-Supports vLLM colocate mode for fast parallel generation.
+Uses Unsloth's FastLanguageModel for memory-efficient loading + vLLM standby
+mode for fast generation. TRL's GRPOTrainer handles the RL loop and tool calling
+via environment_factory.
 
 Usage:
     python -m src.training.train --config src/training/configs/local_debug.yaml
@@ -18,9 +19,7 @@ import time
 import yaml
 import torch
 from datasets import Dataset
-from transformers import AutoTokenizer, AutoModelForCausalLM
 from trl import GRPOConfig, GRPOTrainer
-from peft import LoraConfig
 
 from src.env.search_env import SearchEnvironment
 from src.rewards import retrieval_reward, efficiency_reward, thinking_reward, truncation_reward
@@ -52,8 +51,9 @@ def main():
     config = load_config(args.config)
     device = get_device()
     dtype = get_dtype()
+    use_unsloth = config.get("use_unsloth", False)
 
-    # Setup logging — detailed for debugging
+    # Setup logging
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(name)s %(levelname)s %(message)s",
@@ -63,42 +63,66 @@ def main():
     # Silence experimental warnings
     os.environ["TRL_EXPERIMENTAL_SILENCE"] = "1"
 
-    use_vllm = config.get("use_vllm", False)
-
     logger.info(f"Device: {device}, dtype: {dtype}")
     logger.info(f"Model: {config['model_name']}")
     logger.info(f"Dataset: {config['dataset']}")
-    logger.info(f"vLLM: {use_vllm} (mode: {config.get('vllm_mode', 'n/a')})")
+    logger.info(f"Unsloth: {use_unsloth}")
     logger.info(f"max_completion_length: {config.get('max_completion_length')}")
     logger.info(f"max_tool_calling_iterations: {config.get('max_tool_calling_iterations')}")
 
-    # Load tokenizer
-    logger.info("Loading tokenizer...")
-    tokenizer = AutoTokenizer.from_pretrained(config["model_name"])
-    if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
+    # Load model + tokenizer
+    peft_config = None
 
-    # Load model (skip if vLLM handles it)
-    model = None
-    if not use_vllm:
-        logger.info("Loading model...")
+    if use_unsloth:
+        # Enable vLLM standby mode BEFORE importing unsloth
+        os.environ["UNSLOTH_VLLM_STANDBY"] = "1"
+        from unsloth import FastLanguageModel
+
+        logger.info("Loading model with Unsloth (fast_inference + vLLM standby)...")
+        model, tokenizer = FastLanguageModel.from_pretrained(
+            model_name=config["model_name"],
+            max_seq_length=config.get("max_seq_length", 4096),
+            load_in_4bit=config.get("load_in_4bit", False),
+            fast_inference=True,
+            max_lora_rank=config.get("lora_r", 16),
+            gpu_memory_utilization=config.get("gpu_memory_utilization", 0.85),
+        )
+
+        # Unsloth applies LoRA via get_peft_model
+        logger.info(f"Applying LoRA via Unsloth: r={config.get('lora_r')}, alpha={config.get('lora_alpha')}")
+        model = FastLanguageModel.get_peft_model(
+            model,
+            r=config.get("lora_r", 16),
+            lora_alpha=config.get("lora_alpha", 32),
+            target_modules=config.get("lora_target_modules", ["q_proj", "k_proj", "v_proj", "o_proj",
+                                                               "gate_proj", "up_proj", "down_proj"]),
+            lora_dropout=config.get("lora_dropout", 0.05),
+        )
+    else:
+        from transformers import AutoTokenizer, AutoModelForCausalLM
+        from peft import LoraConfig
+
+        logger.info("Loading tokenizer...")
+        tokenizer = AutoTokenizer.from_pretrained(config["model_name"])
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+
+        logger.info("Loading model with transformers...")
         model = AutoModelForCausalLM.from_pretrained(
             config["model_name"],
             dtype=dtype,
             device_map="auto" if device == "cuda" else device,
         )
 
-    # LoRA
-    peft_config = None
-    if config.get("use_lora"):
-        logger.info(f"LoRA: r={config.get('lora_r')}, alpha={config.get('lora_alpha')}")
-        peft_config = LoraConfig(
-            r=config.get("lora_r", 16),
-            lora_alpha=config.get("lora_alpha", 32),
-            target_modules=config.get("lora_target_modules", "all-linear"),
-            lora_dropout=config.get("lora_dropout", 0.05),
-            task_type="CAUSAL_LM",
-        )
+        if config.get("use_lora"):
+            logger.info(f"LoRA: r={config.get('lora_r')}, alpha={config.get('lora_alpha')}")
+            peft_config = LoraConfig(
+                r=config.get("lora_r", 16),
+                lora_alpha=config.get("lora_alpha", 32),
+                target_modules=config.get("lora_target_modules", "all-linear"),
+                lora_dropout=config.get("lora_dropout", 0.05),
+                task_type="CAUSAL_LM",
+            )
 
     # Load dataset
     logger.info("Loading dataset...")
@@ -128,11 +152,8 @@ def main():
         report_to="none",
     )
 
-    # vLLM settings
-    if use_vllm:
-        grpo_kwargs["use_vllm"] = True
-        grpo_kwargs["vllm_mode"] = config.get("vllm_mode", "colocate")
-        grpo_kwargs["vllm_gpu_memory_utilization"] = config.get("vllm_gpu_memory_utilization", 0.7)
+    # vLLM via Unsloth standby (not TRL's use_vllm)
+    # Unsloth manages vLLM internally when fast_inference=True
 
     grpo_config = GRPOConfig(**grpo_kwargs)
 
@@ -152,7 +173,8 @@ def main():
     logger.info("Creating GRPOTrainer...")
     t0 = time.time()
 
-    trainer_kwargs = dict(
+    trainer = GRPOTrainer(
+        model=model,
         processing_class=tokenizer,
         args=grpo_config,
         train_dataset=dataset,
@@ -160,13 +182,6 @@ def main():
         environment_factory=env_factory,
         peft_config=peft_config,
     )
-    if model is not None:
-        trainer_kwargs["model"] = model
-    else:
-        # vLLM mode — pass model name string
-        trainer_kwargs["model"] = config["model_name"]
-
-    trainer = GRPOTrainer(**trainer_kwargs)
     logger.info(f"GRPOTrainer created in {time.time()-t0:.1f}s")
 
     # Train
