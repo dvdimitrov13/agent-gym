@@ -9,6 +9,7 @@ Usage:
 """
 
 import argparse
+import logging
 import os
 import json
 
@@ -47,6 +48,13 @@ def main():
     config = load_config(args.config)
     device = get_device()
     dtype = get_dtype()
+
+    # Setup logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(name)s %(levelname)s %(message)s",
+        datefmt="%H:%M:%S",
+    )
 
     # Silence experimental warnings
     os.environ["TRL_EXPERIMENTAL_SILENCE"] = "1"

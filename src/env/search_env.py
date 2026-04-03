@@ -1,4 +1,6 @@
+import logging
 import re
+import time
 
 from rapidfuzz import fuzz
 
@@ -7,6 +9,8 @@ from src.env.cache import SearchCache
 from src.env.extraction import fetch_and_extract
 from src.env.providers.base import SearchProvider
 from src.env.providers.duckduckgo import DuckDuckGoProvider
+
+logger = logging.getLogger(__name__)
 
 # Shared caches — persist across rollouts and episodes
 _search_cache = SearchCache(cache_dir=CACHE_DIR / "search")
@@ -69,14 +73,17 @@ class SearchEnvironment:
             Formatted search results with titles, URLs, and snippets.
         """
         self._search_count += 1
+        t0 = time.time()
 
         cached = _search_cache.get("search", query, str(max_results))
         if cached:
+            logger.info(f"search('{query[:50]}') cache hit ({time.time()-t0:.2f}s)")
             return cached
 
         try:
             results = self._provider.search(query, max_results=max_results)
         except Exception as e:
+            logger.warning(f"search('{query[:50]}') error: {e} ({time.time()-t0:.2f}s)")
             return f"[Search error: {e}]"
 
         if not results:
@@ -91,6 +98,7 @@ class SearchEnvironment:
             output = "\n".join(lines).strip()
 
         _search_cache.set("search", query, str(max_results), value=output)
+        logger.info(f"search('{query[:50]}') {len(results) if results else 0} results ({time.time()-t0:.2f}s)")
         return output
 
     def read(self, url: str, keywords: str) -> str:
@@ -108,6 +116,7 @@ class SearchEnvironment:
             Top matching paragraphs from the page, or a message if no matches.
         """
         self._read_count += 1
+        t0 = time.time()
         if url not in self._urls_seen:
             self._urls_seen.append(url)
 
@@ -116,6 +125,7 @@ class SearchEnvironment:
         if full_text is None:
             full_text = fetch_and_extract(url)
             _page_cache.set("page", url, value=full_text)
+            logger.info(f"read('{url[:60]}') fetched page ({time.time()-t0:.2f}s)")
 
         if full_text.startswith("[Error"):
             return full_text
@@ -138,4 +148,5 @@ class SearchEnvironment:
         header = f"Found {len(scored)} matching section(s). Top {len(excerpts)}:\n"
         body = "\n\n---\n\n".join(f"[{i+1}]\n{ex}" for i, ex in enumerate(excerpts))
 
+        logger.info(f"read('{url[:60]}', '{keywords[:30]}') {len(scored)} matches ({time.time()-t0:.2f}s)")
         return header + body
