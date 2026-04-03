@@ -2,6 +2,7 @@
 """M6: GRPO training with tool-calling via TRL.
 
 Wires together: model + dataset + rewards + SearchEnvironment.
+Supports vLLM colocate mode for fast parallel generation.
 
 Usage:
     python -m src.training.train --config src/training/configs/local_debug.yaml
@@ -12,6 +13,7 @@ import argparse
 import logging
 import os
 import json
+import time
 
 import yaml
 import torch
@@ -21,8 +23,10 @@ from trl import GRPOConfig, GRPOTrainer
 from peft import LoraConfig
 
 from src.env.search_env import SearchEnvironment
-from src.rewards import retrieval_reward, efficiency_reward, thinking_reward
+from src.rewards import retrieval_reward, efficiency_reward, thinking_reward, truncation_reward
 from src.utils.device import get_device, get_dtype
+
+logger = logging.getLogger(__name__)
 
 
 def load_config(path: str) -> dict:
@@ -49,7 +53,7 @@ def main():
     device = get_device()
     dtype = get_dtype()
 
-    # Setup logging
+    # Setup logging — detailed for debugging
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(name)s %(levelname)s %(message)s",
@@ -59,29 +63,35 @@ def main():
     # Silence experimental warnings
     os.environ["TRL_EXPERIMENTAL_SILENCE"] = "1"
 
-    print(f"Device: {device}, dtype: {dtype}")
-    print(f"Model: {config['model_name']}")
-    print(f"Dataset: {config['dataset']}")
-    print()
+    use_vllm = config.get("use_vllm", False)
+
+    logger.info(f"Device: {device}, dtype: {dtype}")
+    logger.info(f"Model: {config['model_name']}")
+    logger.info(f"Dataset: {config['dataset']}")
+    logger.info(f"vLLM: {use_vllm} (mode: {config.get('vllm_mode', 'n/a')})")
+    logger.info(f"max_completion_length: {config.get('max_completion_length')}")
+    logger.info(f"max_tool_calling_iterations: {config.get('max_tool_calling_iterations')}")
 
     # Load tokenizer
-    print("Loading tokenizer...", flush=True)
+    logger.info("Loading tokenizer...")
     tokenizer = AutoTokenizer.from_pretrained(config["model_name"])
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    # Load model
-    print("Loading model...", flush=True)
-    model = AutoModelForCausalLM.from_pretrained(
-        config["model_name"],
-        dtype=dtype,
-        device_map="auto" if device == "cuda" else device,
-    )
+    # Load model (skip if vLLM handles it)
+    model = None
+    if not use_vllm:
+        logger.info("Loading model...")
+        model = AutoModelForCausalLM.from_pretrained(
+            config["model_name"],
+            dtype=dtype,
+            device_map="auto" if device == "cuda" else device,
+        )
 
     # LoRA
     peft_config = None
     if config.get("use_lora"):
-        print("Applying LoRA...", flush=True)
+        logger.info(f"LoRA: r={config.get('lora_r')}, alpha={config.get('lora_alpha')}")
         peft_config = LoraConfig(
             r=config.get("lora_r", 16),
             lora_alpha=config.get("lora_alpha", 32),
@@ -91,18 +101,18 @@ def main():
         )
 
     # Load dataset
-    print("Loading dataset...", flush=True)
+    logger.info("Loading dataset...")
     dataset = load_dataset(config["dataset"])
-    print(f"Dataset size: {len(dataset)} examples")
+    logger.info(f"Dataset size: {len(dataset)} examples")
 
     # GRPO config
     output_dir = config.get("output_dir", "checkpoints/debug")
-    grpo_config = GRPOConfig(
+    grpo_kwargs = dict(
         output_dir=output_dir,
         per_device_train_batch_size=config.get("per_device_train_batch_size", 1),
         gradient_accumulation_steps=config.get("gradient_accumulation_steps", 1),
         num_generations=config.get("num_generations", 2),
-        max_completion_length=config.get("max_completion_length", 256),
+        max_completion_length=config.get("max_completion_length", 512),
         max_tool_calling_iterations=config.get("max_tool_calling_iterations", 3),
         loss_type=config.get("loss_type", "dapo"),
         beta=config.get("beta", 0.0),
@@ -111,29 +121,38 @@ def main():
         num_train_epochs=config.get("num_train_epochs", 1),
         max_steps=config.get("max_steps", -1),
         logging_steps=config.get("logging_steps", 1),
-        save_steps=config.get("save_steps", 100),
+        save_steps=config.get("save_steps", 10),
         gradient_checkpointing=config.get("gradient_checkpointing", True),
-        mask_truncated_completions=config.get("mask_truncated_completions", True),
+        mask_truncated_completions=config.get("mask_truncated_completions", False),
         bf16=config.get("bf16", False) and device == "cuda",
-        report_to="none",  # disable wandb for now
+        report_to="none",
     )
 
+    # vLLM settings
+    if use_vllm:
+        grpo_kwargs["use_vllm"] = True
+        grpo_kwargs["vllm_mode"] = config.get("vllm_mode", "colocate")
+        grpo_kwargs["vllm_gpu_memory_utilization"] = config.get("vllm_gpu_memory_utilization", 0.7)
+
+    grpo_config = GRPOConfig(**grpo_kwargs)
+
     # Reward functions
-    reward_funcs = [retrieval_reward, efficiency_reward, thinking_reward]
-    reward_weights = [1.0, 0.5, 0.3]
+    reward_funcs = [retrieval_reward, efficiency_reward, thinking_reward, truncation_reward]
+    reward_weights = [1.0, 0.5, 0.3, 0.3]
     grpo_config.reward_weights = reward_weights
 
-    print(f"\nReward functions: {[f.__name__ for f in reward_funcs]}")
-    print(f"Reward weights: {reward_weights}")
+    logger.info(f"Reward functions: {[f.__name__ for f in reward_funcs]}")
+    logger.info(f"Reward weights: {reward_weights}")
 
     # Environment factory
     def env_factory():
         return SearchEnvironment()
 
     # Create trainer
-    print("\nCreating GRPOTrainer...", flush=True)
-    trainer = GRPOTrainer(
-        model=model,
+    logger.info("Creating GRPOTrainer...")
+    t0 = time.time()
+
+    trainer_kwargs = dict(
         processing_class=tokenizer,
         args=grpo_config,
         train_dataset=dataset,
@@ -141,16 +160,26 @@ def main():
         environment_factory=env_factory,
         peft_config=peft_config,
     )
+    if model is not None:
+        trainer_kwargs["model"] = model
+    else:
+        # vLLM mode — pass model name string
+        trainer_kwargs["model"] = config["model_name"]
+
+    trainer = GRPOTrainer(**trainer_kwargs)
+    logger.info(f"GRPOTrainer created in {time.time()-t0:.1f}s")
 
     # Train
-    print("Starting training...\n", flush=True)
+    logger.info("Starting training...")
+    t0 = time.time()
     trainer.train()
+    logger.info(f"Training completed in {time.time()-t0:.1f}s")
 
     # Save
-    print(f"\nSaving to {output_dir}...", flush=True)
+    logger.info(f"Saving to {output_dir}...")
     trainer.save_model(output_dir)
     tokenizer.save_pretrained(output_dir)
-    print("Done!")
+    logger.info("Done!")
 
 
 if __name__ == "__main__":

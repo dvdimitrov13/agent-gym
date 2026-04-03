@@ -1,12 +1,12 @@
-# Cloud training config — Qwen3-14B + LoRA on A6000
+# Cloud training config — Qwen3-14B + LoRA on 2x A6000
 model_name: "Qwen/Qwen3-14B"
 dataset: "data/train_trl.jsonl"
 
 per_device_train_batch_size: 2
 gradient_accumulation_steps: 4    # effective batch = 8
 num_generations: 4                # must divide effective batch
-max_completion_length: 2048
-max_tool_calling_iterations: 5
+max_completion_length: 512        # reduced from 2048 — sufficient for search+answer
+max_tool_calling_iterations: 3    # reduced from 5
 
 # GRPO settings
 loss_type: "dapo"
@@ -19,6 +19,11 @@ num_train_epochs: 3
 logging_steps: 1
 save_steps: 10
 
+# vLLM for fast generation
+use_vllm: true
+vllm_mode: "colocate"
+vllm_gpu_memory_utilization: 0.7
+
 # LoRA
 use_lora: true
 lora_r: 16
@@ -29,7 +34,7 @@ lora_target_modules: "all-linear"
 # Memory optimization
 bf16: true
 gradient_checkpointing: true
-mask_truncated_completions: true
+mask_truncated_completions: false  # let model learn from truncated completions
 
 # Output
 output_dir: "checkpoints/qwen3-14b-grpo"
