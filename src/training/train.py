@@ -78,15 +78,18 @@ def main():
         os.environ["UNSLOTH_VLLM_STANDBY"] = "1"
         from unsloth import FastLanguageModel
 
-        logger.info("Loading model with Unsloth (fast_inference + vLLM standby)...")
-        model, tokenizer = FastLanguageModel.from_pretrained(
+        fast_inference = config.get("fast_inference", False)
+        logger.info(f"Loading model with Unsloth (fast_inference={fast_inference})...")
+        load_kwargs = dict(
             model_name=config["model_name"],
             max_seq_length=config.get("max_seq_length", 4096),
             load_in_4bit=config.get("load_in_4bit", False),
-            fast_inference=True,
-            max_lora_rank=config.get("lora_r", 16),
-            gpu_memory_utilization=config.get("gpu_memory_utilization", 0.85),
+            fast_inference=fast_inference,
         )
+        if fast_inference:
+            load_kwargs["max_lora_rank"] = config.get("lora_r", 16)
+            load_kwargs["gpu_memory_utilization"] = config.get("gpu_memory_utilization", 0.85)
+        model, tokenizer = FastLanguageModel.from_pretrained(**load_kwargs)
 
         # Unsloth applies LoRA via get_peft_model
         logger.info(f"Applying LoRA via Unsloth: r={config.get('lora_r')}, alpha={config.get('lora_alpha')}")
@@ -168,6 +171,13 @@ def main():
     # Environment factory
     def env_factory():
         return SearchEnvironment()
+
+    # Set response_schema to skip TRL's auto-detection (Qwen3 template not recognized)
+    # TRL falls back to batch_decode + text parsing when response_schema is set but
+    # the model output doesn't match it — which is fine for our tool call parsing
+    if not getattr(tokenizer, "response_schema", None):
+        logger.info("Setting dummy response_schema to skip TRL auto-detection")
+        tokenizer.response_schema = {"type": "object"}
 
     # Create trainer
     logger.info("Creating GRPOTrainer...")
