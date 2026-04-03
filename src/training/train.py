@@ -172,12 +172,8 @@ def main():
     def env_factory():
         return SearchEnvironment()
 
-    # Set response_schema to skip TRL's auto-detection (Qwen3 template not recognized)
-    # TRL falls back to batch_decode + text parsing when response_schema is set but
-    # the model output doesn't match it — which is fine for our tool call parsing
-    if not getattr(tokenizer, "response_schema", None):
-        logger.info("Setting dummy response_schema to skip TRL auto-detection")
-        tokenizer.response_schema = {"type": "object"}
+    # Requires TRL from git main (pip install git+https://github.com/huggingface/trl.git)
+    # which has Qwen3 chat template support (PR #5330)
 
     # Create trainer
     logger.info("Creating GRPOTrainer...")
