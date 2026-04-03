@@ -9,19 +9,33 @@ This rewards the outcome (found the answer via tools) not the specific path
 
 
 def _extract_all_tool_results(completion: list[dict]) -> list[str]:
-    """Extract the text content of ALL tool results (search snippets + read excerpts)."""
+    """Extract the text content of ALL tool results (search snippets + read excerpts).
+
+    Handles two formats:
+    - TRL format: {"role": "tool", "content": "..."}
+    - Anthropic format: {"role": "user", "content": [{"type": "tool_result", "content": "..."}]}
+    """
     results = []
     for msg in completion:
-        if msg.get("role") != "user":
-            continue
-        content = msg.get("content", [])
-        if not isinstance(content, list):
-            continue
-        for block in content:
-            if isinstance(block, dict) and block.get("type") == "tool_result":
-                text = block.get("content", "")
+        # TRL format: role=tool
+        if msg.get("role") == "tool":
+            content = msg.get("content", "")
+            if isinstance(content, str) and content:
+                results.append(content)
+            elif isinstance(content, dict):
+                text = str(content)
                 if text:
                     results.append(text)
+
+        # Anthropic format: role=user with tool_result blocks
+        elif msg.get("role") == "user":
+            content = msg.get("content", [])
+            if isinstance(content, list):
+                for block in content:
+                    if isinstance(block, dict) and block.get("type") == "tool_result":
+                        text = block.get("content", "")
+                        if text:
+                            results.append(text)
     return results
 
 
