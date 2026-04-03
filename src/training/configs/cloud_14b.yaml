@@ -1,4 +1,4 @@
-# Cloud training config — Qwen3-14B + LoRA on 2x A6000
+# Cloud training config — Qwen3-14B + LoRA on single A6000
 model_name: "Qwen/Qwen3-14B"
 dataset: "data/train_trl.jsonl"
 
@@ -17,7 +17,7 @@ learning_rate: 1e-5
 # Training length
 num_train_epochs: 3
 logging_steps: 1
-save_steps: 10
+save_steps: 50
 
 # LoRA
 use_lora: true
@@ -26,9 +26,8 @@ lora_alpha: 32
 lora_dropout: 0.05
 lora_target_modules: "all-linear"
 
-# Optimizations
-use_ddp: true          # data parallel across GPUs (vs pipeline parallel)
-torch_compile: true
+# Optimizations — single GPU, no compile (hurts autoregressive generation)
+torch_compile: false
 bf16: true
 gradient_checkpointing: true
 mask_truncated_completions: false
