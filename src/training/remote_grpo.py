@@ -1,18 +1,16 @@
-"""GRPOTrainer subclass that uses a remote inference server for generation.
+"""RemoteGRPOTrainer — subclass that sends generation to an inference server.
 
-GPU 0 runs the inference server (inference_server.py).
-GPU 1 runs this trainer — handles RL math, tool calling, rewards, gradients.
-
-The trainer overrides _generate_single_turn to call the remote server,
-and syncs LoRA weights back to the server after each training step.
+Overrides _generate_single_turn to call our FastAPI server on GPU 0
+instead of using the local model.generate(). TRL handles everything
+else: tool calling loop, rewards, GRPO math, gradient updates.
 """
 
 import logging
 import time
 
 import requests
-import torch
 from trl import GRPOTrainer
+from transformers import TrainerCallback
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +18,11 @@ LORA_SYNC_PATH = "/tmp/lora_checkpoint"
 
 
 class RemoteGRPOTrainer(GRPOTrainer):
-    """GRPOTrainer that generates completions via a remote inference server."""
+    """GRPOTrainer that generates via a remote inference server."""
 
     def __init__(self, *args, inference_server_url: str = "http://localhost:8000", **kwargs):
         super().__init__(*args, **kwargs)
         self.inference_server_url = inference_server_url
-        self._step_count = 0
 
         # Verify server is reachable
         try:
@@ -34,25 +31,26 @@ class RemoteGRPOTrainer(GRPOTrainer):
         except Exception as e:
             raise ConnectionError(f"Cannot reach inference server at {self.inference_server_url}: {e}")
 
+        # Add weight sync callback
+        self.add_callback(_WeightSyncCallback(self.inference_server_url))
+        logger.info("Weight sync callback added")
+
     def _generate_single_turn(self, prompt_ids, images, multimodal_fields):
-        """Override: send generation to remote server instead of local model."""
-        device = self.accelerator.device
+        """Override: call remote server instead of local model.generate().
+
+        Returns (completion_ids, logprobs) matching parent signature.
+        """
         mode = "train" if self.model.training else "eval"
         num_generations = self.num_generations if mode == "train" else self.num_generations_eval
 
-        # Repeat prompts for num_generations
-        expanded_prompt_ids = []
-        for ids in prompt_ids:
-            for _ in range(num_generations):
-                expanded_prompt_ids.append(ids)
-
+        # prompt_ids is already a list of token ID lists, repeated for num_generations
+        # (TRL repeats them before calling this method)
         t0 = time.time()
 
-        # Call remote server
         response = requests.post(
             f"{self.inference_server_url}/generate",
             json={
-                "prompt_ids": expanded_prompt_ids,
+                "prompt_ids": prompt_ids,
                 "max_new_tokens": self.max_completion_length,
                 "temperature": self.args.temperature,
                 "do_sample": True,
@@ -64,39 +62,31 @@ class RemoteGRPOTrainer(GRPOTrainer):
 
         completion_ids = result["completion_ids"]
         gen_time = time.time() - t0
-        logger.info(f"Remote generation: {len(completion_ids)} completions in {gen_time:.1f}s "
+        logger.info(f"Remote gen: {len(completion_ids)} completions in {gen_time:.1f}s "
                      f"(server: {result['generation_time']:.1f}s)")
 
-        # TRL expects logprobs — we don't have them from the server.
-        # Set to None; TRL handles this for non-vLLM generation.
-        logprobs = None
+        logprobs = None  # TRL recomputes from training model
+        return completion_ids, logprobs
 
-        # Return in the format TRL expects
-        extra_fields = {}
-        return completion_ids, logprobs, extra_fields
 
-    def training_step(self, model, inputs, num_items_in_batch=None):
-        """Override: sync LoRA weights to server after each step."""
-        loss = super().training_step(model, inputs, num_items_in_batch)
+class _WeightSyncCallback(TrainerCallback):
+    """Sync LoRA weights to inference server after each training step."""
 
-        self._step_count += 1
+    def __init__(self, server_url: str):
+        self.server_url = server_url
 
-        # Sync weights every step
+    def on_step_end(self, args, state, control, model=None, **kwargs):
         try:
-            # Save LoRA adapter
-            self.model.save_pretrained(LORA_SYNC_PATH)
-
-            # Tell server to reload
-            r = requests.post(
-                f"{self.inference_server_url}/update_weights",
-                json={"lora_path": LORA_SYNC_PATH},
-                timeout=30,
-            )
-            if r.status_code == 200:
-                logger.info(f"Step {self._step_count}: weights synced to server")
-            else:
-                logger.warning(f"Step {self._step_count}: weight sync failed: {r.text}")
+            if model is not None:
+                model.save_pretrained(LORA_SYNC_PATH)
+                r = requests.post(
+                    f"{self.server_url}/update_weights",
+                    json={"lora_path": LORA_SYNC_PATH},
+                    timeout=30,
+                )
+                if r.status_code == 200:
+                    logger.info(f"Step {state.global_step}: weights synced")
+                else:
+                    logger.warning(f"Weight sync failed: {r.text}")
         except Exception as e:
-            logger.warning(f"Step {self._step_count}: weight sync error: {e}")
-
-        return loss
+            logger.warning(f"Weight sync error: {e}")

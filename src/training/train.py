@@ -26,7 +26,6 @@ import torch
 from datasets import Dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from trl import GRPOConfig, GRPOTrainer
-from src.training.remote_grpo import RemoteGRPOTrainer
 from peft import LoraConfig
 
 from src.env.search_env import SearchEnvironment
@@ -164,28 +163,34 @@ def main():
     def env_factory():
         return SearchEnvironment()
 
-    # Create trainer
+    # Create trainer — use RemoteGRPOTrainer if inference server configured
     inference_server = config.get("inference_server_url")
+    t0 = time.time()
+
     if inference_server:
+        from src.training.remote_grpo import RemoteGRPOTrainer
         logger.info(f"Creating RemoteGRPOTrainer (server: {inference_server})...")
-        TrainerClass = RemoteGRPOTrainer
-        extra_kwargs = {"inference_server_url": inference_server}
+        trainer = RemoteGRPOTrainer(
+            model=model,
+            processing_class=tokenizer,
+            args=grpo_config,
+            train_dataset=dataset,
+            reward_funcs=reward_funcs,
+            environment_factory=env_factory,
+            peft_config=peft_config,
+            inference_server_url=inference_server,
+        )
     else:
         logger.info("Creating GRPOTrainer (local generation)...")
-        TrainerClass = GRPOTrainer
-        extra_kwargs = {}
-
-    t0 = time.time()
-    trainer = TrainerClass(
-        model=model,
-        processing_class=tokenizer,
-        args=grpo_config,
-        train_dataset=dataset,
-        reward_funcs=reward_funcs,
-        environment_factory=env_factory,
-        peft_config=peft_config,
-        **extra_kwargs,
-    )
+        trainer = GRPOTrainer(
+            model=model,
+            processing_class=tokenizer,
+            args=grpo_config,
+            train_dataset=dataset,
+            reward_funcs=reward_funcs,
+            environment_factory=env_factory,
+            peft_config=peft_config,
+        )
     logger.info(f"Trainer created in {time.time()-t0:.1f}s")
 
     # Zero variance filtering: wrap the training step to skip batches with no reward signal
