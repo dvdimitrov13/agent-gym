@@ -48,18 +48,9 @@ def _extract_read_urls(completion: list[dict]) -> set[str]:
     return urls
 
 
-def _extract_read_results(completion: list[dict]) -> list[str]:
-    """Extract the text content of all read() tool results."""
+def _extract_all_tool_results(completion: list[dict]) -> list[str]:
+    """Extract the text content of ALL tool results (search snippets + read excerpts)."""
     results = []
-    # Track which tool_use IDs are read calls
-    read_ids = set()
-    for msg in completion:
-        if msg.get("role") == "assistant" and isinstance(msg.get("content"), list):
-            for block in msg["content"]:
-                if (isinstance(block, dict) and block.get("type") == "tool_use"
-                        and block.get("name") == "read"):
-                    read_ids.add(block.get("id", ""))
-
     for msg in completion:
         if msg.get("role") != "user":
             continue
@@ -67,9 +58,10 @@ def _extract_read_results(completion: list[dict]) -> list[str]:
         if not isinstance(content, list):
             continue
         for block in content:
-            if (isinstance(block, dict) and block.get("type") == "tool_result"
-                    and block.get("tool_use_id", "") in read_ids):
-                results.append(block.get("content", ""))
+            if isinstance(block, dict) and block.get("type") == "tool_result":
+                text = block.get("content", "")
+                if text:
+                    results.append(text)
     return results
 
 
@@ -118,14 +110,13 @@ def retrieval_reward(
         else:
             url_score = None
 
-        # Content match: answer words in read results
-        read_results = _extract_read_results(completion)
+        # Content match: answer words in ANY tool result (snippets + reads)
+        tool_results = _extract_all_tool_results(completion)
         content_score = 0.0
-        if read_results:
-            for result in read_results:
-                if _answer_in_text(gt_answer, result):
-                    content_score = 1.0
-                    break
+        for result in tool_results:
+            if _answer_in_text(gt_answer, result):
+                content_score = 1.0
+                break
 
         # Combine
         if url_score is not None:

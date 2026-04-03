@@ -76,7 +76,7 @@ class TestRetrievalReward:
         assert retrieval_reward(comp, ["Paris"]) == [0.0]
 
     def test_answer_in_snippet(self):
-        """Answer found in search snippet (not read)."""
+        """Answer found in search snippet counts as retrieval success."""
         comp = [_make_completion(
             "done",
             tool_calls=[{
@@ -85,9 +85,8 @@ class TestRetrievalReward:
                 "result": "[1] NAFTA\n    https://example.com\n    NAFTA had 3 original member countries.",
             }],
         )]
-        # No read results, so content_score = 0 even though snippet has the answer
-        # This is by design — we want to reward read() usage
-        assert retrieval_reward(comp, ["3"]) == [0.0]
+        # Answer "3" appears in snippet — should get content match
+        assert retrieval_reward(comp, ["3"]) == [1.0]
 
 
 # === efficiency_reward ===
