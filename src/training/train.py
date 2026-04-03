@@ -115,7 +115,13 @@ def main():
             config["model_name"],
             dtype=dtype,
             device_map="auto" if device == "cuda" else device,
+            attn_implementation="sdpa",  # scaled dot product attention (flash-like)
         )
+
+        # torch.compile for faster forward pass (CUDA only)
+        if device == "cuda" and config.get("torch_compile", True):
+            logger.info("Applying torch.compile...")
+            model = torch.compile(model)
 
         if config.get("use_lora"):
             logger.info(f"LoRA: r={config.get('lora_r')}, alpha={config.get('lora_alpha')}")
@@ -174,6 +180,19 @@ def main():
 
     # Requires TRL from git main (pip install git+https://github.com/huggingface/trl.git)
     # which has Qwen3 chat template support (PR #5330)
+    #
+    # Unsloth modifies the tokenizer's chat_template, causing TRL's exact-match
+    # checks to fail. Restore the original Qwen3 template and set response_schema.
+    if use_unsloth:
+        from transformers import AutoTokenizer as _AT
+        original_tok = _AT.from_pretrained(config["model_name"])
+        if original_tok.chat_template and original_tok.chat_template != tokenizer.chat_template:
+            logger.info("Restoring original Qwen3 chat_template (Unsloth modified it)")
+            tokenizer.chat_template = original_tok.chat_template
+        from trl.chat_template_utils import qwen3_schema
+        logger.info("Setting Qwen3 response_schema")
+        tokenizer.response_schema = qwen3_schema
+        del original_tok
 
     # Create trainer
     logger.info("Creating GRPOTrainer...")

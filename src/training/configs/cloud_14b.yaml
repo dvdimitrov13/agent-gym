@@ -2,11 +2,8 @@
 model_name: "Qwen/Qwen3-14B"
 dataset: "data/train_trl.jsonl"
 
-# Unsloth — efficient model loading + LoRA
-use_unsloth: true
-fast_inference: false    # vLLM standby disabled (version conflicts)
-max_seq_length: 4096
-load_in_4bit: false
+# Vanilla transformers + LoRA (no Unsloth/vLLM — compatibility issues)
+use_unsloth: false
 
 per_device_train_batch_size: 2
 gradient_accumulation_steps: 4    # effective batch = 8
