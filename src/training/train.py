@@ -75,13 +75,19 @@ def main():
         tokenizer.pad_token = tokenizer.eos_token
 
     # Load model
+    # For multi-GPU DDP: don't use device_map="auto" (pipeline parallel).
+    # Let accelerate handle device placement for true data parallelism.
     logger.info("Loading model...")
-    model = AutoModelForCausalLM.from_pretrained(
-        config["model_name"],
+    load_kwargs = dict(
         dtype=dtype,
-        device_map="auto" if device == "cuda" else device,
         attn_implementation="sdpa",
     )
+    if device == "cuda" and not config.get("use_ddp", False):
+        load_kwargs["device_map"] = "auto"
+    elif device != "cuda":
+        load_kwargs["device_map"] = device
+
+    model = AutoModelForCausalLM.from_pretrained(config["model_name"], **load_kwargs)
 
     # torch.compile for faster forward pass (CUDA only)
     if device == "cuda" and config.get("torch_compile", True):

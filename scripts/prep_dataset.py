@@ -68,11 +68,20 @@ def main():
 
     print(f"Loaded {len(examples)} examples from {input_path}")
 
+    SYSTEM_PROMPT = (
+        "You are a research assistant. Use search and read tools to find information. "
+        "Think briefly, then act. Be concise — do not repeat retrieved content. "
+        "When you have the answer, state it directly."
+    )
+
     prepped = []
     for ex in examples:
         traj = ex.get("trajectory", [])
+        # Override the system prompt to encourage conciseness
+        prompt = list(ex["prompt"])
+        prompt[0] = {"role": "system", "content": SYSTEM_PROMPT}
         prepped.append({
-            "prompt": ex["prompt"],
+            "prompt": prompt,
             "answer": ex["answer"],
             "answer_aliases": ex.get("answer_aliases", []),
             "gold_urls": extract_gold_urls(traj),
