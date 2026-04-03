@@ -84,7 +84,6 @@ def main():
             "prompt": prompt,
             "answer": ex["answer"],
             "answer_aliases": ex.get("answer_aliases", []),
-            "gold_urls": extract_gold_urls(traj),
             "gold_tool_count": count_gold_tools(traj),
             "num_hops": ex.get("num_hops", 0),
         })
@@ -96,10 +95,8 @@ def main():
 
     # Stats
     tool_counts = [ex["gold_tool_count"] for ex in prepped]
-    url_counts = [len(ex["gold_urls"]) for ex in prepped]
     print(f"Saved {len(prepped)} examples to {output_path}")
     print(f"Avg gold tool calls: {sum(tool_counts)/len(tool_counts):.1f}")
-    print(f"Avg gold URLs: {sum(url_counts)/len(url_counts):.1f}")
 
 
 if __name__ == "__main__":

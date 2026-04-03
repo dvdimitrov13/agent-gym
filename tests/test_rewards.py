@@ -54,23 +54,6 @@ class TestRetrievalReward:
         )]
         assert retrieval_reward(comp, ["Stuttgart"]) == [0.0]
 
-    def test_url_recall(self):
-        comp = [_make_completion(
-            "done",
-            tool_calls=[{
-                "id": "s1", "name": "search",
-                "input": {"query": "test"},
-                "result": "[1] Result\n    https://example.com/page1\n    snippet",
-            }],
-        )]
-        result = retrieval_reward(
-            comp, ["yes"],
-            gold_urls=[["https://example.com/page1", "https://example.com/page2"]],
-        )
-        # Found 1/2 gold URLs = 0.5 url_score, no read results = 0.0 content
-        # 0.5 * 0.5 + 0.5 * 0.0 = 0.25
-        assert result == [0.25]
-
     def test_no_tools_no_reward(self):
         comp = [_make_completion("Paris")]
         assert retrieval_reward(comp, ["Paris"]) == [0.0]
