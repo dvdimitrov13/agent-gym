@@ -38,22 +38,26 @@ VLLM_PID=$!
 echo "  vLLM PID: $VLLM_PID"
 echo "  Log: $LOG_DIR/vllm_server.log"
 
-# Wait for server to be ready
+# Wait for server to be ready (check both /health and /v1/models endpoints)
 echo "  Waiting for vLLM server..."
-for i in $(seq 1 60); do
-    if curl -s http://localhost:$PORT/health > /dev/null 2>&1; then
-        echo "  vLLM server ready after ${i}s"
+for i in $(seq 1 120); do
+    if curl -s http://localhost:$PORT/health > /dev/null 2>&1 || \
+       curl -s http://localhost:$PORT/v1/models > /dev/null 2>&1; then
+        echo "  vLLM server ready after $((i*5))s"
         break
     fi
     if ! kill -0 $VLLM_PID 2>/dev/null; then
         echo "  ERROR: vLLM server died. Check $LOG_DIR/vllm_server.log"
+        tail -20 "$LOG_DIR/vllm_server.log"
         exit 1
     fi
     sleep 5
 done
 
-if ! curl -s http://localhost:$PORT/health > /dev/null 2>&1; then
-    echo "  ERROR: vLLM server not ready after 300s"
+if ! curl -s http://localhost:$PORT/health > /dev/null 2>&1 && \
+   ! curl -s http://localhost:$PORT/v1/models > /dev/null 2>&1; then
+    echo "  ERROR: vLLM server not ready after 600s"
+    tail -20 "$LOG_DIR/vllm_server.log"
     kill $VLLM_PID 2>/dev/null
     exit 1
 fi

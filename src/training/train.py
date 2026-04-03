@@ -26,6 +26,7 @@ import torch
 from datasets import Dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from trl import GRPOConfig, GRPOTrainer
+from src.training.remote_grpo import RemoteGRPOTrainer
 from peft import LoraConfig
 
 from src.env.search_env import SearchEnvironment
@@ -164,9 +165,18 @@ def main():
         return SearchEnvironment()
 
     # Create trainer
-    logger.info("Creating GRPOTrainer...")
+    inference_server = config.get("inference_server_url")
+    if inference_server:
+        logger.info(f"Creating RemoteGRPOTrainer (server: {inference_server})...")
+        TrainerClass = RemoteGRPOTrainer
+        extra_kwargs = {"inference_server_url": inference_server}
+    else:
+        logger.info("Creating GRPOTrainer (local generation)...")
+        TrainerClass = GRPOTrainer
+        extra_kwargs = {}
+
     t0 = time.time()
-    trainer = GRPOTrainer(
+    trainer = TrainerClass(
         model=model,
         processing_class=tokenizer,
         args=grpo_config,
@@ -174,8 +184,9 @@ def main():
         reward_funcs=reward_funcs,
         environment_factory=env_factory,
         peft_config=peft_config,
+        **extra_kwargs,
     )
-    logger.info(f"GRPOTrainer created in {time.time()-t0:.1f}s")
+    logger.info(f"Trainer created in {time.time()-t0:.1f}s")
 
     # Zero variance filtering: wrap the training step to skip batches with no reward signal
     if config.get("zero_variance_filtering", False):
