@@ -1,0 +1,54 @@
+"""Efficiency reward — penalize trajectories that use more tool calls than the reference.
+
+The reference trajectory (from Sonnet) represents the ideal number of steps.
+If the model takes more steps, it gets penalized proportionally.
+
+Score: max(0, 1 - extra_steps / gold_steps)
+- Same or fewer steps → 1.0
+- Double the steps → 0.0
+"""
+
+
+def _count_tool_calls(completion: list[dict]) -> int:
+    """Count tool_use blocks in a completion."""
+    count = 0
+    for msg in completion:
+        if msg.get("role") != "assistant":
+            continue
+        content = msg.get("content", [])
+        if not isinstance(content, list):
+            continue
+        for block in content:
+            if isinstance(block, dict) and block.get("type") == "tool_use":
+                count += 1
+    return count
+
+
+def efficiency_reward(
+    completions: list[list[dict]],
+    gold_tool_count: list[int] | None = None,
+    **kwargs,
+) -> list[float]:
+    """Penalize excess tool calls beyond the reference trajectory.
+
+    Returns max(0, 1 - extra_steps / gold_steps).
+    If gold_tool_count is not provided, returns 1.0 for all (no penalty).
+    """
+    if gold_tool_count is None:
+        return [1.0] * len(completions)
+
+    rewards = []
+    for completion, gold_count in zip(completions, gold_tool_count):
+        model_count = _count_tool_calls(completion)
+
+        if gold_count <= 0:
+            # No reference — no penalty
+            rewards.append(1.0)
+        elif model_count == 0:
+            # Model didn't use tools at all when it should have
+            rewards.append(0.0)
+        else:
+            extra = max(0, model_count - gold_count)
+            score = max(0.0, 1.0 - extra / gold_count)
+            rewards.append(score)
+    return rewards
