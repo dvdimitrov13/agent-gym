@@ -1,0 +1,88 @@
+"""SearchEnvironment with snippet IDs and submit_ranking tool for v2 training.
+
+Wraps the base SearchEnvironment to:
+  - Add snippet IDs ([S1], [S2], [R1], etc.) to tool results
+  - Provide submit_ranking() tool for structured ranking output
+
+The snippet counter resets on each reset() call (per-episode).
+"""
+
+import re
+from src.env.search_env import SearchEnvironment
+
+
+class SearchEnvironmentV2(SearchEnvironment):
+    """SearchEnvironment with snippet IDs and ranking submission."""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._s_count = 0
+        self._r_count = 0
+
+    def reset(self, **kwargs) -> str | None:
+        self._s_count = 0
+        self._r_count = 0
+        return super().reset(**kwargs)
+
+    def search(self, query: str, max_results: int = 5) -> str:
+        """Search the web. Returns snippets tagged with IDs like [S1], [S2].
+
+        Args:
+            query: The search query.
+            max_results: Maximum number of results to return.
+
+        Returns:
+            Formatted search results with snippet IDs, titles, URLs, and snippets.
+        """
+        raw = super().search(query, max_results=max_results)
+
+        lines = raw.split("\n")
+        formatted = []
+        for line in lines:
+            m = re.match(r'^\[(\d+)\]\s+(.*)', line)
+            if m:
+                self._s_count += 1
+                formatted.append(f"[S{self._s_count}] {m.group(2)}")
+            else:
+                formatted.append(line)
+        return "\n".join(formatted)
+
+    def read(self, url: str, keywords: str) -> str:
+        """Read a web page and find matching sections. Returns excerpts tagged with IDs like [R1], [R2].
+
+        Args:
+            url: The URL to read.
+            keywords: Keywords to search for within the page.
+
+        Returns:
+            Top matching paragraphs from the page with snippet IDs.
+        """
+        raw = super().read(url, keywords)
+
+        if raw == "No matches found." or raw.startswith("[Error"):
+            return raw
+
+        lines = raw.split("\n")
+        formatted = []
+        for line in lines:
+            m = re.match(r'^\[(\d+)\]$', line.strip())
+            if m:
+                self._r_count += 1
+                formatted.append(f"[R{self._r_count}]")
+            else:
+                formatted.append(line)
+        return "\n".join(formatted)
+
+    def submit_ranking(self, passage_ids: list[str]) -> str:
+        """Submit your final ranking of the most relevant passages, ordered by relevance and source quality.
+
+        Args:
+            passage_ids: Ordered list of snippet IDs (e.g. ["S3", "R1", "S1"]), most relevant first.
+
+        Returns:
+            Confirmation that the ranking was submitted.
+        """
+        valid = [pid for pid in passage_ids if re.match(r'^[SR]\d+$', pid)]
+        if not valid:
+            return "Error: no valid passage IDs provided. Use IDs like S1, S2, R1, R2."
+        return f"Ranking submitted: {', '.join(valid)}"

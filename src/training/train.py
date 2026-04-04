@@ -29,7 +29,11 @@ from trl import GRPOConfig, GRPOTrainer
 from peft import LoraConfig
 
 from src.env.search_env import SearchEnvironment
-from src.rewards import retrieval_reward, efficiency_reward, thinking_reward, truncation_reward
+from src.env.search_env_v2 import SearchEnvironmentV2
+from src.rewards import (
+    retrieval_reward, efficiency_reward, thinking_reward, truncation_reward,
+    ndcg_reward, format_reward,
+)
 from src.utils.device import get_device, get_dtype
 
 logger = logging.getLogger(__name__)
@@ -140,8 +144,16 @@ def main():
         mask_truncated_completions=config.get("mask_truncated_completions", False),
         bf16=config.get("bf16", False) and device == "cuda",
         report_to="none",
-        reward_weights=[1.0, 0.5, 0.3, 0.3],
     )
+
+    # V2 reward/env selection
+    use_v2 = config.get("use_v2_rewards", False)
+    if use_v2:
+        reward_funcs = [ndcg_reward, efficiency_reward]
+        grpo_kwargs["reward_weights"] = [1.0, 0.5]
+    else:
+        reward_funcs = [retrieval_reward, efficiency_reward, thinking_reward, truncation_reward]
+        grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.3, 0.3]
 
     # vLLM server mode settings
     if use_vllm:
@@ -153,15 +165,15 @@ def main():
 
     grpo_config = GRPOConfig(**grpo_kwargs)
 
-    # Reward functions
-    reward_funcs = [retrieval_reward, efficiency_reward, thinking_reward, truncation_reward]
     logger.info(f"Reward functions: {[f.__name__ for f in reward_funcs]}")
     logger.info(f"Reward weights: {grpo_config.reward_weights}")
     logger.info(f"Zero variance filtering: {config.get('zero_variance_filtering', False)}")
 
     # Environment factory
+    use_v2_env = config.get("use_v2_env", False)
     def env_factory():
-        return SearchEnvironment()
+        return SearchEnvironmentV2() if use_v2_env else SearchEnvironment()
+    logger.info(f"Environment: {'SearchEnvironmentV2 (snippet IDs)' if use_v2_env else 'SearchEnvironment'}")
 
     # Create trainer — use RemoteGRPOTrainer if inference server configured
     inference_server = config.get("inference_server_url")
@@ -169,7 +181,8 @@ def main():
 
     if inference_server:
         from src.training.remote_grpo import RemoteGRPOTrainer
-        logger.info(f"Creating RemoteGRPOTrainer (server: {inference_server})...")
+        use_tito = config.get("use_tito", False)
+        logger.info(f"Creating RemoteGRPOTrainer (server: {inference_server}, tito: {use_tito})...")
         trainer = RemoteGRPOTrainer(
             model=model,
             processing_class=tokenizer,
@@ -179,6 +192,7 @@ def main():
             environment_factory=env_factory,
             peft_config=peft_config,
             inference_server_url=inference_server,
+            use_tito=use_tito,
         )
     else:
         logger.info("Creating GRPOTrainer (local generation)...")

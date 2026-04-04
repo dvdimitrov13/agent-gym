@@ -1,35 +1,47 @@
-"""Format reward — did the model use <answer> tags?
+"""Format reward — checks the model produces valid tool calls and a ranking.
 
-Returns 1.0 if the final assistant message contains <answer>...</answer> tags,
-0.0 otherwise. This gives the model a learning signal for output format
-even when the answer content is wrong.
+Two checks:
+1. Tool calls present (model actually used tools)
+2. Final response includes a RANKING: line with valid snippet IDs
+
+Returns 1.0 if both, 0.5 if only tools used, 0.0 if no tools at all.
 """
 
 import re
-
-
-def _get_last_assistant_text(completion: list[dict]) -> str:
-    for msg in reversed(completion):
-        if msg.get("role") == "assistant":
-            content = msg.get("content", "")
-            if isinstance(content, str):
-                return content
-            if isinstance(content, list):
-                texts = [b.get("text", "") for b in content
-                         if isinstance(b, dict) and b.get("type") == "text"]
-                if texts:
-                    return " ".join(texts)
-    return ""
 
 
 def format_reward(
     completions: list[list[dict]],
     **kwargs,
 ) -> list[float]:
-    """1.0 if <answer> tags present in final response, 0.0 otherwise."""
     rewards = []
     for completion in completions:
-        text = _get_last_assistant_text(completion)
-        has_tags = bool(re.search(r"<answer>.*?</answer>", text, re.DOTALL))
-        rewards.append(1.0 if has_tags else 0.0)
+        has_tools = False
+        has_ranking = False
+
+        for msg in completion:
+            if msg.get("role") != "assistant":
+                continue
+
+            # Check tool calls (TRL OpenAI format)
+            if msg.get("tool_calls"):
+                has_tools = True
+
+            content = msg.get("content", "")
+            if not isinstance(content, str):
+                continue
+
+            # Check for RANKING line in final response
+            if "RANKING:" in content.upper():
+                ids = re.findall(r'[SR]\d+', content)
+                if ids:
+                    has_ranking = True
+
+        if has_tools and has_ranking:
+            rewards.append(1.0)
+        elif has_tools:
+            rewards.append(0.5)
+        else:
+            rewards.append(0.0)
+
     return rewards

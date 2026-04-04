@@ -1,0 +1,40 @@
+# TI/TO test — 25 steps on eval data to verify learning signal
+model_name: "Qwen/Qwen3-14B"
+dataset: "data/eval_trl_v2.jsonl"
+
+# Remote inference server with TI/TO
+inference_server_url: "http://localhost:8000"
+use_tito: true
+
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 2
+num_generations: 4
+max_completion_length: 1024
+max_tool_calling_iterations: 3
+
+# GRPO (length-biased, SID-1 style)
+loss_type: "grpo"
+beta: 0.0
+temperature: 0.7
+learning_rate: 1e-5
+
+max_steps: 25
+logging_steps: 1
+save_steps: 100
+
+# LoRA
+use_lora: true
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+lora_target_modules: "all-linear"
+
+bf16: true
+gradient_checkpointing: true
+mask_truncated_completions: false
+
+# V2
+use_v2_env: true
+use_v2_rewards: true
+
+output_dir: "checkpoints/v2-tito-test"
