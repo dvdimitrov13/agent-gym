@@ -18,7 +18,8 @@ from transformers import TrainerCallback
 
 from src.training.tito import (
     _init_token_ids, _find_tool_call, _parse_tool_call_json,
-    _encode_tool_result, _TOOL_RESULT_PREFIX_IDS, _TOOL_RESULT_SUFFIX_IDS,
+    _encode_tool_result, strip_thinking_tokens,
+    _TOOL_RESULT_PREFIX_IDS, _TOOL_RESULT_SUFFIX_IDS,
     _TOOL_CALL_END_ID,
 )
 
@@ -175,9 +176,10 @@ class RemoteGRPOTrainer(GRPOTrainer):
                 # Update tool mask: add 0s for splice tokens
                 tool_mask_list[idx] = tool_mask_list[idx][:tc_end_pos] + [0] * len(splice_ids)
 
-                # Build new full sequence for next generation
+                # Build prompt for next generation — strip thinking to prevent context blowup
                 pid = prompt_ids[idx] if isinstance(prompt_ids[idx], list) else prompt_ids[idx].tolist()
-                new_full = pid + kept_completion + splice_ids
+                ctx_completion = strip_thinking_tokens(kept_completion)
+                new_full = pid + ctx_completion + splice_ids
                 new_prompt_ids.append(new_full)
 
                 # Update completion_ids to include splice
@@ -216,7 +218,8 @@ class RemoteGRPOTrainer(GRPOTrainer):
                         new_text = tokenizer.decode(new_tokens, skip_special_tokens=True)
                         completions[idx].append({"role": "assistant", "content": new_text})
 
-        return tool_mask_list, completions, completion_ids, logprobs, tool_call_count, tool_failure_count, tool_images
+        # TRL 1.0 expects 6 values (no tool_images)
+        return tool_mask_list, completions, completion_ids, logprobs, tool_call_count, tool_failure_count
 
     def _dispatch_tool(self, name, args):
         """Dispatch a tool call to the environment."""

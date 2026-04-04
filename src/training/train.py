@@ -24,7 +24,7 @@ import time
 import yaml
 import torch
 from datasets import Dataset
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, TrainerCallback
 from trl import GRPOConfig, GRPOTrainer
 from peft import LoraConfig
 
@@ -226,6 +226,25 @@ def main():
 
         trainer.training_step = _filtered_training_step
         logger.info("Zero variance filtering enabled")
+
+    # Length scheduling (SID-1 style): progressively increase max_completion_length
+    length_stages = config.get("length_schedule")  # e.g. [[0, 256], [8, 512], [16, 1024]]
+    if length_stages:
+        _original_max_len = trainer.max_completion_length
+
+        class _LengthScheduleCallback(TrainerCallback):
+            def on_step_begin(self, args, state, control, **kwargs):
+                step = state.global_step
+                current_len = length_stages[0][1]
+                for stage_step, stage_len in length_stages:
+                    if step >= stage_step:
+                        current_len = stage_len
+                if trainer.max_completion_length != current_len:
+                    trainer.max_completion_length = current_len
+                    logger.info(f"Length schedule: step {step} → max_completion_length={current_len}")
+
+        trainer.add_callback(_LengthScheduleCallback())
+        logger.info(f"Length scheduling enabled: {length_stages}")
 
     # Train (resume from checkpoint if specified)
     resume_from = config.get("resume_from_checkpoint")

@@ -29,6 +29,8 @@ logger = logging.getLogger(__name__)
 # Qwen3 special token IDs (set on first call via tokenizer)
 _TOOL_CALL_START_ID = None   # <tool_call>
 _TOOL_CALL_END_ID = None     # </tool_call>
+_THINK_START_ID = None       # <think>
+_THINK_END_ID = None         # </think>
 _IM_END_ID = None            # <|im_end|>
 _EOS_ID = None               # eos_token_id
 
@@ -39,7 +41,8 @@ _TOOL_RESULT_SUFFIX_IDS = None  # \n</tool_response><|im_end|>\n<|im_start|>assi
 
 def _init_token_ids(tokenizer: PreTrainedTokenizerBase):
     """Initialize special token IDs from the tokenizer (called once)."""
-    global _TOOL_CALL_START_ID, _TOOL_CALL_END_ID, _IM_END_ID, _EOS_ID
+    global _TOOL_CALL_START_ID, _TOOL_CALL_END_ID, _THINK_START_ID, _THINK_END_ID
+    global _IM_END_ID, _EOS_ID
     global _TOOL_RESULT_PREFIX_IDS, _TOOL_RESULT_SUFFIX_IDS
 
     if _TOOL_CALL_START_ID is not None:
@@ -47,6 +50,8 @@ def _init_token_ids(tokenizer: PreTrainedTokenizerBase):
 
     _TOOL_CALL_START_ID = tokenizer.encode("<tool_call>", add_special_tokens=False)[0]
     _TOOL_CALL_END_ID = tokenizer.encode("</tool_call>", add_special_tokens=False)[0]
+    _THINK_START_ID = tokenizer.encode("<think>", add_special_tokens=False)[0]
+    _THINK_END_ID = tokenizer.encode("</think>", add_special_tokens=False)[0]
     _IM_END_ID = tokenizer.encode("<|im_end|>", add_special_tokens=False)[0]
     _EOS_ID = tokenizer.eos_token_id
 
@@ -60,7 +65,29 @@ def _init_token_ids(tokenizer: PreTrainedTokenizerBase):
     )
 
     logger.info(f"TI/TO initialized: tool_call={_TOOL_CALL_START_ID}/{_TOOL_CALL_END_ID}, "
+                f"think={_THINK_START_ID}/{_THINK_END_ID}, "
                 f"prefix={len(_TOOL_RESULT_PREFIX_IDS)} tokens, suffix={len(_TOOL_RESULT_SUFFIX_IDS)} tokens")
+
+
+def strip_thinking_tokens(token_ids: list[int]) -> list[int]:
+    """Remove <think>...</think> blocks from a token sequence.
+
+    The model benefits from thinking during generation, but we strip it
+    from the carried-forward context to prevent context blowup across
+    tool call rounds. Keeps everything outside think blocks intact.
+    """
+    result = []
+    in_think = False
+    for tid in token_ids:
+        if tid == _THINK_START_ID:
+            in_think = True
+            continue
+        elif tid == _THINK_END_ID:
+            in_think = False
+            continue
+        if not in_think:
+            result.append(tid)
+    return result
 
 
 def _find_tool_call(token_ids: list[int]) -> tuple[int, int] | None:
