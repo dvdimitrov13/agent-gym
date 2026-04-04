@@ -38,3 +38,5 @@ Thumbs.db
 # Cache
 .cache/
 search_cache/
+scripts/monitor.sh
+scripts/setup_dual_env.sh
