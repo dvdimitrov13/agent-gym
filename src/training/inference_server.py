@@ -121,14 +121,24 @@ def update_weights(req: UpdateWeightsRequest):
         return {"status": "error", "message": f"Path not found: {req.lora_path}"}
 
     try:
+        # Free old model memory before loading new weights
+        del _model
+        torch.cuda.empty_cache()
+
         # Reload LoRA adapter
         _model = PeftModel.from_pretrained(_base_model, req.lora_path)
         _model.eval()
         _lora_path = req.lora_path
-        logger.info(f"Reloaded LoRA from {req.lora_path} in {time.time()-t0:.1f}s")
+
+        torch.cuda.empty_cache()
+        mem = torch.cuda.memory_allocated() / 1e9
+        logger.info(f"Reloaded LoRA from {req.lora_path} in {time.time()-t0:.1f}s (GPU mem: {mem:.1f}GB)")
         return {"status": "ok", "lora_path": req.lora_path}
     except Exception as e:
         logger.error(f"Failed to reload LoRA: {e}")
+        # Try to recover by using base model
+        _model = _base_model
+        torch.cuda.empty_cache()
         return {"status": "error", "message": str(e)}
 
 
