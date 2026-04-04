@@ -1,0 +1,150 @@
+[
+  {
+    "question": "In what year was the Acropolis of Athens inscribed as a UNESCO World Heritage Site in the country wh",
+    "num_hops": 1,
+    "gold_answer": "1987",
+    "num_tool_calls": 1,
+    "tools_used": [
+      "search"
+    ],
+    "rounds": 2,
+    "answer_in_results": true,
+    "model_correct": true,
+    "final_text_preview": "<think>\nOkay, let's see. The user is asking for the year the Acropolis of Athens was inscribed as a UNESCO World Heritage Site in Greece.\n\nLooking at the search results, the third result from Britannica says it was designated in 1987. The fourth result from New World Encyclopedia also mentions 1987.",
+    "search_queries": [
+      "Acropolis of Athens UNESCO World Heritage Site inscription year"
+    ]
+  },
+  {
+    "question": "How many countries were original members of NAFTA?",
+    "num_hops": 1,
+    "gold_answer": "3",
+    "num_tool_calls": 0,
+    "tools_used": [],
+    "rounds": 1,
+    "answer_in_results": false,
+    "model_correct": true,
+    "final_text_preview": "<think>\nOkay, the user is asking how many countries were original members of NAFTA. Let me recall what NAFTA is. NAFTA stands for the North American Free Trade Agreement. From what I remember, it was a trade deal between the United States, Canada, and Mexico. But wait, maybe there were more countrie",
+    "search_queries": []
+  },
+  {
+    "question": "How many countries were original members of NAFTA?",
+    "num_hops": 1,
+    "gold_answer": "3",
+    "num_tool_calls": 1,
+    "tools_used": [
+      "search"
+    ],
+    "rounds": 2,
+    "answer_in_results": true,
+    "model_correct": true,
+    "final_text_preview": "<think>\nOkay, let's see. The user asked how many countries were original members of NAFTA. From the search results, I need to find the answer.\n\nLooking at the first result from Wikipedia: \"The NAFTA trade bloc formed one of the largest trade blocs in the world by gross domestic product. The impetus ",
+    "search_queries": [
+      "original members of NAFTA"
+    ]
+  },
+  {
+    "question": "Who was the Vice President of the U.S. President in office during the attack on Pearl Harbor?",
+    "num_hops": 2,
+    "gold_answer": "Henry A. Wallace",
+    "num_tool_calls": 0,
+    "tools_used": [],
+    "rounds": 1,
+    "answer_in_results": false,
+    "model_correct": true,
+    "final_text_preview": "<think>\nOkay, let's see. The user is asking who was the Vice President of the U.S. during the attack on Pearl Harbor. First, I need to recall which President was in office at that time. Pearl Harbor was attacked on December 7, 1941. The President then was Franklin D. Roosevelt. But wait, the questio",
+    "search_queries": []
+  },
+  {
+    "question": "In which country was the inventor of the telephone born?",
+    "num_hops": 2,
+    "gold_answer": "Scotland",
+    "num_tool_calls": 1,
+    "tools_used": [
+      "search"
+    ],
+    "rounds": 2,
+    "answer_in_results": true,
+    "model_correct": true,
+    "final_text_preview": "<think>\nOkay, so the user is asking about the country where the inventor of the telephone was born. From the search results provided, multiple sources mention that Alexander Graham Bell, the inventor of the first practical telephone, was born in Edinburgh, Scotland. Each of the first five search res",
+    "search_queries": [
+      "inventor of the telephone birth country"
+    ]
+  },
+  {
+    "question": "On what date was the space mission that first landed humans on the Moon launched?",
+    "num_hops": 2,
+    "gold_answer": "July 16, 1969",
+    "num_tool_calls": 1,
+    "tools_used": [
+      "search"
+    ],
+    "rounds": 2,
+    "answer_in_results": true,
+    "model_correct": true,
+    "final_text_preview": "<think>\nOkay, so the user is asking for the launch date of the first space mission that landed humans on the Moon. From the search results, I need to find the correct date.\n\nLooking at the tools provided, the search function was used with the query \"Apollo 11 launch date\". The results from the searc",
+    "search_queries": [
+      "Apollo 11 launch date"
+    ]
+  },
+  {
+    "question": "In which country was the inventor of the telephone born?",
+    "num_hops": 2,
+    "gold_answer": "Scotland",
+    "num_tool_calls": 1,
+    "tools_used": [
+      "search"
+    ],
+    "rounds": 2,
+    "answer_in_results": true,
+    "model_correct": true,
+    "final_text_preview": "<think>\nOkay, so the user wants to know the country where the inventor of the telephone was born. From the search results, I see that Alexander Graham Bell is credited as the inventor of the telephone. The results mention he was born in Edinburgh, Scotland. Specifically, result [2] states he was bor",
+    "search_queries": [
+      "Alexander Graham Bell birthplace"
+    ]
+  },
+  {
+    "question": "The 1921 Nobel Prize in Physics winner was born in a city in Germany. What is the capital of the sta",
+    "num_hops": 3,
+    "gold_answer": "Stuttgart",
+    "num_tool_calls": 0,
+    "tools_used": [],
+    "rounds": 1,
+    "answer_in_results": false,
+    "model_correct": true,
+    "final_text_preview": "<think>\nOkay, let's tackle this question step by step. The user is asking for the capital of the state (Bundesland) in Germany where the birthplace of the 1921 Nobel Prize in Physics winner is located.\n\nFirst, I need to identify who won the 1921 Nobel Prize in Physics. From what I remember, Albert E",
+    "search_queries": []
+  },
+  {
+    "question": "What is the home state of the U.S. President who was in office during the launch year of the Mars Pa",
+    "num_hops": 3,
+    "gold_answer": "Arkansas",
+    "num_tool_calls": 1,
+    "tools_used": [
+      "search"
+    ],
+    "rounds": 2,
+    "answer_in_results": false,
+    "model_correct": true,
+    "final_text_preview": "<think>\nOkay, so the Mars Pathfinder mission launched on July 4, 1996. Now I need to find out who the U.S. President was in 1996. Let me think. Bill Clinton was president from 1993 to 2001, so that would include 1996. Therefore, the President during the launch was Bill Clinton. Now, I need to confir",
+    "search_queries": [
+      "Mars Pathfinder mission launch date"
+    ]
+  },
+  {
+    "question": "What river flows through the capital city of the country where the UNESCO World Heritage Site of Ang",
+    "num_hops": 3,
+    "gold_answer": "Mekong River",
+    "num_tool_calls": 1,
+    "tools_used": [
+      "search"
+    ],
+    "rounds": 2,
+    "answer_in_results": true,
+    "model_correct": true,
+    "final_text_preview": "<think>\nOkay, let's see. The user wants to know which river flows through the capital city of the country where Angkor is located. Angkor is in Cambodia, so the capital is Phnom Penh. The search results mention the Mekong River as the main river in that area. The first result says the Mekong is the ",
+    "search_queries": [
+      "river flowing through Phnom Penh Cambodia"
+    ]
+  }
+]

@@ -10,17 +10,26 @@ Score: max(0, 1 - extra_steps / gold_steps)
 
 
 def _count_tool_calls(completion: list[dict]) -> int:
-    """Count tool_use blocks in a completion."""
+    """Count tool calls in a completion.
+
+    Supports TRL format (tool_calls key on assistant messages)
+    and Anthropic format (type=tool_use content blocks).
+    """
     count = 0
     for msg in completion:
         if msg.get("role") != "assistant":
             continue
-        content = msg.get("content", [])
-        if not isinstance(content, list):
+        # TRL / OpenAI format: tool_calls key on the message
+        tool_calls = msg.get("tool_calls", [])
+        if tool_calls:
+            count += len(tool_calls)
             continue
-        for block in content:
-            if isinstance(block, dict) and block.get("type") == "tool_use":
-                count += 1
+        # Anthropic format: type=tool_use blocks in content list
+        content = msg.get("content", [])
+        if isinstance(content, list):
+            for block in content:
+                if isinstance(block, dict) and block.get("type") == "tool_use":
+                    count += 1
     return count
 
 

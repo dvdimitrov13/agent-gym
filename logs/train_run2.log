@@ -1,0 +1,978 @@
+[2026-04-04 13:10:32] INFO train.py:72: Device: cuda, dtype: torch.bfloat16
+[2026-04-04 13:10:32] INFO train.py:73: Model: Qwen/Qwen3-14B
+[2026-04-04 13:10:32] INFO train.py:74: Dataset: data/train_trl.jsonl
+[2026-04-04 13:10:32] INFO train.py:75: Mode: simple (model.generate)
+[2026-04-04 13:10:32] INFO train.py:76: max_completion_length: 1024
+[2026-04-04 13:10:32] INFO train.py:77: max_tool_calling_iterations: 3
+[2026-04-04 13:10:32] INFO train.py:80: Loading tokenizer...
+[2026-04-04 13:10:32] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[2026-04-04 13:10:32] WARNING _http.py:916: Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[2026-04-04 13:10:32] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:10:32] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:10:32] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:10:32] INFO _client.py:1025: HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-14B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+[2026-04-04 13:10:33] INFO _client.py:1025: HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-14B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-04-04 13:10:34] INFO _client.py:1025: HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-14B "HTTP/1.1 200 OK"
+[2026-04-04 13:10:34] INFO train.py:93: Loading model...
+[2026-04-04 13:10:34] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:10:34] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:10:34] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:10:34] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/443 [00:00<?, ?it/s]Loading weights:   0%|          | 1/443 [00:00<03:12,  2.29it/s]Loading weights:   0%|          | 2/443 [00:00<03:21,  2.19it/s]Loading weights:   1%|          | 5/443 [00:01<01:07,  6.46it/s]Loading weights:   3%|▎         | 15/443 [00:01<00:19, 21.85it/s]Loading weights:   4%|▍         | 19/443 [00:01<00:17, 24.86it/s]Loading weights:   6%|▌         | 27/443 [00:01<00:12, 33.48it/s]Loading weights:   8%|▊         | 36/443 [00:01<00:09, 41.49it/s]Loading weights:   9%|▉         | 41/443 [00:01<00:09, 42.36it/s]Loading weights:  11%|█         | 49/443 [00:01<00:08, 45.92it/s]Loading weights:  13%|█▎        | 59/443 [00:01<00:07, 52.18it/s]Loading weights:  15%|█▍        | 65/443 [00:02<00:07, 50.49it/s]Loading weights:  16%|█▌        | 71/443 [00:02<00:07, 49.05it/s]Loading weights:  18%|█▊        | 81/443 [00:02<00:06, 56.01it/s]Loading weights:  20%|█▉        | 87/443 [00:02<00:06, 54.09it/s]Loading weights:  21%|██        | 93/443 [00:02<00:06, 52.04it/s]Loading weights:  23%|██▎       | 103/443 [00:02<00:05, 57.36it/s]Loading weights:  25%|██▍       | 109/443 [00:02<00:06, 53.99it/s]Loading weights:  26%|██▌       | 115/443 [00:03<00:06, 51.94it/s]Loading weights:  28%|██▊       | 125/443 [00:03<00:05, 58.30it/s]Loading weights:  30%|██▉       | 131/443 [00:03<00:05, 55.20it/s]Loading weights:  31%|███       | 137/443 [00:03<00:05, 53.40it/s]Loading weights:  33%|███▎      | 147/443 [00:03<00:04, 59.22it/s]Loading weights:  35%|███▍      | 153/443 [00:03<00:05, 55.77it/s]Loading weights:  36%|███▌      | 159/443 [00:03<00:05, 55.91it/s]Loading weights:  38%|███▊      | 169/443 [00:03<00:04, 59.82it/s]Loading weights:  40%|███▉      | 175/443 [00:04<00:04, 57.41it/s]Loading weights:  41%|████      | 181/443 [00:04<00:04, 56.12it/s]Loading weights:  43%|████▎     | 191/443 [00:04<00:04, 62.19it/s]Loading weights:  45%|████▍     | 198/443 [00:04<00:04, 60.14it/s]Loading weights:  46%|████▌     | 204/443 [00:04<00:04, 52.23it/s]Loading weights:  48%|████▊     | 214/443 [00:04<00:03, 61.41it/s]Loading weights:  50%|█████     | 223/443 [00:04<00:03, 62.29it/s]Loading weights:  52%|█████▏    | 230/443 [00:04<00:03, 62.41it/s]Loading weights:  53%|█████▎    | 237/443 [00:05<00:03, 53.02it/s]Loading weights:  56%|█████▌    | 247/443 [00:05<00:03, 59.12it/s]Loading weights:  58%|█████▊    | 257/443 [00:05<00:02, 62.06it/s]Loading weights:  60%|█████▉    | 264/443 [00:05<00:02, 61.52it/s]Loading weights:  61%|██████    | 271/443 [00:05<00:03, 56.92it/s]Loading weights:  63%|██████▎   | 280/443 [00:05<00:02, 61.29it/s]Loading weights:  65%|██████▌   | 290/443 [00:05<00:02, 59.33it/s]Loading weights:  68%|██████▊   | 301/443 [00:06<00:02, 64.33it/s]Loading weights:  70%|██████▉   | 308/443 [00:06<00:02, 64.11it/s]Loading weights:  71%|███████   | 315/443 [00:06<00:02, 58.06it/s]Loading weights:  73%|███████▎  | 324/443 [00:06<00:01, 61.98it/s]Loading weights:  75%|███████▌  | 334/443 [00:06<00:01, 65.33it/s]Loading weights:  77%|███████▋  | 341/443 [00:06<00:01, 62.76it/s]Loading weights:  79%|███████▊  | 348/443 [00:06<00:01, 54.43it/s]Loading weights:  81%|████████  | 357/443 [00:07<00:01, 59.23it/s]Loading weights:  83%|████████▎ | 366/443 [00:07<00:01, 60.18it/s]Loading weights:  84%|████████▍ | 373/443 [00:07<00:01, 59.45it/s]Loading weights:  86%|████████▌ | 380/443 [00:07<00:01, 56.81it/s]Loading weights:  88%|████████▊ | 390/443 [00:07<00:00, 63.49it/s]Loading weights:  90%|█████████ | 399/443 [00:07<00:00, 63.76it/s]Loading weights:  92%|█████████▏| 409/443 [00:07<00:00, 72.20it/s]Loading weights:  94%|█████████▍| 417/443 [00:07<00:00, 65.27it/s]Loading weights:  96%|█████████▌| 424/443 [00:08<00:00, 57.66it/s]Loading weights:  98%|█████████▊| 434/443 [00:08<00:00, 62.92it/s]Loading weights: 100%|██████████| 443/443 [00:08<00:00, 52.97it/s]
+[2026-04-04 13:10:43] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:10:44] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/generation_config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:10:44] INFO train.py:108: LoRA: r=16, alpha=32
+[2026-04-04 13:10:44] INFO train.py:118: Loading dataset...
+[2026-04-04 13:10:44] INFO train.py:120: Dataset size: 200 examples
+[2026-04-04 13:10:44] INFO train.py:158: Reward functions: ['retrieval_reward', 'efficiency_reward', 'thinking_reward', 'truncation_reward']
+[2026-04-04 13:10:44] INFO train.py:159: Reward weights: [1.0, 0.5, 0.3, 0.3]
+[2026-04-04 13:10:44] INFO train.py:160: Zero variance filtering: True
+[2026-04-04 13:10:44] INFO train.py:172: Creating RemoteGRPOTrainer (server: http://localhost:8000)...
+[2026-04-04 13:10:51] INFO remote_grpo.py:30: Inference server connected: {'status': 'ok', 'model_loaded': True}
+[2026-04-04 13:10:51] INFO remote_grpo.py:36: Weight sync callback added
+[2026-04-04 13:10:51] INFO train.py:194: Trainer created in 7.2s
+[2026-04-04 13:10:51] INFO train.py:214: Zero variance filtering enabled
+[2026-04-04 13:10:51] INFO train.py:219: Resuming from checkpoint: checkpoints/qwen3-14b-grpo-pipeline/checkpoint-200
+The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'bos_token_id': None, 'pad_token_id': 151643}.
+  0%|          | 0/400 [00:00<?, ?it/s][2026-04-04 13:11:31] INFO remote_grpo.py:65: Remote gen: 8 completions in 38.7s (server: 38.6s)
+[2026-04-04 13:11:31] INFO search_env.py:80: search('Glastonbury Festival county town river length mile') cache hit (0.00s)
+[2026-04-04 13:11:31] INFO search_env.py:80: search('Glastonbury Festival county town river length mile') cache hit (0.00s)
+[2026-04-04 13:11:31] INFO search_env.py:80: search('Glastonbury Festival county') cache hit (0.00s)
+[2026-04-04 13:11:31] INFO search_env.py:80: search('county town of Somerset') cache hit (0.00s)
+[2026-04-04 13:11:31] INFO search_env.py:80: search('Nobel Prize in Physics 1921 winner') cache hit (0.00s)
+[2026-04-04 13:11:31] INFO search_env.py:80: search('Nobel Prize in Physics 1921 winner') cache hit (0.00s)
+[2026-04-04 13:11:31] INFO search_env.py:80: search('Nobel Prize in Physics 1921 winner') cache hit (0.00s)
+[2026-04-04 13:12:37] INFO remote_grpo.py:65: Remote gen: 7 completions in 66.3s (server: 66.3s)
+[2026-04-04 13:12:37] INFO search_env.py:80: search('county town of Somerset') cache hit (0.00s)
+[2026-04-04 13:12:54] INFO remote_grpo.py:65: Remote gen: 1 completions in 16.4s (server: 16.4s)
+ 50%|█████     | 201/400 [02:19<02:17,  1.45it/s][2026-04-04 13:13:12] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:13:12] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:13:12] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:13:12] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:13:20] INFO remote_grpo.py:88: Step 201: weights synced
+                                                 {'loss': '-0.05475', 'grad_norm': '3.131', 'learning_rate': '3.333e-06', 'num_tokens': '1.808e+06', 'completions/mean_length': '805.1', 'completions/min_length': '485', 'completions/max_length': '949', 'completions/clipped_ratio': '0.375', 'completions/mean_terminated_length': '848.4', 'completions/min_terminated_length': '485', 'completions/max_terminated_length': '949', 'tools/call_frequency': '1', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.375', 'rewards/retrieval_reward/std': '0.5175', 'rewards/efficiency_reward/mean': '0.875', 'rewards/efficiency_reward/std': '0.3536', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.875', 'rewards/truncation_reward/std': '0.3536', 'reward': '1.225', 'reward_std': '0.6251', 'frac_reward_zero_std': '0', 'entropy': '0.6367', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '138.1', 'epoch': '2.01'}
+ 50%|█████     | 201/400 [02:27<02:17,  1.45it/s][2026-04-04 13:14:49] INFO remote_grpo.py:65: Remote gen: 8 completions in 89.1s (server: 89.1s)
+[2026-04-04 13:14:49] INFO search_env.py:80: search('where did James Joyce write Ulysses') cache hit (0.00s)
+[2026-04-04 13:14:49] INFO search_env.py:80: search('James Joyce Ulysses writing location') cache hit (0.00s)
+[2026-04-04 13:14:49] INFO search_env.py:80: search('where did James Joyce write Ulysses') cache hit (0.00s)
+[2026-04-04 13:14:49] INFO search_env.py:80: search('discovery of element 94') cache hit (0.00s)
+[2026-04-04 13:14:49] INFO search_env.py:80: search('discovery of element 94') cache hit (0.00s)
+[2026-04-04 13:14:49] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=element+94+discovery&limit=1 200
+[2026-04-04 13:14:49] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=element%2094%20discovery 200
+[2026-04-04 13:14:49] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=Element%20discovery&explaintext=0&exintro=0&redirects=1 200
+[2026-04-04 13:14:50] INFO lib.rs:484: response: https://search.brave.com/search?q=element+94+discovery&source=web 429
+[2026-04-04 13:14:51] INFO lib.rs:484: response: https://consent.yahoo.com/v2/collectConsent?sessionId=3_cc-session_41e29dff-d4e5-4f93-86e4-8c99c773b676 200
+[2026-04-04 13:14:52] INFO lib.rs:484: response: https://yandex.com/search/site/?text=element+94+discovery&web=1&searchid=5444848 200
+[2026-04-04 13:14:52] INFO search_env.py:101: search('element 94 discovery') 3 results (3.12s)
+[2026-04-04 13:16:12] INFO remote_grpo.py:65: Remote gen: 6 completions in 80.4s (server: 80.4s)
+ 50%|█████     | 202/400 [05:37<06:53,  2.09s/it][2026-04-04 13:16:30] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:16:30] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:16:30] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:16:31] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:16:39] INFO remote_grpo.py:88: Step 202: weights synced
+                                                 {'loss': '3.874e-07', 'grad_norm': '3.062', 'learning_rate': '4.975e-06', 'num_tokens': '1.818e+06', 'completions/mean_length': '790', 'completions/min_length': '790', 'completions/max_length': '790', 'completions/clipped_ratio': '0.75', 'completions/mean_terminated_length': '790', 'completions/min_terminated_length': '790', 'completions/max_terminated_length': '790', 'tools/call_frequency': '0.75', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.75', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.25', 'rewards/truncation_reward/std': '0.4629', 'reward': '0.6', 'reward_std': '0.09258', 'frac_reward_zero_std': '0', 'entropy': '1.183', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '189.5', 'epoch': '2.02'}
+ 50%|█████     | 202/400 [05:46<06:53,  2.09s/it][2026-04-04 13:17:21] INFO remote_grpo.py:65: Remote gen: 8 completions in 42.4s (server: 42.4s)
+[2026-04-04 13:17:22] INFO search_env.py:80: search('number of nations in first modern Olympic Games At') cache hit (0.00s)
+[2026-04-04 13:17:22] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=number%20of%20nations%20in%20first%20modern%20Olympic%20Games 200
+[2026-04-04 13:17:22] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=number+of+nations+in+first+modern+Olympic+Games&limit=1 200
+[2026-04-04 13:17:22] INFO ddgs.py:192: Error in engine yahoo: DDGSException("RequestError: RequestError('error sending request for url (https://search.yahoo.com/search;_ylt=RDxcz-i7d8vA9IeKDRzEAzJd;_ylu=SHwP6r9sM9TjtcsEuAEbSk34eWZxYDUVPG6rkr6hQEPapd8?p=number+of+nations+in+first+modern+Olympic+Games)', 'https://search.yahoo.com/search;_ylt=RDxcz-i7d8vA9IeKDRzEAzJd;_ylu=SHwP6r9sM9TjtcsEuAEbSk34eWZxYDUVPG6rkr6hQEPapd8?p=number+of+nations+in+first+modern+Olympic+Games')")
+[2026-04-04 13:17:23] INFO lib.rs:484: response: https://www.google.com/search?q=number+of+nations+in+first+modern+Olympic+Games&filter=1&start=0&hl=en-US&lr=lang_en&cr=countryUS 200
+[2026-04-04 13:17:23] INFO search_env.py:101: search('number of nations in first modern Olympic Games') 3 results (1.30s)
+[2026-04-04 13:17:23] INFO search_env.py:80: search('men's 100m world record holder') cache hit (0.00s)
+[2026-04-04 13:17:23] INFO search_env.py:80: search('men's 100-meter sprint world record holder') cache hit (0.00s)
+[2026-04-04 13:17:23] INFO search_env.py:80: search('men's 100-meter sprint world record holder') cache hit (0.00s)
+[2026-04-04 13:17:23] INFO search_env.py:80: search('men's 100m world record holder') cache hit (0.00s)
+[2026-04-04 13:19:05] INFO remote_grpo.py:65: Remote gen: 6 completions in 102.3s (server: 102.3s)
+ 51%|█████     | 203/400 [08:31<12:29,  3.80s/it][2026-04-04 13:19:24] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:19:24] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:19:24] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:19:24] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:19:32] INFO remote_grpo.py:88: Step 203: weights synced
+                                                 {'loss': '-0.06339', 'grad_norm': '1.192', 'learning_rate': '4.95e-06', 'num_tokens': '1.826e+06', 'completions/mean_length': '611.2', 'completions/min_length': '396', 'completions/max_length': '760', 'completions/clipped_ratio': '0.5', 'completions/mean_terminated_length': '573.5', 'completions/min_terminated_length': '396', 'completions/max_terminated_length': '760', 'tools/call_frequency': '0.75', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.75', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '0.75', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '1.575', 'reward_std': '0.6944', 'frac_reward_zero_std': '0.5', 'entropy': '0.7518', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '164', 'epoch': '2.03'}
+ 51%|█████     | 203/400 [08:40<12:29,  3.80s/it][2026-04-04 13:20:16] INFO remote_grpo.py:65: Remote gen: 8 completions in 43.5s (server: 43.5s)
+[2026-04-04 13:20:16] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=first%20modern%20Olympic%20Games%20opening%20date 200
+[2026-04-04 13:20:17] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=first+modern+Olympic+Games+opening+date&limit=1 200
+[2026-04-04 13:20:17] INFO lib.rs:484: response: https://consent.yahoo.com/v2/collectConsent?sessionId=3_cc-session_786337fc-521a-4d0e-b42f-9dd852c686da 200
+[2026-04-04 13:20:19] INFO lib.rs:484: response: https://html.duckduckgo.com/html/ 200
+[2026-04-04 13:20:19] INFO search_env.py:101: search('first modern Olympic Games opening date') 3 results (2.39s)
+[2026-04-04 13:20:19] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=date+of+the+opening+ceremony+of+the+first+modern+Olympic+Games+in+Athens&limit=1 200
+[2026-04-04 13:20:19] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=date%20of%20the%20opening%20ceremony%20of%20the%20first%20modern%20Olympic%20Games%20in%20Athens 200
+[2026-04-04 13:20:19] INFO lib.rs:484: response: https://search.brave.com/search?q=date+of+the+opening+ceremony+of+the+first+modern+Olympic+Games+in+Athens&source=web 429
+[2026-04-04 13:20:20] INFO lib.rs:484: response: https://www.mojeek.com/search?q=date+of+the+opening+ceremony+of+the+first+modern+Olympic+Games+in+Athens 200
+[2026-04-04 13:20:20] INFO search_env.py:101: search('date of the opening ceremony of the first modern O') 5 results (1.90s)
+[2026-04-04 13:20:20] INFO search_env.py:80: search('first modern Olympic Games opening ceremony date') cache hit (0.00s)
+[2026-04-04 13:20:20] INFO search_env.py:80: search('first modern Olympic Games opening ceremony date') cache hit (0.00s)
+[2026-04-04 13:20:20] INFO search_env.py:80: search('Galápagos Islands UNESCO World Heritage Site count') cache hit (0.00s)
+[2026-04-04 13:20:20] INFO search_env.py:80: search('Galápagos Islands UNESCO World Heritage Site count') cache hit (0.00s)
+[2026-04-04 13:21:07] INFO remote_grpo.py:65: Remote gen: 6 completions in 46.2s (server: 46.1s)
+ 51%|█████     | 204/400 [10:32<17:47,  5.45s/it][2026-04-04 13:21:25] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:21:25] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:21:25] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:21:25] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:21:33] INFO remote_grpo.py:88: Step 204: weights synced
+                                                 {'loss': '-0.1609', 'grad_norm': '2.958', 'learning_rate': '4.925e-06', 'num_tokens': '1.834e+06', 'completions/mean_length': '594.1', 'completions/min_length': '359', 'completions/max_length': '731', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '595.7', 'completions/min_terminated_length': '359', 'completions/max_terminated_length': '731', 'tools/call_frequency': '0.75', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.375', 'rewards/retrieval_reward/std': '0.5175', 'rewards/efficiency_reward/mean': '0.75', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '1.2', 'reward_std': '0.6547', 'frac_reward_zero_std': '0', 'entropy': '0.3691', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '111.3', 'epoch': '2.04'}
+ 51%|█████     | 204/400 [10:40<17:47,  5.45s/it][2026-04-04 13:22:24] INFO remote_grpo.py:65: Remote gen: 8 completions in 50.9s (server: 50.9s)
+[2026-04-04 13:22:24] INFO search_env.py:80: search('inventor of the telephone') cache hit (0.00s)
+[2026-04-04 13:22:24] INFO search_env.py:80: search('Alexander Graham Bell birthplace') cache hit (0.00s)
+[2026-04-04 13:22:24] INFO search_env.py:80: search('Leo Tolstoy War and Peace writing location') cache hit (0.00s)
+[2026-04-04 13:22:24] INFO search_env.py:80: search('Leo Tolstoy wrote War and Peace location') cache hit (0.00s)
+[2026-04-04 13:22:24] INFO search_env.py:80: search('Leo Tolstoy wrote War and Peace location') cache hit (0.00s)
+[2026-04-04 13:23:06] INFO remote_grpo.py:65: Remote gen: 5 completions in 42.4s (server: 42.4s)
+[2026-04-04 13:23:06] INFO search_env.py:80: search('Alexander Graham Bell birthplace') cache hit (0.00s)
+[2026-04-04 13:23:06] INFO search_env.py:80: search('Leo Tolstoy War and Peace writing location') cache hit (0.00s)
+[2026-04-04 13:23:08] INFO search_env.py:128: read('https://en.wikipedia.org/wiki/Leo_Tolstoy') fetched page (1.66s)
+[2026-04-04 13:23:08] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Leo_Tolstoy', 'War and Peace location') 185 matches (1.67s)
+[2026-04-04 13:24:18] INFO remote_grpo.py:65: Remote gen: 3 completions in 70.3s (server: 70.3s)
+ 51%|█████▏    | 205/400 [13:44<29:39,  9.13s/it][2026-04-04 13:24:37] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:24:37] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:24:37] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:24:37] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:24:45] INFO remote_grpo.py:88: Step 205: weights synced
+                                                 {'loss': '-0.09627', 'grad_norm': '2.871', 'learning_rate': '4.9e-06', 'num_tokens': '1.843e+06', 'completions/mean_length': '593.5', 'completions/min_length': '427', 'completions/max_length': '754', 'completions/clipped_ratio': '0.25', 'completions/mean_terminated_length': '587.3', 'completions/min_terminated_length': '427', 'completions/max_terminated_length': '754', 'tools/call_frequency': '1', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.625', 'rewards/efficiency_reward/std': '0.5175', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.625', 'rewards/truncation_reward/std': '0.5175', 'reward': '0.65', 'reward_std': '0.207', 'frac_reward_zero_std': '0', 'entropy': '0.3897', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '182.9', 'epoch': '2.05'}
+ 51%|█████▏    | 205/400 [13:53<29:39,  9.13s/it][2026-04-04 13:25:26] INFO remote_grpo.py:65: Remote gen: 8 completions in 40.4s (server: 40.3s)
+[2026-04-04 13:25:26] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Gal%C3%A1pagos+Islands+country&limit=1 200
+[2026-04-04 13:25:26] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Gal%C3%A1pagos%20Islands%20country 200
+[2026-04-04 13:25:28] INFO lib.rs:484: response: https://www.mojeek.com/search?q=Gal%C3%A1pagos+Islands+country 200
+[2026-04-04 13:25:28] INFO search_env.py:101: search('Galápagos Islands country') 3 results (1.76s)
+[2026-04-04 13:25:28] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Gal%C3%A1pagos+Islands+UNESCO+World+Heritage+Site+country&limit=1 200
+[2026-04-04 13:25:28] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Gal%C3%A1pagos%20Islands%20UNESCO%20World%20Heritage%20Site%20country 200
+[2026-04-04 13:25:28] INFO lib.rs:484: response: https://www.google.com/search?q=Gal%C3%A1pagos+Islands+UNESCO+World+Heritage+Site+country&filter=1&start=0&hl=en-US&lr=lang_en&cr=countryUS 200
+[2026-04-04 13:25:29] INFO search_env.py:101: search('Galápagos Islands UNESCO World Heritage Site count') 3 results (1.06s)
+[2026-04-04 13:25:29] INFO search_env.py:80: search('Galápagos Islands country') cache hit (0.00s)
+[2026-04-04 13:25:29] INFO search_env.py:80: search('Coachella Valley Music and Arts Festival first yea') cache hit (0.00s)
+[2026-04-04 13:25:29] INFO search_env.py:80: search('Coachella Valley Music and Arts Festival first yea') cache hit (0.00s)
+[2026-04-04 13:25:29] INFO search_env.py:80: search('Coachella Valley Music and Arts Festival first yea') cache hit (0.00s)
+[2026-04-04 13:25:29] INFO search_env.py:80: search('Coachella Valley Music and Arts Festival first yea') cache hit (0.00s)
+[2026-04-04 13:26:04] INFO remote_grpo.py:65: Remote gen: 7 completions in 35.4s (server: 35.4s)
+[2026-04-04 13:26:07] INFO search_env.py:128: read('https://zippyfacts.com/which-country-do-the-galapagos-island') fetched page (2.74s)
+[2026-04-04 13:26:07] INFO search_env.py:151: read('https://zippyfacts.com/which-country-do-the-galapagos-island', 'country Galápagos') 19 matches (2.74s)
+[2026-04-04 13:26:30] INFO remote_grpo.py:65: Remote gen: 1 completions in 23.2s (server: 23.2s)
+ 52%|█████▏    | 206/400 [15:56<40:22, 12.49s/it][2026-04-04 13:26:49] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:26:49] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:26:49] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:26:49] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:26:57] INFO remote_grpo.py:88: Step 206: weights synced
+                                                 {'loss': '-0.07723', 'grad_norm': '1.423', 'learning_rate': '4.875e-06', 'num_tokens': '1.851e+06', 'completions/mean_length': '614.2', 'completions/min_length': '343', 'completions/max_length': '653', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '608.7', 'completions/min_terminated_length': '343', 'completions/max_terminated_length': '653', 'tools/call_frequency': '1', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.5', 'rewards/retrieval_reward/std': '0.5345', 'rewards/efficiency_reward/mean': '0.875', 'rewards/efficiency_reward/std': '0.3536', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.875', 'rewards/truncation_reward/std': '0.3536', 'reward': '1.35', 'reward_std': '0.6612', 'frac_reward_zero_std': '0.5', 'entropy': '0.3217', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '122.4', 'epoch': '2.06'}
+ 52%|█████▏    | 206/400 [16:05<40:22, 12.49s/it][2026-04-04 13:27:52] INFO remote_grpo.py:65: Remote gen: 8 completions in 54.9s (server: 54.9s)
+[2026-04-04 13:27:52] INFO search_env.py:80: search('original NAFTA signatories 1994') cache hit (0.00s)
+[2026-04-04 13:27:52] INFO search_env.py:80: search('original signatories of NAFTA 1994') cache hit (0.00s)
+[2026-04-04 13:27:52] INFO search_env.py:80: search('original NAFTA signatories 1994') cache hit (0.00s)
+[2026-04-04 13:27:52] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 13:27:52] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=1921+Nobel+Prize+in+Physics+winner+birthplace+present-day+German+state+and+capital&limit=1 200
+[2026-04-04 13:27:53] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=1921%20Nobel%20Prize%20in%20Physics%20winner%20birthplace%20present-day%20German%20state%20and%20capital 200
+[2026-04-04 13:27:53] INFO lib.rs:484: response: https://yandex.com/search/site/?text=1921+Nobel+Prize+in+Physics+winner+birthplace+present-day+German+state+and+capital&web=1&searchid=8791693 200
+[2026-04-04 13:27:53] INFO search_env.py:101: search('1921 Nobel Prize in Physics winner birthplace pres') 3 results (1.09s)
+[2026-04-04 13:28:27] INFO remote_grpo.py:65: Remote gen: 5 completions in 33.9s (server: 33.9s)
+ 52%|█████▏    | 207/400 [17:54<52:52, 16.44s/it][2026-04-04 13:28:47] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:28:47] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:28:47] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:28:47] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:28:55] INFO remote_grpo.py:88: Step 207: weights synced
+                                                 {'loss': '-0.1609', 'grad_norm': '4.858', 'learning_rate': '4.85e-06', 'num_tokens': '1.86e+06', 'completions/mean_length': '647.9', 'completions/min_length': '482', 'completions/max_length': '769', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '646', 'completions/min_terminated_length': '482', 'completions/max_terminated_length': '769', 'tools/call_frequency': '0.625', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.375', 'rewards/retrieval_reward/std': '0.5175', 'rewards/efficiency_reward/mean': '0.625', 'rewards/efficiency_reward/std': '0.5175', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '1.138', 'reward_std': '0.7039', 'frac_reward_zero_std': '0', 'entropy': '0.2904', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '108.1', 'epoch': '2.07'}
+ 52%|█████▏    | 207/400 [18:02<52:52, 16.44s/it][2026-04-04 13:29:39] INFO remote_grpo.py:65: Remote gen: 8 completions in 44.6s (server: 44.6s)
+[2026-04-04 13:29:40] INFO search_env.py:80: search('Mars Pathfinder mission launch date') cache hit (0.00s)
+[2026-04-04 13:29:40] INFO search_env.py:80: search('Mars Pathfinder mission launch date') cache hit (0.00s)
+[2026-04-04 13:29:40] INFO search_env.py:80: search('Mars Pathfinder launch date') cache hit (0.00s)
+[2026-04-04 13:29:40] INFO search_env.py:80: search('Mars Pathfinder launch date') cache hit (0.00s)
+[2026-04-04 13:29:40] INFO search_env.py:80: search('Jonathan Demme birthplace') cache hit (0.00s)
+[2026-04-04 13:29:40] INFO search_env.py:80: search('director of The Silence of the Lambs') cache hit (0.00s)
+[2026-04-04 13:29:40] INFO search_env.py:80: search('director of The Silence of the Lambs') cache hit (0.00s)
+[2026-04-04 13:29:40] INFO search_env.py:80: search('Jonathan Demme birthplace') cache hit (0.00s)
+[2026-04-04 13:30:19] INFO remote_grpo.py:65: Remote gen: 8 completions in 39.0s (server: 39.0s)
+[2026-04-04 13:30:19] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Jonathan_Demme', 'born') 112 matches (0.01s)
+[2026-04-04 13:30:19] INFO search_env.py:80: search('Jonathan Demme birthplace') cache hit (0.00s)
+[2026-04-04 13:30:19] INFO search_env.py:80: search('Jonathan Demme birthplace') cache hit (0.00s)
+[2026-04-04 13:30:19] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Jonathan_Demme', 'born') 112 matches (0.00s)
+[2026-04-04 13:30:53] INFO remote_grpo.py:65: Remote gen: 4 completions in 33.7s (server: 33.7s)
+ 52%|█████▏    | 208/400 [20:18<1:13:26, 22.95s/it][2026-04-04 13:31:11] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:31:11] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:31:11] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:31:11] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:31:19] INFO remote_grpo.py:88: Step 208: weights synced
+                                                   {'loss': '-0.02759', 'grad_norm': '0.3444', 'learning_rate': '4.825e-06', 'num_tokens': '1.869e+06', 'completions/mean_length': '768.5', 'completions/min_length': '744', 'completions/max_length': '842', 'completions/clipped_ratio': '0.5', 'completions/mean_terminated_length': '744', 'completions/min_terminated_length': '744', 'completions/max_terminated_length': '744', 'tools/call_frequency': '1.5', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.5', 'rewards/retrieval_reward/std': '0.5345', 'rewards/efficiency_reward/mean': '1', 'rewards/efficiency_reward/std': '0', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.75', 'rewards/truncation_reward/std': '0.4629', 'reward': '1.375', 'reward_std': '0.4683', 'frac_reward_zero_std': '0.5', 'entropy': '0.2668', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '134.9', 'epoch': '2.08'}
+ 52%|█████▏    | 208/400 [20:26<1:13:26, 22.95s/it][2026-04-04 13:33:17] INFO remote_grpo.py:65: Remote gen: 8 completions in 118.4s (server: 118.3s)
+[2026-04-04 13:33:18] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=1921+Nobel+Prize+in+Physics+winner+mother%27s+first+name&limit=1 200
+[2026-04-04 13:33:18] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=1921%20Nobel%20Prize%20in%20Physics%20winner%20mother%27s%20first%20name 200
+[2026-04-04 13:33:18] INFO lib.rs:484: response: https://html.duckduckgo.com/html/ 200
+[2026-04-04 13:33:18] INFO search_env.py:101: search('1921 Nobel Prize in Physics winner mother's first ') 3 results (1.21s)
+[2026-04-04 13:33:18] INFO search_env.py:80: search('country that administered Zimbabwe before 1980') cache hit (0.00s)
+[2026-04-04 13:34:21] INFO remote_grpo.py:65: Remote gen: 2 completions in 62.1s (server: 62.1s)
+ 52%|█████▏    | 209/400 [23:45<1:52:50, 35.45s/it][2026-04-04 13:34:38] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:34:38] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:34:38] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:34:38] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:34:46] INFO remote_grpo.py:88: Step 209: weights synced
+                                                   {'loss': '-5.96e-08', 'grad_norm': '8.539', 'learning_rate': '4.8e-06', 'num_tokens': '1.881e+06', 'completions/mean_length': '1024', 'completions/min_length': '1024', 'completions/max_length': '1024', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '1024', 'completions/min_terminated_length': '1024', 'completions/max_terminated_length': '1024', 'tools/call_frequency': '0.25', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.25', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.75', 'rewards/truncation_reward/std': '0.4629', 'reward': '0.5', 'reward_std': '0.09258', 'frac_reward_zero_std': '0', 'entropy': '0.7871', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '197.8', 'epoch': '2.09'}
+ 52%|█████▏    | 209/400 [23:53<1:52:50, 35.45s/it][2026-04-04 13:35:32] INFO remote_grpo.py:65: Remote gen: 8 completions in 46.5s (server: 46.5s)
+[2026-04-04 13:35:32] INFO search_env.py:80: search('Glastonbury Festival location England') cache hit (0.00s)
+[2026-04-04 13:35:32] INFO search_env.py:80: search('Glastonbury Festival location') cache hit (0.00s)
+[2026-04-04 13:35:32] INFO search_env.py:80: search('Glastonbury Festival location England') cache hit (0.00s)
+[2026-04-04 13:35:32] INFO search_env.py:80: search('Glastonbury Festival region England') cache hit (0.00s)
+[2026-04-04 13:35:32] INFO search_env.py:80: search('men's 100m sprint world record holder nationality') cache hit (0.00s)
+[2026-04-04 13:35:32] INFO search_env.py:80: search('men's 100m sprint world record holder nationality') cache hit (0.00s)
+[2026-04-04 13:35:32] INFO search_env.py:80: search('men's 100m sprint world record holder nationality') cache hit (0.00s)
+[2026-04-04 13:35:32] INFO search_env.py:80: search('current men's 100m world record holder nationality') cache hit (0.00s)
+[2026-04-04 13:36:11] INFO remote_grpo.py:65: Remote gen: 8 completions in 38.4s (server: 38.4s)
+[2026-04-04 13:36:11] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Men's_100_metres_world_record_', 'current record holder national') 79 matches (0.00s)
+[2026-04-04 13:36:43] INFO remote_grpo.py:65: Remote gen: 1 completions in 32.2s (server: 32.1s)
+ 52%|█████▎    | 210/400 [26:09<2:22:40, 45.05s/it][2026-04-04 13:37:02] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:37:02] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:37:02] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:37:02] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:37:10] INFO remote_grpo.py:88: Step 210: weights synced
+                                                   {'loss': '0.06146', 'grad_norm': '0.3301', 'learning_rate': '4.775e-06', 'num_tokens': '1.89e+06', 'completions/mean_length': '696.6', 'completions/min_length': '528', 'completions/max_length': '734', 'completions/clipped_ratio': '0.25', 'completions/mean_terminated_length': '718.5', 'completions/min_terminated_length': '693', 'completions/max_terminated_length': '734', 'tools/call_frequency': '1.125', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.25', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '1', 'rewards/efficiency_reward/std': '0', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.875', 'rewards/truncation_reward/std': '0.3536', 'reward': '1.163', 'reward_std': '0.497', 'frac_reward_zero_std': '0', 'entropy': '0.1758', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '134.7', 'epoch': '2.1'}
+ 52%|█████▎    | 210/400 [26:17<2:22:40, 45.05s/it][2026-04-04 13:37:53] INFO remote_grpo.py:65: Remote gen: 8 completions in 42.8s (server: 42.8s)
+[2026-04-04 13:37:53] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=1993%20Academy%20Award%20Best%20Picture%20winner%20director 200
+[2026-04-04 13:37:53] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=1993+Academy+Award+Best+Picture+winner+director&limit=1 200
+[2026-04-04 13:37:54] INFO lib.rs:484: response: https://search.yahoo.com/search;_ylt=mP41pH6wKNhVhIMqOkUj2zfl;_ylu=3uEj4dEq-ZtDQnJ9YGhU9ehx101R2IGM_1VKTmkM1wYcwfo?p=1993+Academy+Award+Best+Picture+winner+director 200
+[2026-04-04 13:37:54] INFO lib.rs:484: response: https://search.brave.com/search?q=1993+Academy+Award+Best+Picture+winner+director&source=web 429
+[2026-04-04 13:37:56] INFO lib.rs:484: response: https://www.mojeek.com/search?q=1993+Academy+Award+Best+Picture+winner+director 200
+[2026-04-04 13:37:56] INFO search_env.py:101: search('1993 Academy Award Best Picture winner director') 1 results (3.02s)
+[2026-04-04 13:37:56] INFO search_env.py:80: search('1993 Academy Award Best Picture winner') cache hit (0.00s)
+[2026-04-04 13:37:56] INFO search_env.py:80: search('1993 Academy Award Best Picture winner') cache hit (0.00s)
+[2026-04-04 13:37:56] INFO search_env.py:80: search('1993 Academy Award Best Picture winner director') cache hit (0.00s)
+[2026-04-04 13:38:58] INFO remote_grpo.py:65: Remote gen: 4 completions in 62.5s (server: 62.5s)
+[2026-04-04 13:39:00] INFO search_env.py:128: read('https://en.wikipedia.org/wiki/Academy_Award_for_Best_Directo') fetched page (1.73s)
+[2026-04-04 13:39:00] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Academy_Award_for_Best_Directo', '1993 winner') 98 matches (1.74s)
+[2026-04-04 13:39:00] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Academy_Award_for_Best_Directo', '1993 Best Picture director') 144 matches (0.01s)
+[2026-04-04 13:39:59] INFO remote_grpo.py:65: Remote gen: 2 completions in 58.9s (server: 58.9s)
+ 53%|█████▎    | 211/400 [29:25<3:15:17, 62.00s/it][2026-04-04 13:40:18] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:40:18] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:40:18] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:40:18] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:40:26] INFO remote_grpo.py:88: Step 211: weights synced
+                                                   {'loss': '0.01843', 'grad_norm': '0.2658', 'learning_rate': '4.75e-06', 'num_tokens': '1.899e+06', 'completions/mean_length': '657.5', 'completions/min_length': '391', 'completions/max_length': '952', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '623.4', 'completions/min_terminated_length': '391', 'completions/max_terminated_length': '952', 'tools/call_frequency': '0.75', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.5', 'rewards/efficiency_reward/std': '0.5345', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.75', 'rewards/truncation_reward/std': '0.4629', 'reward': '0.625', 'reward_std': '0.2188', 'frac_reward_zero_std': '0.5', 'entropy': '0.2385', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '186.7', 'epoch': '2.11'}
+ 53%|█████▎    | 211/400 [29:33<3:15:17, 62.00s/it][2026-04-04 13:41:07] INFO remote_grpo.py:65: Remote gen: 8 completions in 40.8s (server: 40.8s)
+[2026-04-04 13:41:07] INFO search_env.py:80: search('Apollo 11 launch date') cache hit (0.00s)
+[2026-04-04 13:41:07] INFO search_env.py:80: search('Apollo 11 launch date') cache hit (0.00s)
+[2026-04-04 13:41:07] INFO search_env.py:80: search('Apollo 11 launch date') cache hit (0.00s)
+[2026-04-04 13:41:07] INFO search_env.py:80: search('first moon landing mission launch date') cache hit (0.00s)
+[2026-04-04 13:41:07] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 13:41:07] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 13:41:07] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 13:41:07] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 13:41:49] INFO remote_grpo.py:65: Remote gen: 8 completions in 41.5s (server: 41.5s)
+[2026-04-04 13:41:49] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Albert_Einstein', 'born') 414 matches (0.02s)
+[2026-04-04 13:42:12] INFO remote_grpo.py:65: Remote gen: 1 completions in 23.7s (server: 23.7s)
+ 53%|█████▎    | 212/400 [31:38<3:45:01, 71.81s/it][2026-04-04 13:42:31] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:42:31] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:42:31] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:42:31] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:42:39] INFO remote_grpo.py:88: Step 212: weights synced
+                                                   {'loss': '-0.09129', 'grad_norm': '0.5021', 'learning_rate': '4.725e-06', 'num_tokens': '1.907e+06', 'completions/mean_length': '624', 'completions/min_length': '358', 'completions/max_length': '662', 'completions/clipped_ratio': '0.25', 'completions/mean_terminated_length': '662', 'completions/min_terminated_length': '662', 'completions/max_terminated_length': '662', 'tools/call_frequency': '1.125', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.625', 'rewards/retrieval_reward/std': '0.5175', 'rewards/efficiency_reward/mean': '1', 'rewards/efficiency_reward/std': '0', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.75', 'rewards/truncation_reward/std': '0.4629', 'reward': '1.5', 'reward_std': '0.4721', 'frac_reward_zero_std': '0', 'entropy': '0.2116', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '123.7', 'epoch': '2.12'}
+ 53%|█████▎    | 212/400 [31:47<3:45:01, 71.81s/it][2026-04-04 13:43:25] INFO remote_grpo.py:65: Remote gen: 8 completions in 45.6s (server: 45.6s)
+[2026-04-04 13:43:25] INFO search_env.py:80: search('1964 Summer Olympics host city') cache hit (0.00s)
+[2026-04-04 13:43:25] INFO search_env.py:80: search('1964 Summer Olympics host city') cache hit (0.00s)
+[2026-04-04 13:43:25] INFO search_env.py:80: search('1964 Summer Olympics host city') cache hit (0.00s)
+[2026-04-04 13:43:25] INFO search_env.py:80: search('1964 Summer Olympics host city') cache hit (0.00s)
+[2026-04-04 13:43:56] INFO remote_grpo.py:65: Remote gen: 4 completions in 30.8s (server: 30.8s)
+ 53%|█████▎    | 213/400 [33:21<3:59:34, 76.87s/it][2026-04-04 13:44:14] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:44:14] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:44:14] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:44:14] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:44:22] INFO remote_grpo.py:88: Step 213: weights synced
+                                                   {'loss': '0', 'grad_norm': '0', 'learning_rate': '4.7e-06', 'num_tokens': '1.915e+06', 'completions/mean_length': '522.5', 'completions/min_length': '392', 'completions/max_length': '653', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '522.5', 'completions/min_terminated_length': '392', 'completions/max_terminated_length': '653', 'tools/call_frequency': '0.5', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.5', 'rewards/efficiency_reward/std': '0.5345', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '0.7', 'reward_std': '0.2673', 'frac_reward_zero_std': '1', 'entropy': '0.1656', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '93.17', 'epoch': '2.13'}
+ 53%|█████▎    | 213/400 [33:29<3:59:34, 76.87s/it][2026-04-04 13:45:21] INFO remote_grpo.py:65: Remote gen: 8 completions in 59.5s (server: 59.5s)
+[2026-04-04 13:45:22] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=capital%20city%20of%20former%20Rhodesia 200
+[2026-04-04 13:45:22] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=capital+city+of+former+Rhodesia&limit=1 200
+[2026-04-04 13:45:23] INFO lib.rs:484: response: https://www.mojeek.com/search?q=capital+city+of+former+Rhodesia 200
+[2026-04-04 13:45:23] INFO search_env.py:101: search('capital city of former Rhodesia') 3 results (1.86s)
+[2026-04-04 13:45:23] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=capital%20city%20of%20Rhodesia%20and%20Zimbabwe 200
+[2026-04-04 13:45:24] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=capital+city+of+Rhodesia+and+Zimbabwe&limit=1 200
+[2026-04-04 13:45:24] INFO lib.rs:484: response: https://search.brave.com/search?q=capital+city+of+Rhodesia+and+Zimbabwe&source=web 200
+[2026-04-04 13:45:24] INFO search_env.py:101: search('capital city of Rhodesia and Zimbabwe') 3 results (1.32s)
+[2026-04-04 13:46:04] INFO remote_grpo.py:65: Remote gen: 2 completions in 39.9s (server: 39.9s)
+ 54%|█████▎    | 214/400 [35:30<4:29:22, 86.89s/it][2026-04-04 13:46:23] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:46:23] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:46:23] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:46:23] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:46:31] INFO remote_grpo.py:88: Step 214: weights synced
+                                                   {'loss': '-0.0719', 'grad_norm': '2.977', 'learning_rate': '4.675e-06', 'num_tokens': '1.923e+06', 'completions/mean_length': '597.6', 'completions/min_length': '548', 'completions/max_length': '827', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '587.9', 'completions/min_terminated_length': '548', 'completions/max_terminated_length': '827', 'tools/call_frequency': '0.25', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.25', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '0.25', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '0.825', 'reward_std': '0.6944', 'frac_reward_zero_std': '0.5', 'entropy': '0.253', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '120.2', 'epoch': '2.14'}
+ 54%|█████▎    | 214/400 [35:38<4:29:22, 86.89s/it][2026-04-04 13:47:15] INFO remote_grpo.py:65: Remote gen: 8 completions in 43.6s (server: 43.6s)
+[2026-04-04 13:47:15] INFO search_env.py:80: search('Glastonbury Festival county town river') cache hit (0.00s)
+[2026-04-04 13:47:15] INFO search_env.py:80: search('Glastonbury Festival county town river') cache hit (0.00s)
+[2026-04-04 13:47:15] INFO search_env.py:80: search('Glastonbury Festival county') cache hit (0.00s)
+[2026-04-04 13:47:15] INFO search_env.py:80: search('Glastonbury Festival county town river') cache hit (0.00s)
+[2026-04-04 13:47:15] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Barcelona+1992+Olympic+Games+opening+ceremony+date&limit=1 200
+[2026-04-04 13:47:15] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Barcelona%201992%20Olympic%20Games%20opening%20ceremony%20date 200
+[2026-04-04 13:47:16] INFO lib.rs:484: response: https://www.mojeek.com/search?q=Barcelona+1992+Olympic+Games+opening+ceremony+date 200
+[2026-04-04 13:47:16] INFO search_env.py:101: search('Barcelona 1992 Olympic Games opening ceremony date') 3 results (1.39s)
+[2026-04-04 13:47:16] INFO search_env.py:80: search('Barcelona 1992 Olympic opening ceremony month') cache hit (0.00s)
+[2026-04-04 13:47:16] INFO search_env.py:80: search('Barcelona 1992 Olympic Games opening ceremony mont') cache hit (0.00s)
+[2026-04-04 13:47:17] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Barcelona+1992+Olympic+opening+ceremony+month&limit=1 200
+[2026-04-04 13:47:17] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Barcelona%201992%20Olympic%20opening%20ceremony%20month 200
+[2026-04-04 13:47:17] INFO lib.rs:484: response: https://search.brave.com/search?q=Barcelona+1992+Olympic+opening+ceremony+month&source=web 429
+[2026-04-04 13:47:18] INFO lib.rs:484: response: https://www.mojeek.com/search?q=Barcelona+1992+Olympic+opening+ceremony+month 200
+[2026-04-04 13:47:18] INFO search_env.py:101: search('Barcelona 1992 Olympic opening ceremony month') 5 results (1.64s)
+[2026-04-04 13:48:05] INFO remote_grpo.py:65: Remote gen: 8 completions in 47.4s (server: 47.4s)
+[2026-04-04 13:48:07] INFO search_env.py:128: read('https://en.wikipedia.org/wiki/Glastonbury') fetched page (1.33s)
+[2026-04-04 13:48:07] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Glastonbury', 'county town river') 221 matches (1.34s)
+[2026-04-04 13:48:09] INFO search_env.py:128: read('https://en.wikipedia.org/wiki/Somerset') fetched page (1.66s)
+[2026-04-04 13:48:09] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Somerset', 'county town river') 252 matches (1.67s)
+[2026-04-04 13:48:09] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Taunton', 'river') 265 matches (0.01s)
+[2026-04-04 13:48:59] INFO remote_grpo.py:65: Remote gen: 3 completions in 50.2s (server: 50.2s)
+ 54%|█████▍    | 215/400 [38:24<5:25:17, 105.50s/it][2026-04-04 13:49:17] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:49:17] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:49:17] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:49:17] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:49:25] INFO remote_grpo.py:88: Step 215: weights synced
+                                                    {'loss': '-0.01421', 'grad_norm': '0.4139', 'learning_rate': '4.65e-06', 'num_tokens': '1.932e+06', 'completions/mean_length': '707.6', 'completions/min_length': '556', 'completions/max_length': '777', 'completions/clipped_ratio': '0.625', 'completions/mean_terminated_length': '715', 'completions/min_terminated_length': '657', 'completions/max_terminated_length': '770', 'tools/call_frequency': '1.375', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.75', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '1', 'rewards/efficiency_reward/std': '0', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.625', 'rewards/truncation_reward/std': '0.5175', 'reward': '1.587', 'reward_std': '0.5097', 'frac_reward_zero_std': '0.5', 'entropy': '0.1518', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '164.6', 'epoch': '2.15'}
+ 54%|█████▍    | 215/400 [38:32<5:25:17, 105.50s/it][2026-04-04 13:50:46] INFO remote_grpo.py:65: Remote gen: 8 completions in 81.3s (server: 81.3s)
+[2026-04-04 13:50:48] INFO search_env.py:80: search('element atomic number 94 discoverer') cache hit (0.00s)
+[2026-04-04 13:50:48] INFO search_env.py:80: search('element atomic number 94') cache hit (0.00s)
+[2026-04-04 13:50:48] INFO search_env.py:80: search('scientist who discovered element 94 birthplace') cache hit (0.00s)
+[2026-04-04 13:50:49] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=year+Salisbury+renamed+Harare+Zimbabwe&limit=1 200
+[2026-04-04 13:50:49] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=year%20Salisbury%20renamed%20Harare%20Zimbabwe 200
+[2026-04-04 13:50:49] INFO lib.rs:484: response: https://www.google.com/search?q=year+Salisbury+renamed+Harare+Zimbabwe&filter=1&start=0&hl=en-US&lr=lang_en&cr=countryUS 200
+[2026-04-04 13:50:49] INFO search_env.py:101: search('year Salisbury renamed Harare Zimbabwe') 5 results (0.94s)
+[2026-04-04 13:50:49] INFO search_env.py:80: search('when was Salisbury renamed Harare') cache hit (0.00s)
+[2026-04-04 13:50:49] INFO search_env.py:80: search('year Salisbury renamed Harare') cache hit (0.00s)
+[2026-04-04 13:50:49] INFO search_env.py:80: search('year Salisbury renamed to Harare Zimbabwe') cache hit (0.00s)
+[2026-04-04 13:52:13] INFO remote_grpo.py:65: Remote gen: 7 completions in 84.0s (server: 84.0s)
+ 54%|█████▍    | 216/400 [41:38<6:27:16, 126.29s/it][2026-04-04 13:52:31] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:52:31] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:52:31] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:52:32] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:52:40] INFO remote_grpo.py:88: Step 216: weights synced
+                                                    {'loss': '-0.02848', 'grad_norm': '5.574', 'learning_rate': '4.625e-06', 'num_tokens': '1.942e+06', 'completions/mean_length': '765.6', 'completions/min_length': '722', 'completions/max_length': '931', 'completions/clipped_ratio': '0.875', 'completions/mean_terminated_length': '722', 'completions/min_terminated_length': '722', 'completions/max_terminated_length': '722', 'tools/call_frequency': '0.875', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.5', 'rewards/retrieval_reward/std': '0.5345', 'rewards/efficiency_reward/mean': '0.875', 'rewards/efficiency_reward/std': '0.3536', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.5', 'rewards/truncation_reward/std': '0.5345', 'reward': '1.237', 'reward_std': '0.4704', 'frac_reward_zero_std': '0.5', 'entropy': '0.1758', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '185', 'epoch': '2.16'}
+ 54%|█████▍    | 216/400 [41:47<6:27:16, 126.29s/it][2026-04-04 13:53:36] INFO remote_grpo.py:65: Remote gen: 8 completions in 56.3s (server: 56.3s)
+[2026-04-04 13:53:36] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=first+successful+Mars+lander+launch+date&limit=1 200
+[2026-04-04 13:53:37] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=first%20successful%20Mars%20lander%20launch%20date 200
+[2026-04-04 13:53:37] INFO lib.rs:484: response: https://yandex.com/search/site/?text=first+successful+Mars+lander+launch+date&web=1&searchid=4176562 200
+[2026-04-04 13:53:37] INFO search_env.py:101: search('first successful Mars lander launch date') 5 results (1.10s)
+[2026-04-04 13:53:37] INFO search_env.py:80: search('first spacecraft to successfully land on Mars laun') cache hit (0.00s)
+[2026-04-04 13:53:37] INFO search_env.py:80: search('first spacecraft to successfully land on Mars laun') cache hit (0.00s)
+[2026-04-04 13:53:37] INFO search_env.py:80: search('first spacecraft to successfully land on Mars laun') cache hit (0.00s)
+[2026-04-04 13:53:37] INFO search_env.py:80: search('discovery of element with atomic number 94') cache hit (0.00s)
+[2026-04-04 13:53:37] INFO search_env.py:80: search('discovery of element 94') cache hit (0.00s)
+[2026-04-04 13:53:37] INFO search_env.py:80: search('who discovered the element with atomic number 94') cache hit (0.00s)
+[2026-04-04 13:53:38] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=discovery%20of%20atomic%20number%2094 200
+[2026-04-04 13:53:38] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=discovery+of+atomic+number+94&limit=1 200
+[2026-04-04 13:53:38] INFO lib.rs:484: response: https://search.brave.com/search?q=discovery+of+atomic+number+94&source=web 429
+[2026-04-04 13:53:39] INFO lib.rs:484: response: https://html.duckduckgo.com/html/ 200
+[2026-04-04 13:53:39] INFO search_env.py:101: search('discovery of atomic number 94') 5 results (1.66s)
+[2026-04-04 13:54:41] INFO remote_grpo.py:65: Remote gen: 8 completions in 61.7s (server: 61.7s)
+[2026-04-04 13:54:41] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Plutonium', 'discovery, discoverers') 177 matches (0.01s)
+[2026-04-04 13:55:48] INFO remote_grpo.py:65: Remote gen: 1 completions in 66.8s (server: 66.8s)
+ 54%|█████▍    | 217/400 [45:13<7:32:22, 148.32s/it][2026-04-04 13:56:05] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:56:05] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:56:06] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:56:06] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:56:14] INFO remote_grpo.py:88: Step 217: weights synced
+                                                    {'loss': '0.02163', 'grad_norm': '0.2548', 'learning_rate': '4.6e-06', 'num_tokens': '1.951e+06', 'completions/mean_length': '666.8', 'completions/min_length': '492', 'completions/max_length': '827', 'completions/clipped_ratio': '0.875', 'completions/mean_terminated_length': '827', 'completions/min_terminated_length': '827', 'completions/max_terminated_length': '827', 'tools/call_frequency': '1.125', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.125', 'rewards/retrieval_reward/std': '0.3536', 'rewards/efficiency_reward/mean': '1', 'rewards/efficiency_reward/std': '0', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.625', 'rewards/truncation_reward/std': '0.5175', 'reward': '0.9625', 'reward_std': '0.3091', 'frac_reward_zero_std': '0', 'entropy': '0.1642', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '204.5', 'epoch': '2.17'}
+ 54%|█████▍    | 217/400 [45:21<7:32:22, 148.32s/it][2026-04-04 13:58:07] INFO remote_grpo.py:65: Remote gen: 8 completions in 113.9s (server: 113.9s)
+[2026-04-04 13:58:08] INFO search_env.py:80: search('discovery of element with atomic number 8') cache hit (0.00s)
+[2026-04-04 13:58:08] INFO search_env.py:80: search('discovery of element with atomic number 8') cache hit (0.00s)
+[2026-04-04 13:58:08] INFO search_env.py:80: search('discovery of element with atomic number 8') cache hit (0.00s)
+[2026-04-04 13:58:08] INFO search_env.py:80: search('discovery of element atomic number 8') cache hit (0.00s)
+[2026-04-04 13:58:08] INFO search_env.py:80: search('discoverer of element 94 birthplace') cache hit (0.00s)
+[2026-04-04 13:58:08] INFO search_env.py:80: search('discoverer of element 94') cache hit (0.00s)
+[2026-04-04 13:59:01] INFO remote_grpo.py:65: Remote gen: 6 completions in 53.1s (server: 53.1s)
+ 55%|█████▍    | 218/400 [48:26<8:06:07, 160.26s/it][2026-04-04 13:59:19] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:59:19] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:59:19] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 13:59:19] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 13:59:27] INFO remote_grpo.py:88: Step 218: weights synced
+                                                    {'loss': '5.96e-08', 'grad_norm': '2.217', 'learning_rate': '4.575e-06', 'num_tokens': '1.962e+06', 'completions/mean_length': '1024', 'completions/min_length': '1024', 'completions/max_length': '1024', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '1024', 'completions/min_terminated_length': '1024', 'completions/max_terminated_length': '1024', 'tools/call_frequency': '0.75', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.75', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.25', 'rewards/truncation_reward/std': '0.4629', 'reward': '0.6', 'reward_std': '0.09258', 'frac_reward_zero_std': '0.5', 'entropy': '0.5321', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '184.4', 'epoch': '2.18'}
+ 55%|█████▍    | 218/400 [48:35<8:06:07, 160.26s/it][2026-04-04 14:00:17] INFO remote_grpo.py:65: Remote gen: 8 completions in 49.4s (server: 49.3s)
+[2026-04-04 14:00:17] INFO search_env.py:80: search('Glastonbury Festival location') cache hit (0.00s)
+[2026-04-04 14:00:17] INFO search_env.py:80: search('Glastonbury Festival location') cache hit (0.00s)
+[2026-04-04 14:00:17] INFO search_env.py:80: search('Glastonbury Festival location') cache hit (0.00s)
+[2026-04-04 14:00:17] INFO search_env.py:80: search('Glastonbury Festival county location') cache hit (0.00s)
+[2026-04-04 14:00:17] INFO search_env.py:80: search('inventor of the telephone birthplace') cache hit (0.00s)
+[2026-04-04 14:00:17] INFO search_env.py:80: search('Alexander Graham Bell birthplace') cache hit (0.00s)
+[2026-04-04 14:00:17] INFO search_env.py:80: search('Alexander Graham Bell birthplace') cache hit (0.00s)
+[2026-04-04 14:00:17] INFO search_env.py:80: search('Alexander Graham Bell birthplace') cache hit (0.00s)
+[2026-04-04 14:01:05] INFO remote_grpo.py:65: Remote gen: 8 completions in 48.8s (server: 48.8s)
+[2026-04-04 14:01:05] INFO search_env.py:80: search('population of Taunton Somerset') cache hit (0.00s)
+[2026-04-04 14:01:06] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=population+of+Taunton&limit=1 200
+[2026-04-04 14:01:06] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=population%20of%20Taunton 200
+[2026-04-04 14:01:07] INFO lib.rs:484: response: https://www.mojeek.com/search?q=population+of+Taunton 200
+[2026-04-04 14:01:07] INFO search_env.py:101: search('population of Taunton') 3 results (1.61s)
+[2026-04-04 14:01:07] INFO search_env.py:80: search('population of Taunton Somerset') cache hit (0.00s)
+[2026-04-04 14:01:07] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Alexander_Graham_Bell', 'born') 260 matches (0.01s)
+[2026-04-04 14:02:23] INFO remote_grpo.py:65: Remote gen: 4 completions in 76.1s (server: 76.1s)
+ 55%|█████▍    | 219/400 [51:49<8:38:13, 171.79s/it][2026-04-04 14:02:41] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:02:42] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:02:42] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:02:42] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:02:50] INFO remote_grpo.py:88: Step 219: weights synced
+                                                    {'loss': '0.00843', 'grad_norm': '0.2743', 'learning_rate': '4.55e-06', 'num_tokens': '1.972e+06', 'completions/mean_length': '776.2', 'completions/min_length': '679', 'completions/max_length': '850', 'completions/clipped_ratio': '0.375', 'completions/mean_terminated_length': '749.6', 'completions/min_terminated_length': '679', 'completions/max_terminated_length': '821', 'tools/call_frequency': '1.5', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.5', 'rewards/retrieval_reward/std': '0.5345', 'rewards/efficiency_reward/mean': '1', 'rewards/efficiency_reward/std': '0', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.625', 'rewards/truncation_reward/std': '0.5175', 'reward': '1.337', 'reward_std': '0.5939', 'frac_reward_zero_std': '0', 'entropy': '0.1432', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '193.1', 'epoch': '2.19'}
+ 55%|█████▍    | 219/400 [51:57<8:38:13, 171.79s/it][2026-04-04 14:04:34] INFO remote_grpo.py:65: Remote gen: 8 completions in 104.8s (server: 104.8s)
+[2026-04-04 14:04:34] INFO search_env.py:80: search('Coachella Valley Music and Arts Festival location') cache hit (0.00s)
+[2026-04-04 14:04:34] INFO search_env.py:80: search('Coachella Valley Music and Arts Festival location') cache hit (0.00s)
+[2026-04-04 14:04:35] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Coachella%20Valley%20Music%20and%20Arts%20Festival%20city 200
+[2026-04-04 14:04:35] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Coachella+Valley+Music+and+Arts+Festival+city&limit=1 200
+[2026-04-04 14:04:36] INFO lib.rs:484: response: https://html.duckduckgo.com/html/ 200
+[2026-04-04 14:04:36] INFO search_env.py:101: search('Coachella Valley Music and Arts Festival city') 3 results (1.34s)
+[2026-04-04 14:04:36] INFO search_env.py:80: search('Coachella Valley Music and Arts Festival location') cache hit (0.00s)
+[2026-04-04 14:04:36] INFO search_env.py:80: search('famous ancient volcano in Edinburgh Scotland') cache hit (0.00s)
+[2026-04-04 14:04:36] INFO search_env.py:80: search('ancient volcano in birthplace of Alexander Graham ') cache hit (0.00s)
+[2026-04-04 14:04:36] INFO search_env.py:80: search('ancient volcano in birthplace of Alexander Graham ') cache hit (0.00s)
+[2026-04-04 14:05:18] INFO remote_grpo.py:65: Remote gen: 7 completions in 42.4s (server: 42.4s)
+ 55%|█████▌    | 220/400 [54:43<8:37:40, 172.56s/it][2026-04-04 14:05:36] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:05:36] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:05:36] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:05:36] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:05:44] INFO remote_grpo.py:88: Step 220: weights synced
+                                                    {'loss': '2.235e-08', 'grad_norm': '4.39', 'learning_rate': '4.525e-06', 'num_tokens': '1.983e+06', 'completions/mean_length': '919', 'completions/min_length': '919', 'completions/max_length': '919', 'completions/clipped_ratio': '0.875', 'completions/mean_terminated_length': '919', 'completions/min_terminated_length': '919', 'completions/max_terminated_length': '919', 'tools/call_frequency': '0.875', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.75', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '0.875', 'rewards/efficiency_reward/std': '0.3536', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.125', 'rewards/truncation_reward/std': '0.3536', 'reward': '1.375', 'reward_std': '0.512', 'frac_reward_zero_std': '0.5', 'entropy': '0.4867', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '165.3', 'epoch': '2.2'}
+ 55%|█████▌    | 220/400 [54:52<8:37:40, 172.56s/it][2026-04-04 14:07:03] INFO remote_grpo.py:65: Remote gen: 8 completions in 78.7s (server: 78.7s)
+[2026-04-04 14:07:03] INFO search_env.py:80: search('Glastonbury Festival location') cache hit (0.00s)
+[2026-04-04 14:07:03] INFO search_env.py:80: search('Glastonbury Festival county') cache hit (0.00s)
+[2026-04-04 14:07:03] INFO search_env.py:80: search('Glastonbury Festival county') cache hit (0.00s)
+[2026-04-04 14:07:03] INFO search_env.py:80: search('Glastonbury Festival county') cache hit (0.00s)
+[2026-04-04 14:07:56] INFO remote_grpo.py:65: Remote gen: 4 completions in 53.5s (server: 53.4s)
+ 55%|█████▌    | 221/400 [57:23<8:23:53, 168.90s/it][2026-04-04 14:08:16] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:08:16] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:08:16] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:08:16] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:08:24] INFO remote_grpo.py:88: Step 221: weights synced
+                                                    {'loss': '-0.0686', 'grad_norm': '2.828', 'learning_rate': '4.5e-06', 'num_tokens': '1.992e+06', 'completions/mean_length': '680.1', 'completions/min_length': '649', 'completions/max_length': '898', 'completions/clipped_ratio': '0.5', 'completions/mean_terminated_length': '649', 'completions/min_terminated_length': '649', 'completions/max_terminated_length': '649', 'tools/call_frequency': '0.5', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.5', 'rewards/efficiency_reward/std': '0.5345', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.625', 'rewards/truncation_reward/std': '0.5175', 'reward': '0.5875', 'reward_std': '0.1768', 'frac_reward_zero_std': '0.5', 'entropy': '0.1829', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '150.3', 'epoch': '2.21'}
+ 55%|█████▌    | 221/400 [57:31<8:23:53, 168.90s/it][2026-04-04 14:09:36] INFO remote_grpo.py:65: Remote gen: 8 completions in 72.3s (server: 72.3s)
+[2026-04-04 14:09:36] INFO search_env.py:80: search('Coachella Valley Music and Arts Festival location') cache hit (0.00s)
+[2026-04-04 14:09:36] INFO search_env.py:80: search('Coachella Valley Music and Arts Festival location') cache hit (0.00s)
+[2026-04-04 14:09:36] INFO search_env.py:80: search('Coachella Valley Music and Arts Festival location') cache hit (0.00s)
+[2026-04-04 14:09:36] INFO search_env.py:80: search('Coachella Valley Music and Arts Festival location') cache hit (0.00s)
+[2026-04-04 14:09:36] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 14:09:36] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner birthplace') cache hit (0.00s)
+[2026-04-04 14:09:36] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner birthplace') cache hit (0.00s)
+[2026-04-04 14:10:35] INFO remote_grpo.py:65: Remote gen: 7 completions in 58.3s (server: 58.3s)
+[2026-04-04 14:10:35] INFO search_env.py:80: search('Albert Einstein birthplace') cache hit (0.00s)
+[2026-04-04 14:10:52] INFO remote_grpo.py:65: Remote gen: 1 completions in 17.7s (server: 17.7s)
+ 56%|█████▌    | 222/400 [1:00:18<8:26:50, 170.85s/it][2026-04-04 14:11:11] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:11:11] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:11:12] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:11:12] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:11:20] INFO remote_grpo.py:88: Step 222: weights synced
+                                                      {'loss': '-0.01391', 'grad_norm': '8.385', 'learning_rate': '4.475e-06', 'num_tokens': '2.001e+06', 'completions/mean_length': '788.6', 'completions/min_length': '687', 'completions/max_length': '936', 'completions/clipped_ratio': '0.75', 'completions/mean_terminated_length': '811.5', 'completions/min_terminated_length': '687', 'completions/max_terminated_length': '936', 'tools/call_frequency': '1', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.5', 'rewards/retrieval_reward/std': '0.5345', 'rewards/efficiency_reward/mean': '0.875', 'rewards/efficiency_reward/std': '0.3536', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.875', 'rewards/truncation_reward/std': '0.3536', 'reward': '1.35', 'reward_std': '0.6612', 'frac_reward_zero_std': '0.5', 'entropy': '0.135', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '165.9', 'epoch': '2.22'}
+ 56%|█████▌    | 222/400 [1:00:27<8:26:50, 170.85s/it][2026-04-04 14:13:00] INFO remote_grpo.py:65: Remote gen: 8 completions in 100.9s (server: 100.9s)
+[2026-04-04 14:13:01] INFO search_env.py:80: search('Jonathan Demme birthplace') cache hit (0.00s)
+[2026-04-04 14:13:01] INFO search_env.py:80: search('Jonathan Demme birthplace') cache hit (0.00s)
+[2026-04-04 14:13:01] INFO search_env.py:80: search('director of The Silence of the Lambs') cache hit (0.00s)
+[2026-04-04 14:13:01] INFO search_env.py:80: search('1992 Summer Olympics host country') cache hit (0.00s)
+[2026-04-04 14:13:01] INFO search_env.py:80: search('when did Madrid become the capital of Spain') cache hit (0.00s)
+[2026-04-04 14:13:01] INFO search_env.py:80: search('1992 Summer Olympics host country') cache hit (0.00s)
+[2026-04-04 14:13:37] INFO remote_grpo.py:65: Remote gen: 5 completions in 36.7s (server: 36.7s)
+ 56%|█████▌    | 223/400 [1:03:03<8:18:37, 169.03s/it][2026-04-04 14:13:56] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:13:56] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:13:56] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:13:56] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:14:04] INFO remote_grpo.py:88: Step 223: weights synced
+                                                      {'loss': '-0.00744', 'grad_norm': '13.87', 'learning_rate': '4.45e-06', 'num_tokens': '2.012e+06', 'completions/mean_length': '910.9', 'completions/min_length': '901', 'completions/max_length': '937', 'completions/clipped_ratio': '0.625', 'completions/mean_terminated_length': '901', 'completions/min_terminated_length': '901', 'completions/max_terminated_length': '901', 'tools/call_frequency': '0.75', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.125', 'rewards/retrieval_reward/std': '0.3536', 'rewards/efficiency_reward/mean': '0.625', 'rewards/efficiency_reward/std': '0.5175', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.75', 'rewards/truncation_reward/std': '0.4629', 'reward': '0.8125', 'reward_std': '0.4104', 'frac_reward_zero_std': '0', 'entropy': '0.3551', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '155.3', 'epoch': '2.23'}
+ 56%|█████▌    | 223/400 [1:03:12<8:18:37, 169.03s/it][2026-04-04 14:14:39] INFO remote_grpo.py:65: Remote gen: 8 completions in 34.7s (server: 34.7s)
+[2026-04-04 14:14:39] INFO search_env.py:80: search('Dostoevsky Crime and Punishment writing location') cache hit (0.00s)
+[2026-04-04 14:14:39] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Dostoevsky%20Crime%20and%20Punishment%20city 200
+[2026-04-04 14:14:40] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Dostoevsky+Crime+and+Punishment+city&limit=1 200
+[2026-04-04 14:14:41] INFO lib.rs:484: response: https://www.mojeek.com/search?q=Dostoevsky+Crime+and+Punishment+city 200
+[2026-04-04 14:14:41] INFO search_env.py:101: search('Dostoevsky Crime and Punishment city') 3 results (1.80s)
+[2026-04-04 14:14:41] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=where+did+Dostoevsky+write+Crime+and+Punishment&limit=1 200
+[2026-04-04 14:14:41] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=where%20did%20Dostoevsky%20write%20Crime%20and%20Punishment 200
+[2026-04-04 14:14:42] INFO lib.rs:484: response: https://consent.yahoo.com/v2/collectConsent?sessionId=3_cc-session_587f9b51-fe5d-4f62-8268-4811fd4372c7 200
+[2026-04-04 14:14:43] INFO lib.rs:484: response: https://yandex.com/search/site/?text=where+did+Dostoevsky+write+Crime+and+Punishment&web=1&searchid=6024047 200
+[2026-04-04 14:14:43] INFO search_env.py:101: search('where did Dostoevsky write Crime and Punishment') 3 results (2.03s)
+[2026-04-04 14:14:43] INFO search_env.py:80: search('Dostoevsky Crime and Punishment location') cache hit (0.00s)
+[2026-04-04 14:14:43] INFO search_env.py:80: search('Yangtze River coastal city before East China Sea') cache hit (0.00s)
+[2026-04-04 14:14:43] INFO search_env.py:80: search('Yangtze River coastal city before East China Sea') cache hit (0.00s)
+[2026-04-04 14:14:43] INFO search_env.py:80: search('Yangtze River coastal city East China Sea') cache hit (0.00s)
+[2026-04-04 14:14:43] INFO search_env.py:80: search('Yangtze River coastal city before East China Sea') cache hit (0.00s)
+[2026-04-04 14:15:17] INFO remote_grpo.py:65: Remote gen: 8 completions in 34.1s (server: 34.1s)
+[2026-04-04 14:15:18] INFO search_env.py:128: read('https://en.wikipedia.org/wiki/Crime_and_Punishment') fetched page (0.96s)
+[2026-04-04 14:15:18] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Crime_and_Punishment', 'city wrote Crime and Punishmen') 192 matches (0.96s)
+[2026-04-04 14:15:51] INFO remote_grpo.py:65: Remote gen: 1 completions in 33.2s (server: 33.2s)
+ 56%|█████▌    | 224/400 [1:05:17<7:45:25, 158.66s/it][2026-04-04 14:16:10] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:16:10] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:16:10] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:16:10] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:16:18] INFO remote_grpo.py:88: Step 224: weights synced
+                                                      {'loss': '-2.98e-08', 'grad_norm': '0.7227', 'learning_rate': '4.425e-06', 'num_tokens': '2.02e+06', 'completions/mean_length': '583', 'completions/min_length': '583', 'completions/max_length': '583', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '583', 'completions/min_terminated_length': '583', 'completions/max_terminated_length': '583', 'tools/call_frequency': '1.125', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.75', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '1', 'rewards/efficiency_reward/std': '0', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.875', 'rewards/truncation_reward/std': '0.3536', 'reward': '1.663', 'reward_std': '0.4518', 'frac_reward_zero_std': '0.5', 'entropy': '0.1753', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '124.3', 'epoch': '2.24'}
+ 56%|█████▌    | 224/400 [1:05:26<7:45:25, 158.66s/it][2026-04-04 14:16:59] INFO remote_grpo.py:65: Remote gen: 8 completions in 40.8s (server: 40.8s)
+[2026-04-04 14:16:59] INFO search_env.py:80: search('elevation of Harare Zimbabwe') cache hit (0.00s)
+[2026-04-04 14:16:59] INFO search_env.py:80: search('elevation of Harare Zimbabwe') cache hit (0.00s)
+[2026-04-04 14:16:59] INFO search_env.py:80: search('elevation of Harare Zimbabwe') cache hit (0.00s)
+[2026-04-04 14:16:59] INFO search_env.py:80: search('elevation of Harare Zimbabwe meters') cache hit (0.00s)
+[2026-04-04 14:16:59] INFO search_env.py:80: search('USMCA effective date') cache hit (0.00s)
+[2026-04-04 14:17:00] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=trade+agreement+replacing+NAFTA&limit=1 200
+[2026-04-04 14:17:00] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=trade%20agreement%20replacing%20NAFTA 200
+[2026-04-04 14:17:01] INFO lib.rs:484: response: https://html.duckduckgo.com/html/ 200
+[2026-04-04 14:17:01] INFO search_env.py:101: search('trade agreement replacing NAFTA') 3 results (1.31s)
+[2026-04-04 14:17:01] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=USMCA+effective+date&limit=1 200
+[2026-04-04 14:17:01] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=USMCA%20effective%20date 200
+[2026-04-04 14:17:02] INFO lib.rs:484: response: https://html.duckduckgo.com/html/ 200
+[2026-04-04 14:17:02] INFO search_env.py:101: search('USMCA effective date') 1 results (1.23s)
+[2026-04-04 14:17:02] INFO search_env.py:80: search('USMCA implementation date') cache hit (0.00s)
+[2026-04-04 14:17:50] INFO remote_grpo.py:65: Remote gen: 8 completions in 47.9s (server: 47.9s)
+ 56%|█████▋    | 225/400 [1:07:16<7:08:07, 146.78s/it][2026-04-04 14:18:09] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:18:09] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:18:09] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:18:09] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:18:17] INFO remote_grpo.py:88: Step 225: weights synced
+                                                      {'loss': '0', 'grad_norm': '0', 'learning_rate': '4.4e-06', 'num_tokens': '2.029e+06', 'completions/mean_length': '711.8', 'completions/min_length': '644', 'completions/max_length': '779', 'completions/clipped_ratio': '0.375', 'completions/mean_terminated_length': '752', 'completions/min_terminated_length': '644', 'completions/max_terminated_length': '779', 'tools/call_frequency': '1', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.5', 'rewards/retrieval_reward/std': '0.5345', 'rewards/efficiency_reward/mean': '1', 'rewards/efficiency_reward/std': '0', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '1.45', 'reward_std': '0.5345', 'frac_reward_zero_std': '1', 'entropy': '0.1476', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '109.1', 'epoch': '2.25'}
+ 56%|█████▋    | 225/400 [1:07:24<7:08:07, 146.78s/it][2026-04-04 14:20:08] INFO remote_grpo.py:65: Remote gen: 8 completions in 111.0s (server: 111.0s)
+[2026-04-04 14:20:08] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=major%20river%20through%20Chongqing%20China 200
+[2026-04-04 14:20:09] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=major+river+through+Chongqing+China&limit=1 200
+[2026-04-04 14:20:09] INFO lib.rs:484: response: https://search.brave.com/search?q=major+river+through+Chongqing+China&source=web 429
+[2026-04-04 14:20:09] INFO lib.rs:484: response: https://www.google.com/search?q=major+river+through+Chongqing+China&filter=1&start=0&hl=en-US&lr=lang_en&cr=countryUS 200
+[2026-04-04 14:20:10] INFO search_env.py:101: search('major river through Chongqing China') 3 results (1.65s)
+[2026-04-04 14:20:10] INFO search_env.py:80: search('major river through Chongqing China empty body wat') cache hit (0.00s)
+[2026-04-04 14:20:44] INFO remote_grpo.py:65: Remote gen: 2 completions in 34.4s (server: 34.4s)
+ 56%|█████▋    | 226/400 [1:10:10<7:29:43, 155.08s/it][2026-04-04 14:21:03] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:21:03] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:21:03] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:21:03] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:21:11] INFO remote_grpo.py:88: Step 226: weights synced
+                                                      {'loss': '-4.47e-08', 'grad_norm': '5.662', 'learning_rate': '4.375e-06', 'num_tokens': '2.041e+06', 'completions/mean_length': '1024', 'completions/min_length': '1024', 'completions/max_length': '1024', 'completions/clipped_ratio': '0.375', 'completions/mean_terminated_length': '1024', 'completions/min_terminated_length': '1024', 'completions/max_terminated_length': '1024', 'tools/call_frequency': '0.25', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.125', 'rewards/retrieval_reward/std': '0.3536', 'rewards/efficiency_reward/mean': '0.25', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.75', 'rewards/truncation_reward/std': '0.4629', 'reward': '0.625', 'reward_std': '0.42', 'frac_reward_zero_std': '0.5', 'entropy': '0.3388', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '165.4', 'epoch': '2.26'}
+ 56%|█████▋    | 226/400 [1:10:19<7:29:43, 155.08s/it][2026-04-04 14:22:05] INFO remote_grpo.py:65: Remote gen: 8 completions in 54.0s (server: 54.0s)
+[2026-04-04 14:22:05] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 14:22:05] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 14:22:05] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 14:22:32] INFO remote_grpo.py:65: Remote gen: 3 completions in 26.0s (server: 26.0s)
+[2026-04-04 14:22:32] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Albert_Einstein', 'born') 414 matches (0.02s)
+[2026-04-04 14:22:32] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Albert_Einstein', 'born') 414 matches (0.02s)
+[2026-04-04 14:23:00] INFO remote_grpo.py:65: Remote gen: 2 completions in 28.8s (server: 28.8s)
+ 57%|█████▋    | 227/400 [1:12:26<7:10:37, 149.35s/it][2026-04-04 14:23:19] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:23:19] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:23:19] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:23:19] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:23:27] INFO remote_grpo.py:88: Step 227: weights synced
+                                                      {'loss': '-0.06298', 'grad_norm': '1.906', 'learning_rate': '4.35e-06', 'num_tokens': '2.049e+06', 'completions/mean_length': '560.5', 'completions/min_length': '475', 'completions/max_length': '703', 'completions/clipped_ratio': '0.25', 'completions/mean_terminated_length': '513', 'completions/min_terminated_length': '475', 'completions/max_terminated_length': '703', 'tools/call_frequency': '0.625', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.25', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '0.375', 'rewards/efficiency_reward/std': '0.5175', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.75', 'rewards/truncation_reward/std': '0.4629', 'reward': '0.8125', 'reward_std': '0.5449', 'frac_reward_zero_std': '0.5', 'entropy': '0.1961', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '126.4', 'epoch': '2.27'}
+ 57%|█████▋    | 227/400 [1:12:34<7:10:37, 149.35s/it][2026-04-04 14:24:12] INFO remote_grpo.py:65: Remote gen: 8 completions in 45.1s (server: 45.1s)
+[2026-04-04 14:24:12] INFO search_env.py:80: search('French astronomer co-discoverer of helium 1868 sol') cache hit (0.00s)
+[2026-04-04 14:24:12] INFO search_env.py:80: search('French astronomer co-discoverer of helium 1868 sol') cache hit (0.00s)
+[2026-04-04 14:24:12] INFO search_env.py:80: search('French astronomer co-discoverer of helium 1868 sol') cache hit (0.00s)
+[2026-04-04 14:24:12] INFO search_env.py:80: search('1964 Summer Olympics opening ceremony date') cache hit (0.00s)
+[2026-04-04 14:24:12] INFO search_env.py:80: search('1964 Summer Olympics opening ceremony date') cache hit (0.00s)
+[2026-04-04 14:24:12] INFO search_env.py:80: search('1964 Summer Olympics opening ceremony date') cache hit (0.00s)
+[2026-04-04 14:25:01] INFO remote_grpo.py:65: Remote gen: 6 completions in 48.7s (server: 48.7s)
+[2026-04-04 14:25:04] INFO search_env.py:128: read('https://en.wikipedia.org/wiki/1964_Summer_Olympics_closing_c') fetched page (2.88s)
+[2026-04-04 14:25:04] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/1964_Summer_Olympics_closing_c', 'opening ceremony date') 69 matches (2.88s)
+[2026-04-04 14:25:48] INFO remote_grpo.py:65: Remote gen: 1 completions in 44.1s (server: 44.1s)
+ 57%|█████▋    | 228/400 [1:15:14<7:23:54, 154.85s/it][2026-04-04 14:26:07] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:26:07] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:26:07] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:26:07] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:26:15] INFO remote_grpo.py:88: Step 228: weights synced
+                                                      {'loss': '-0.204', 'grad_norm': '1.104', 'learning_rate': '4.325e-06', 'num_tokens': '2.058e+06', 'completions/mean_length': '639.8', 'completions/min_length': '351', 'completions/max_length': '753', 'completions/clipped_ratio': '0.375', 'completions/mean_terminated_length': '585.4', 'completions/min_terminated_length': '351', 'completions/max_terminated_length': '753', 'tools/call_frequency': '0.875', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.75', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.875', 'rewards/truncation_reward/std': '0.3536', 'reward': '0.7875', 'reward_std': '0.2326', 'frac_reward_zero_std': '0', 'entropy': '0.1408', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '158.4', 'epoch': '2.28'}
+ 57%|█████▋    | 228/400 [1:15:22<7:23:54, 154.85s/it][2026-04-04 14:28:04] INFO remote_grpo.py:65: Remote gen: 8 completions in 109.5s (server: 109.5s)
+[2026-04-04 14:28:06] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=2025+neo-noir+black+comedy+film+Joel+Coen+director&limit=1 200
+[2026-04-04 14:28:06] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=2025%20neo-noir%20black%20comedy%20film%20Joel%20Coen%20director 200
+[2026-04-04 14:28:07] INFO lib.rs:484: response: https://www.mojeek.com/search?q=2025+neo-noir+black+comedy+film+Joel+Coen+director 200
+[2026-04-04 14:28:07] INFO search_env.py:101: search('2025 neo-noir black comedy film Joel Coen director') 5 results (1.75s)
+[2026-04-04 14:28:08] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=2025+neo-noir+black+comedy+film+Ethan+Coen&limit=1 200
+[2026-04-04 14:28:08] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=2025%20neo-noir%20black%20comedy%20film%20Ethan%20Coen 200
+[2026-04-04 14:28:08] INFO lib.rs:484: response: https://consent.yahoo.com/v2/collectConsent?sessionId=3_cc-session_7f080eee-0206-409a-83f9-3d592f57e236 200
+[2026-04-04 14:28:09] INFO lib.rs:484: response: https://yandex.com/search/site/?text=2025+neo-noir+black+comedy+film+Ethan+Coen&web=1&searchid=5830767 200
+[2026-04-04 14:28:09] INFO search_env.py:101: search('2025 neo-noir black comedy film Ethan Coen') 5 results (1.94s)
+[2026-04-04 14:28:09] INFO search_env.py:80: search('northernmost USMCA member nation capital city rive') cache hit (0.00s)
+[2026-04-04 14:28:09] INFO search_env.py:80: search('length of Ottawa River in kilometers') cache hit (0.00s)
+[2026-04-04 14:28:09] INFO search_env.py:80: search('length of Ottawa River in kilometers') cache hit (0.00s)
+[2026-04-04 14:29:12] INFO remote_grpo.py:65: Remote gen: 5 completions in 62.7s (server: 62.7s)
+ 57%|█████▋    | 229/400 [1:18:38<8:02:58, 169.47s/it][2026-04-04 14:29:31] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:29:31] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:29:31] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:29:31] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:29:39] INFO remote_grpo.py:88: Step 229: weights synced
+                                                      {'loss': '-7.451e-08', 'grad_norm': '4.043', 'learning_rate': '4.3e-06', 'num_tokens': '2.07e+06', 'completions/mean_length': '1024', 'completions/min_length': '1024', 'completions/max_length': '1024', 'completions/clipped_ratio': '0.25', 'completions/mean_terminated_length': '1024', 'completions/min_terminated_length': '1024', 'completions/max_terminated_length': '1024', 'tools/call_frequency': '0.625', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.375', 'rewards/retrieval_reward/std': '0.5175', 'rewards/efficiency_reward/mean': '0.625', 'rewards/efficiency_reward/std': '0.5175', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.375', 'rewards/truncation_reward/std': '0.5175', 'reward': '0.95', 'reward_std': '0.5855', 'frac_reward_zero_std': '0', 'entropy': '0.3357', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '194.5', 'epoch': '2.29'}
+ 57%|█████▋    | 229/400 [1:18:46<8:02:58, 169.47s/it][2026-04-04 14:30:28] INFO remote_grpo.py:65: Remote gen: 8 completions in 49.5s (server: 49.5s)
+[2026-04-04 14:30:28] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=directors+of+No+Country+for+Old+Men&limit=1 200
+[2026-04-04 14:30:29] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=directors%20of%20No%20Country%20for%20Old%20Men 200
+[2026-04-04 14:30:29] INFO lib.rs:484: response: https://yandex.com/search/site/?text=directors+of+No+Country+for+Old+Men&web=1&searchid=3946072 200
+[2026-04-04 14:30:29] INFO search_env.py:101: search('directors of No Country for Old Men') 3 results (1.07s)
+[2026-04-04 14:30:29] INFO search_env.py:80: search('Gordon Coen university teaching subject') cache hit (0.00s)
+[2026-04-04 14:30:29] INFO search_env.py:80: search('JFK televised address Cuban Missile Crisis date') cache hit (0.00s)
+[2026-04-04 14:30:29] INFO search_env.py:80: search('JFK Cuban Missile Crisis speech date') cache hit (0.00s)
+[2026-04-04 14:30:29] INFO search_env.py:80: search('JFK televised address Cuban Missile Crisis date') cache hit (0.00s)
+[2026-04-04 14:30:29] INFO search_env.py:80: search('JFK televised address Cuban Missile Crisis date') cache hit (0.00s)
+[2026-04-04 14:31:14] INFO remote_grpo.py:65: Remote gen: 6 completions in 44.6s (server: 44.6s)
+[2026-04-04 14:31:14] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Joel+Coen+father+teaching+subject&limit=1 200
+[2026-04-04 14:31:14] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Joel%20Coen%20father%20teaching%20subject 200
+[2026-04-04 14:31:15] INFO lib.rs:484: response: https://html.duckduckgo.com/html/ 200
+[2026-04-04 14:31:15] INFO search_env.py:101: search('Joel Coen father teaching subject') 3 results (1.24s)
+[2026-04-04 14:31:30] INFO remote_grpo.py:65: Remote gen: 1 completions in 15.0s (server: 15.0s)
+ 57%|█████▊    | 230/400 [1:20:57<7:34:32, 160.43s/it][2026-04-04 14:31:50] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:31:50] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:31:50] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:31:50] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:31:58] INFO remote_grpo.py:88: Step 230: weights synced
+                                                      {'loss': '-0.06164', 'grad_norm': '7.212', 'learning_rate': '4.275e-06', 'num_tokens': '2.079e+06', 'completions/mean_length': '711.6', 'completions/min_length': '449', 'completions/max_length': '845', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '698.6', 'completions/min_terminated_length': '449', 'completions/max_terminated_length': '845', 'tools/call_frequency': '0.875', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.375', 'rewards/retrieval_reward/std': '0.5175', 'rewards/efficiency_reward/mean': '0.75', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.875', 'rewards/truncation_reward/std': '0.3536', 'reward': '1.163', 'reward_std': '0.6128', 'frac_reward_zero_std': '0', 'entropy': '0.1687', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '129.9', 'epoch': '2.3'}
+ 57%|█████▊    | 230/400 [1:21:05<7:34:32, 160.43s/it][2026-04-04 14:32:33] INFO remote_grpo.py:65: Remote gen: 8 completions in 34.4s (server: 34.4s)
+[2026-04-04 14:32:33] INFO search_env.py:80: search('men's 100m sprint world record holder nationality') cache hit (0.00s)
+[2026-04-04 14:32:33] INFO search_env.py:80: search('current men's 100m world record holder nationality') cache hit (0.00s)
+[2026-04-04 14:32:33] INFO search_env.py:80: search('current men's 100m world record holder nationality') cache hit (0.00s)
+[2026-04-04 14:32:33] INFO search_env.py:80: search('current men's 100m world record holder') cache hit (0.00s)
+[2026-04-04 14:32:33] INFO search_env.py:80: search('former name of Zimbabwe') cache hit (0.00s)
+[2026-04-04 14:32:33] INFO search_env.py:80: search('former name of Zimbabwe') cache hit (0.00s)
+[2026-04-04 14:32:33] INFO search_env.py:80: search('former name of Zimbabwe') cache hit (0.00s)
+[2026-04-04 14:33:08] INFO remote_grpo.py:65: Remote gen: 7 completions in 34.9s (server: 34.9s)
+[2026-04-04 14:33:08] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Men's_100_metres_world_record_', 'current world record holder na') 82 matches (0.00s)
+[2026-04-04 14:34:03] INFO remote_grpo.py:65: Remote gen: 1 completions in 54.8s (server: 54.8s)
+ 58%|█████▊    | 231/400 [1:23:28<7:24:23, 157.78s/it][2026-04-04 14:34:21] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:34:21] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:34:22] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:34:22] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:34:30] INFO remote_grpo.py:88: Step 231: weights synced
+                                                      {'loss': '-0.09771', 'grad_norm': '2.598', 'learning_rate': '4.25e-06', 'num_tokens': '2.087e+06', 'completions/mean_length': '577.4', 'completions/min_length': '314', 'completions/max_length': '615', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '572', 'completions/min_terminated_length': '314', 'completions/max_terminated_length': '615', 'tools/call_frequency': '1', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.25', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '0.875', 'rewards/efficiency_reward/std': '0.3536', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.875', 'rewards/truncation_reward/std': '0.3536', 'reward': '1.1', 'reward_std': '0.5555', 'frac_reward_zero_std': '0', 'entropy': '0.1248', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '142.1', 'epoch': '2.31'}
+ 58%|█████▊    | 231/400 [1:23:37<7:24:23, 157.78s/it][2026-04-04 14:35:23] INFO remote_grpo.py:65: Remote gen: 8 completions in 53.0s (server: 53.0s)
+[2026-04-04 14:35:23] INFO search_env.py:80: search('USMCA entry into force date') cache hit (0.00s)
+[2026-04-04 14:35:23] INFO search_env.py:80: search('USMCA entry into force date') cache hit (0.00s)
+[2026-04-04 14:35:23] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=trade+agreement+replacing+NAFTA+entry+into+force+date&limit=1 200
+[2026-04-04 14:35:23] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=trade%20agreement%20replacing%20NAFTA%20entry%20into%20force%20date 200
+[2026-04-04 14:35:23] INFO lib.rs:484: response: https://www.google.com/search?q=trade+agreement+replacing+NAFTA+entry+into+force+date&filter=1&start=0&hl=en-US&lr=lang_en&cr=countryUS 200
+[2026-04-04 14:35:24] INFO search_env.py:101: search('trade agreement replacing NAFTA entry into force d') 3 results (1.10s)
+[2026-04-04 14:35:24] INFO search_env.py:80: search('USMCA entry into force date') cache hit (0.00s)
+[2026-04-04 14:35:24] INFO search_env.py:80: search('Zimbabwe former name before 1980') cache hit (0.00s)
+[2026-04-04 14:35:24] INFO search_env.py:80: search('Zimbabwe previous name before 1980') cache hit (0.00s)
+[2026-04-04 14:35:24] INFO search_env.py:80: search('Zimbabwe previous name before 1980') cache hit (0.00s)
+[2026-04-04 14:35:59] INFO remote_grpo.py:65: Remote gen: 7 completions in 35.8s (server: 35.7s)
+ 58%|█████▊    | 232/400 [1:25:25<6:47:22, 145.49s/it][2026-04-04 14:36:18] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:36:18] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:36:18] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:36:18] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:36:26] INFO remote_grpo.py:88: Step 232: weights synced
+                                                      {'loss': '-0.06251', 'grad_norm': '5.465', 'learning_rate': '4.225e-06', 'num_tokens': '2.096e+06', 'completions/mean_length': '660.1', 'completions/min_length': '453', 'completions/max_length': '736', 'completions/clipped_ratio': '0.375', 'completions/mean_terminated_length': '679.4', 'completions/min_terminated_length': '453', 'completions/max_terminated_length': '736', 'tools/call_frequency': '0.875', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.75', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '0.875', 'rewards/efficiency_reward/std': '0.3536', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '1.638', 'reward_std': '0.5939', 'frac_reward_zero_std': '0.5', 'entropy': '0.1779', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '107.5', 'epoch': '2.32'}
+ 58%|█████▊    | 232/400 [1:25:34<6:47:22, 145.49s/it][2026-04-04 14:37:14] INFO remote_grpo.py:65: Remote gen: 8 completions in 47.3s (server: 47.3s)
+[2026-04-04 14:37:14] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner birthplace') cache hit (0.00s)
+[2026-04-04 14:37:14] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 14:37:14] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 14:37:14] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 14:37:14] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Lutetia+capital+country&limit=1 200
+[2026-04-04 14:37:14] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Lutetia%20capital%20country 200
+[2026-04-04 14:37:15] INFO lib.rs:484: response: https://consent.yahoo.com/v2/collectConsent?sessionId=3_cc-session_c56ae31a-b927-4668-82f5-193cf1eefa9e 200
+[2026-04-04 14:37:16] INFO lib.rs:484: response: https://yandex.com/search/site/?text=Lutetia+capital+country&web=1&searchid=8569602 200
+[2026-04-04 14:37:16] INFO search_env.py:101: search('Lutetia capital country') 1 results (1.96s)
+[2026-04-04 14:37:16] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=longest%20river%20in%20France%20length 200
+[2026-04-04 14:37:16] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=longest+river+in+France+length&limit=1 200
+[2026-04-04 14:37:17] INFO lib.rs:484: response: https://www.google.com/search?q=longest+river+in+France+length&filter=1&start=0&hl=en-US&lr=lang_en&cr=countryUS 200
+[2026-04-04 14:37:17] INFO search_env.py:101: search('longest river in France length') 1 results (1.10s)
+[2026-04-04 14:38:22] INFO remote_grpo.py:65: Remote gen: 6 completions in 64.9s (server: 64.9s)
+[2026-04-04 14:38:22] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Albert_Einstein', 'born') 414 matches (0.02s)
+[2026-04-04 14:38:22] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Albert_Einstein', 'born') 414 matches (0.02s)
+[2026-04-04 14:38:22] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Albert_Einstein', 'born') 414 matches (0.02s)
+[2026-04-04 14:38:22] INFO search_env.py:80: search('longest river in France length') cache hit (0.00s)
+[2026-04-04 14:39:00] INFO remote_grpo.py:65: Remote gen: 4 completions in 37.3s (server: 37.3s)
+ 58%|█████▊    | 233/400 [1:28:25<7:13:55, 155.90s/it][2026-04-04 14:39:19] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:39:19] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:39:19] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:39:19] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:39:27] INFO remote_grpo.py:88: Step 233: weights synced
+                                                      {'loss': '-0.1695', 'grad_norm': '7.708', 'learning_rate': '4.2e-06', 'num_tokens': '2.105e+06', 'completions/mean_length': '789.9', 'completions/min_length': '421', 'completions/max_length': '944', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '788', 'completions/min_terminated_length': '421', 'completions/max_terminated_length': '944', 'tools/call_frequency': '1.25', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.625', 'rewards/retrieval_reward/std': '0.5175', 'rewards/efficiency_reward/mean': '0.75', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.5', 'rewards/truncation_reward/std': '0.5345', 'reward': '1.3', 'reward_std': '0.5952', 'frac_reward_zero_std': '0', 'entropy': '0.118', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '170.9', 'epoch': '2.33'}
+ 58%|█████▊    | 233/400 [1:28:34<7:13:55, 155.90s/it][2026-04-04 14:40:41] INFO remote_grpo.py:65: Remote gen: 8 completions in 74.6s (server: 74.6s)
+[2026-04-04 14:40:41] INFO search_env.py:80: search('Glastonbury Festival county town population') cache hit (0.00s)
+[2026-04-04 14:40:41] INFO search_env.py:80: search('Glastonbury Festival county') cache hit (0.00s)
+[2026-04-04 14:40:41] INFO search_env.py:80: search('population of Taunton Somerset') cache hit (0.00s)
+[2026-04-04 14:40:41] INFO search_env.py:80: search('Glastonbury Festival county') cache hit (0.00s)
+[2026-04-04 14:40:41] INFO search_env.py:80: search('first spacecraft to successfully land on Mars laun') cache hit (0.00s)
+[2026-04-04 14:40:41] INFO search_env.py:80: search('first spacecraft to successfully land on Mars laun') cache hit (0.00s)
+[2026-04-04 14:40:41] INFO search_env.py:80: search('first successful Mars landing spacecraft launch da') cache hit (0.00s)
+[2026-04-04 14:42:19] INFO remote_grpo.py:65: Remote gen: 7 completions in 97.7s (server: 97.7s)
+ 58%|█████▊    | 234/400 [1:31:44<7:46:52, 168.75s/it][2026-04-04 14:42:37] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:42:37] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:42:37] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:42:37] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:42:45] INFO remote_grpo.py:88: Step 234: weights synced
+                                                      {'loss': '-0.03116', 'grad_norm': '6.158', 'learning_rate': '4.175e-06', 'num_tokens': '2.114e+06', 'completions/mean_length': '711.9', 'completions/min_length': '672', 'completions/max_length': '811', 'completions/clipped_ratio': '0.875', 'completions/mean_terminated_length': '672', 'completions/min_terminated_length': '672', 'completions/max_terminated_length': '672', 'tools/call_frequency': '0.875', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.125', 'rewards/retrieval_reward/std': '0.3536', 'rewards/efficiency_reward/mean': '0.875', 'rewards/efficiency_reward/std': '0.3536', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.625', 'rewards/truncation_reward/std': '0.5175', 'reward': '0.9', 'reward_std': '0.3586', 'frac_reward_zero_std': '0', 'entropy': '0.2111', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '189.2', 'epoch': '2.34'}
+ 58%|█████▊    | 234/400 [1:31:53<7:46:52, 168.75s/it][2026-04-04 14:44:11] INFO remote_grpo.py:65: Remote gen: 8 completions in 86.2s (server: 86.2s)
+[2026-04-04 14:44:11] INFO search_env.py:80: search('current men's 100m world record holder') cache hit (0.00s)
+[2026-04-04 14:44:11] INFO search_env.py:80: search('men's 100m world record holder') cache hit (0.00s)
+[2026-04-04 14:44:11] INFO search_env.py:80: search('current men's 100m world record holder') cache hit (0.00s)
+[2026-04-04 14:44:11] INFO search_env.py:80: search('men's 100-meter sprint world record holder') cache hit (0.00s)
+[2026-04-04 14:45:23] INFO remote_grpo.py:65: Remote gen: 4 completions in 72.1s (server: 72.1s)
+ 59%|█████▉    | 235/400 [1:34:50<7:58:00, 173.82s/it][2026-04-04 14:45:43] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:45:43] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:45:43] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:45:43] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:45:51] INFO remote_grpo.py:88: Step 235: weights synced
+                                                      {'loss': '0', 'grad_norm': '0', 'learning_rate': '4.15e-06', 'num_tokens': '2.124e+06', 'completions/mean_length': '760', 'completions/min_length': '760', 'completions/max_length': '760', 'completions/clipped_ratio': '0.5', 'completions/mean_terminated_length': '760', 'completions/min_terminated_length': '760', 'completions/max_terminated_length': '760', 'tools/call_frequency': '0.5', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.5', 'rewards/efficiency_reward/std': '0.5345', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.5', 'rewards/truncation_reward/std': '0.5345', 'reward': '0.55', 'reward_std': '0.1069', 'frac_reward_zero_std': '1', 'entropy': '0.1083', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '176.4', 'epoch': '2.35'}
+ 59%|█████▉    | 235/400 [1:34:58<7:58:00, 173.82s/it][2026-04-04 14:47:07] INFO remote_grpo.py:65: Remote gen: 8 completions in 76.2s (server: 76.2s)
+[2026-04-04 14:47:08] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Barcelona%20Summer%20Olympics%20opening%20ceremony%20date 200
+[2026-04-04 14:47:08] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Barcelona+Summer+Olympics+opening+ceremony+date&limit=1 200
+[2026-04-04 14:47:08] INFO lib.rs:484: response: https://search.brave.com/search?q=Barcelona+Summer+Olympics+opening+ceremony+date&source=web 200
+[2026-04-04 14:47:08] INFO search_env.py:101: search('Barcelona Summer Olympics opening ceremony date') 1 results (1.27s)
+[2026-04-04 14:47:08] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner birthplace') cache hit (0.00s)
+[2026-04-04 14:47:40] INFO remote_grpo.py:65: Remote gen: 2 completions in 32.0s (server: 32.0s)
+ 59%|█████▉    | 236/400 [1:37:06<7:24:28, 162.61s/it][2026-04-04 14:47:59] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:47:59] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:47:59] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:47:59] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:48:07] INFO remote_grpo.py:88: Step 236: weights synced
+                                                      {'loss': '-0.09066', 'grad_norm': '19.87', 'learning_rate': '4.125e-06', 'num_tokens': '2.133e+06', 'completions/mean_length': '721.6', 'completions/min_length': '678', 'completions/max_length': '902', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '710', 'completions/min_terminated_length': '678', 'completions/max_terminated_length': '902', 'tools/call_frequency': '0.25', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.125', 'rewards/retrieval_reward/std': '0.3536', 'rewards/efficiency_reward/mean': '0.25', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '0.7', 'reward_std': '0.5345', 'frac_reward_zero_std': '0', 'entropy': '0.1118', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '127.1', 'epoch': '2.36'}
+ 59%|█████▉    | 236/400 [1:37:15<7:24:28, 162.61s/it][2026-04-04 14:48:52] INFO remote_grpo.py:65: Remote gen: 8 completions in 44.7s (server: 44.7s)
+[2026-04-04 14:48:52] INFO search_env.py:80: search('Alexander Graham Bell birthplace') cache hit (0.00s)
+[2026-04-04 14:48:52] INFO search_env.py:80: search('Alexander Graham Bell birthplace') cache hit (0.00s)
+[2026-04-04 14:48:52] INFO search_env.py:80: search('Alexander Graham Bell birthplace') cache hit (0.00s)
+[2026-04-04 14:48:52] INFO search_env.py:80: search('Alexander Graham Bell birthplace') cache hit (0.00s)
+[2026-04-04 14:48:52] INFO search_env.py:80: search('Swedish chemist isolated oxygen 1772') cache hit (0.00s)
+[2026-04-04 14:48:52] INFO search_env.py:80: search('Swedish chemist isolated oxygen 1772') cache hit (0.00s)
+[2026-04-04 14:48:52] INFO search_env.py:80: search('Swedish chemist first isolate oxygen 1772') cache hit (0.00s)
+[2026-04-04 14:49:21] INFO remote_grpo.py:65: Remote gen: 7 completions in 28.9s (server: 28.9s)
+[2026-04-04 14:49:21] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Alexander_Graham_Bell', 'born city') 219 matches (0.01s)
+[2026-04-04 14:49:38] INFO remote_grpo.py:65: Remote gen: 1 completions in 17.5s (server: 17.5s)
+ 59%|█████▉    | 237/400 [1:39:04<6:45:30, 149.27s/it][2026-04-04 14:49:57] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:49:57] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:49:58] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:49:58] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:50:06] INFO remote_grpo.py:88: Step 237: weights synced
+                                                      {'loss': '-0.07327', 'grad_norm': '0.7212', 'learning_rate': '4.1e-06', 'num_tokens': '2.142e+06', 'completions/mean_length': '598.8', 'completions/min_length': '394', 'completions/max_length': '628', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '594.6', 'completions/min_terminated_length': '394', 'completions/max_terminated_length': '628', 'tools/call_frequency': '1', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.875', 'rewards/retrieval_reward/std': '0.3536', 'rewards/efficiency_reward/mean': '0.875', 'rewards/efficiency_reward/std': '0.3536', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.875', 'rewards/truncation_reward/std': '0.3536', 'reward': '1.725', 'reward_std': '0.5258', 'frac_reward_zero_std': '0', 'entropy': '0.1197', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '108.8', 'epoch': '2.37'}
+ 59%|█████▉    | 237/400 [1:39:13<6:45:30, 149.27s/it][2026-04-04 14:50:56] INFO remote_grpo.py:65: Remote gen: 8 completions in 50.6s (server: 50.6s)
+[2026-04-04 14:50:56] INFO search_env.py:80: search('inventor of the telephone') cache hit (0.00s)
+[2026-04-04 14:50:56] INFO search_env.py:80: search('inventor of the telephone birthplace') cache hit (0.00s)
+[2026-04-04 14:50:56] INFO search_env.py:80: search('inventor of the telephone') cache hit (0.00s)
+[2026-04-04 14:50:56] INFO search_env.py:80: search('Alexander Graham Bell birthplace') cache hit (0.00s)
+[2026-04-04 14:50:56] INFO search_env.py:80: search('Alexander Graham Bell birthplace') cache hit (0.00s)
+[2026-04-04 14:50:56] INFO search_env.py:80: search('inventor of the telephone birthplace') cache hit (0.00s)
+[2026-04-04 14:50:56] INFO search_env.py:80: search('Alexander Graham Bell birthplace country') cache hit (0.00s)
+[2026-04-04 14:51:48] INFO remote_grpo.py:65: Remote gen: 7 completions in 51.3s (server: 51.3s)
+[2026-04-04 14:51:49] INFO search_env.py:128: read('https://en.wikipedia.org/wiki/Invention_of_the_telephone') fetched page (1.05s)
+[2026-04-04 14:51:49] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Invention_of_the_telephone', 'Alexander Graham Bell birthpla') 127 matches (1.06s)
+[2026-04-04 14:51:49] INFO search_env.py:80: search('Alexander Graham Bell birthplace') cache hit (0.00s)
+[2026-04-04 14:51:49] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Alexander_Graham_Bell', 'born') 260 matches (0.01s)
+[2026-04-04 14:52:34] INFO remote_grpo.py:65: Remote gen: 3 completions in 45.5s (server: 45.4s)
+ 60%|█████▉    | 238/400 [1:42:00<7:04:20, 157.17s/it][2026-04-04 14:52:53] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:52:53] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:52:53] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:52:53] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:53:01] INFO remote_grpo.py:88: Step 238: weights synced
+                                                      {'loss': '-0.04415', 'grad_norm': '0.3961', 'learning_rate': '4.075e-06', 'num_tokens': '2.151e+06', 'completions/mean_length': '737.2', 'completions/min_length': '464', 'completions/max_length': '901', 'completions/clipped_ratio': '0.375', 'completions/mean_terminated_length': '663.6', 'completions/min_terminated_length': '464', 'completions/max_terminated_length': '778', 'tools/call_frequency': '1.25', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.625', 'rewards/retrieval_reward/std': '0.5175', 'rewards/efficiency_reward/mean': '0.875', 'rewards/efficiency_reward/std': '0.3536', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.625', 'rewards/truncation_reward/std': '0.5175', 'reward': '1.4', 'reward_std': '0.6211', 'frac_reward_zero_std': '0', 'entropy': '0.1064', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '166.2', 'epoch': '2.38'}
+ 60%|█████▉    | 238/400 [1:42:08<7:04:20, 157.17s/it][2026-04-04 14:53:58] INFO remote_grpo.py:65: Remote gen: 8 completions in 57.2s (server: 57.1s)
+[2026-04-04 14:53:59] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 14:53:59] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner') cache hit (0.00s)
+[2026-04-04 14:53:59] INFO search_env.py:80: search('1921 Nobel Prize in Physics winner birthplace') cache hit (0.00s)
+[2026-04-04 14:53:59] INFO search_env.py:80: search('Nobel Prize in Physics 1969 winner') cache hit (0.00s)
+[2026-04-04 14:53:59] INFO search_env.py:80: search('Nobel Prize in Physics 1969 winner') cache hit (0.00s)
+[2026-04-04 14:53:59] INFO search_env.py:80: search('Nobel Prize in Physics 1969 winner') cache hit (0.00s)
+[2026-04-04 14:53:59] INFO search_env.py:80: search('Nobel Prize in Physics 1969 winner') cache hit (0.00s)
+[2026-04-04 14:54:54] INFO remote_grpo.py:65: Remote gen: 7 completions in 55.1s (server: 55.1s)
+[2026-04-04 14:54:54] INFO search_env.py:151: read('https://en.wikipedia.org/wiki/Albert_Einstein', 'born, birthplace') 269 matches (0.02s)
+[2026-04-04 14:55:47] INFO remote_grpo.py:65: Remote gen: 1 completions in 53.1s (server: 53.1s)
+ 60%|█████▉    | 239/400 [1:45:12<7:29:39, 167.57s/it][2026-04-04 14:56:05] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:56:05] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:56:05] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:56:05] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:56:13] INFO remote_grpo.py:88: Step 239: weights synced
+                                                      {'loss': '-0.01284', 'grad_norm': '0.1772', 'learning_rate': '4.05e-06', 'num_tokens': '2.16e+06', 'completions/mean_length': '737.9', 'completions/min_length': '450', 'completions/max_length': '922', 'completions/clipped_ratio': '0.5', 'completions/mean_terminated_length': '727.5', 'completions/min_terminated_length': '450', 'completions/max_terminated_length': '922', 'tools/call_frequency': '1', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.375', 'rewards/retrieval_reward/std': '0.5175', 'rewards/efficiency_reward/mean': '0.875', 'rewards/efficiency_reward/std': '0.3536', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.875', 'rewards/truncation_reward/std': '0.3536', 'reward': '1.225', 'reward_std': '0.6251', 'frac_reward_zero_std': '0', 'entropy': '0.09927', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '182.6', 'epoch': '2.39'}
+ 60%|█████▉    | 239/400 [1:45:20<7:29:39, 167.57s/it][2026-04-04 14:56:55] INFO remote_grpo.py:65: Remote gen: 8 completions in 41.8s (server: 41.8s)
+[2026-04-04 14:56:55] INFO search_env.py:80: search('major river in Chongqing China') cache hit (0.00s)
+[2026-04-04 14:56:55] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=major%20river%20flowing%20through%20Chongqing%20China 200
+[2026-04-04 14:56:55] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=major+river+flowing+through+Chongqing+China&limit=1 200
+[2026-04-04 14:56:57] INFO lib.rs:484: response: https://www.mojeek.com/search?q=major+river+flowing+through+Chongqing+China 200
+[2026-04-04 14:56:57] INFO search_env.py:101: search('major river flowing through Chongqing China') 1 results (1.82s)
+[2026-04-04 14:56:57] INFO search_env.py:80: search('F. Scott Fitzgerald wrote The Great Gatsby locatio') cache hit (0.00s)
+[2026-04-04 14:56:57] INFO search_env.py:80: search('F. Scott Fitzgerald wrote The Great Gatsby where') cache hit (0.00s)
+[2026-04-04 14:56:57] INFO search_env.py:80: search('F. Scott Fitzgerald wrote The Great Gatsby where') cache hit (0.00s)
+[2026-04-04 14:56:57] INFO search_env.py:80: search('where did F. Scott Fitzgerald write The Great Gats') cache hit (0.00s)
+[2026-04-04 14:58:08] INFO remote_grpo.py:65: Remote gen: 6 completions in 71.4s (server: 71.4s)
+ 60%|██████    | 240/400 [1:47:33<7:05:57, 159.73s/it][2026-04-04 14:58:26] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:58:26] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:58:26] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 14:58:27] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 14:58:34] INFO remote_grpo.py:88: Step 240: weights synced
+                                                      {'loss': '-0.1291', 'grad_norm': '2.091', 'learning_rate': '4.025e-06', 'num_tokens': '2.169e+06', 'completions/mean_length': '673', 'completions/min_length': '386', 'completions/max_length': '946', 'completions/clipped_ratio': '0.375', 'completions/mean_terminated_length': '636.4', 'completions/min_terminated_length': '386', 'completions/max_terminated_length': '946', 'tools/call_frequency': '0.75', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.125', 'rewards/retrieval_reward/std': '0.3536', 'rewards/efficiency_reward/mean': '0.75', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '0.95', 'reward_std': '0.4629', 'frac_reward_zero_std': '0', 'entropy': '0.1197', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '132.2', 'epoch': '2.4'}
+ 60%|██████    | 240/400 [1:47:42<7:05:57, 159.73s/it][2026-04-04 14:59:34] INFO remote_grpo.py:65: Remote gen: 8 completions in 60.0s (server: 60.0s)
+[2026-04-04 14:59:35] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=element%20with%20atomic%20number%2094 200
+[2026-04-04 14:59:36] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=element+with+atomic+number+94&limit=1 200
+[2026-04-04 14:59:36] INFO lib.rs:484: response: https://www.google.com/search?q=element+with+atomic+number+94&filter=1&start=0&hl=en-US&lr=lang_en&cr=countryUS 200
+[2026-04-04 14:59:36] INFO search_env.py:101: search('element with atomic number 94') 1 results (1.90s)
+[2026-04-04 14:59:36] INFO search_env.py:80: search('discovery of element with atomic number 94') cache hit (0.00s)
+[2026-04-04 14:59:36] INFO search_env.py:80: search('discovery of element 94') cache hit (0.00s)
+[2026-04-04 14:59:37] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Who%20discovered%20the%20element%20with%20atomic%20number%2094%3F 200
+[2026-04-04 14:59:37] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Who+discovered+the+element+with+atomic+number+94%3F&limit=1 200
+[2026-04-04 14:59:38] INFO lib.rs:484: response: https://www.mojeek.com/search?q=Who+discovered+the+element+with+atomic+number+94%3F 200
+[2026-04-04 14:59:38] INFO search_env.py:101: search('Who discovered the element with atomic number 94?') 3 results (1.41s)
+[2026-04-04 15:00:57] INFO remote_grpo.py:65: Remote gen: 4 completions in 79.8s (server: 79.8s)
+ 60%|██████    | 241/400 [1:50:24<7:11:39, 162.89s/it][2026-04-04 15:01:17] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:01:17] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:01:17] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:01:17] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:01:25] INFO remote_grpo.py:88: Step 241: weights synced
+                                                      {'loss': '0', 'grad_norm': '0', 'learning_rate': '4e-06', 'num_tokens': '2.178e+06', 'completions/mean_length': '685.5', 'completions/min_length': '556', 'completions/max_length': '936', 'completions/clipped_ratio': '0.5', 'completions/mean_terminated_length': '556', 'completions/min_terminated_length': '556', 'completions/max_terminated_length': '556', 'tools/call_frequency': '0.5', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.5', 'rewards/efficiency_reward/std': '0.5345', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '0.7', 'reward_std': '0.2673', 'frac_reward_zero_std': '1', 'entropy': '0.1452', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '161', 'epoch': '2.41'}
+ 60%|██████    | 241/400 [1:50:32<7:11:39, 162.89s/it][2026-04-04 15:02:17] INFO remote_grpo.py:65: Remote gen: 8 completions in 52.7s (server: 52.7s)
+[2026-04-04 15:02:18] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Victor%20Hugo%20wrote%20Les%20Mis%C3%A9rables%20in%20exile%20city 200
+[2026-04-04 15:02:18] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Victor+Hugo+wrote+Les+Mis%C3%A9rables+in+exile+city&limit=1 200
+[2026-04-04 15:02:18] INFO lib.rs:484: response: https://search.brave.com/search?q=Victor+Hugo+wrote+Les+Mis%C3%A9rables+in+exile+city&source=web 429
+[2026-04-04 15:02:18] INFO lib.rs:484: response: https://search.yahoo.com/search;_ylt=rNYKfM9bxZ9zwUkCtiyvBQ-8;_ylu=T5REDaUbHObl_3hJtNITngIxVqVWmFZybjCe-IeEGMjDfyU?p=Victor+Hugo+wrote+Les+Mis%C3%A9rables+in+exile+city 200
+[2026-04-04 15:02:19] INFO lib.rs:484: response: https://www.google.com/search?q=Victor+Hugo+wrote+Les+Mis%C3%A9rables+in+exile+city&filter=1&start=0&hl=en-US&lr=lang_en&cr=countryUS 200
+[2026-04-04 15:02:20] INFO search_env.py:101: search('Victor Hugo wrote Les Misérables in exile city') 3 results (2.64s)
+[2026-04-04 15:02:20] INFO search_env.py:80: search('Victor Hugo wrote Les Misérables exile city') cache hit (0.00s)
+[2026-04-04 15:02:20] INFO search_env.py:80: search('Victor Hugo wrote Les Misérables exile city') cache hit (0.00s)
+[2026-04-04 15:02:20] INFO search_env.py:80: search('Victor Hugo wrote Les Misérables exile city') cache hit (0.00s)
+[2026-04-04 15:02:57] INFO remote_grpo.py:65: Remote gen: 4 completions in 36.6s (server: 36.6s)
+ 60%|██████    | 242/400 [1:52:22<6:34:09, 149.68s/it][2026-04-04 15:03:15] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:03:15] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:03:16] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:03:16] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:03:23] INFO remote_grpo.py:88: Step 242: weights synced
+                                                      {'loss': '0', 'grad_norm': '0', 'learning_rate': '3.975e-06', 'num_tokens': '2.186e+06', 'completions/mean_length': '594.4', 'completions/min_length': '452', 'completions/max_length': '745', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '572.9', 'completions/min_terminated_length': '452', 'completions/max_terminated_length': '745', 'tools/call_frequency': '0.5', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.5', 'rewards/efficiency_reward/std': '0.5345', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '0.7', 'reward_std': '0.2673', 'frac_reward_zero_std': '1', 'entropy': '0.1442', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '109.6', 'epoch': '2.42'}
+ 60%|██████    | 242/400 [1:52:31<6:34:09, 149.68s/it][2026-04-04 15:04:27] INFO remote_grpo.py:65: Remote gen: 8 completions in 63.1s (server: 63.1s)
+[2026-04-04 15:04:27] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Cecil%20Rhodes%20birth%20date 200
+[2026-04-04 15:04:27] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Cecil+Rhodes+birth+date&limit=1 200
+[2026-04-04 15:04:27] INFO lib.rs:484: response: https://search.brave.com/search?q=Cecil+Rhodes+birth+date&source=web 429
+[2026-04-04 15:04:28] INFO lib.rs:484: response: https://yandex.com/search/site/?text=Cecil+Rhodes+birth+date&web=1&searchid=7891593 200
+[2026-04-04 15:04:28] INFO search_env.py:101: search('Cecil Rhodes birth date') 1 results (1.27s)
+[2026-04-04 15:04:28] INFO search_env.py:80: search('Cecil Rhodes birth year') cache hit (0.00s)
+[2026-04-04 15:04:28] INFO search_env.py:80: search('Cecil Rhodes birth year') cache hit (0.00s)
+[2026-04-04 15:04:28] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Dostoevsky+wrote+Crime+and+Punishment+city&limit=1 200
+[2026-04-04 15:04:28] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Dostoevsky%20wrote%20Crime%20and%20Punishment%20city 200
+[2026-04-04 15:04:29] INFO lib.rs:484: response: https://search.brave.com/search?q=Dostoevsky+wrote+Crime+and+Punishment+city&source=web 429
+[2026-04-04 15:04:30] INFO lib.rs:484: response: https://www.mojeek.com/search?q=Dostoevsky+wrote+Crime+and+Punishment+city 200
+[2026-04-04 15:04:30] INFO search_env.py:101: search('Dostoevsky wrote Crime and Punishment city') 1 results (1.98s)
+[2026-04-04 15:04:30] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=Dostoevsky%20Crime%20and%20Punishment%20city%20founded 200
+[2026-04-04 15:04:30] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=Dostoevsky+Crime+and+Punishment+city+founded&limit=1 200
+[2026-04-04 15:04:31] INFO ddgs.py:192: Error in engine yahoo: DDGSException("RequestError: RequestError('error sending request for url (https://search.yahoo.com/search;_ylt=Wir_rIKunMMSQTHzwQjxO_B4;_ylu=lzovPfYhAlYRtnLlKz59X-jkjXhBYyO2vh0Sr0fUcUol6Ng?p=Dostoevsky+Crime+and+Punishment+city+founded)', 'https://search.yahoo.com/search;_ylt=Wir_rIKunMMSQTHzwQjxO_B4;_ylu=lzovPfYhAlYRtnLlKz59X-jkjXhBYyO2vh0Sr0fUcUol6Ng?p=Dostoevsky+Crime+and+Punishment+city+founded')")
+[2026-04-04 15:04:31] INFO lib.rs:484: response: https://html.duckduckgo.com/html/ 200
+[2026-04-04 15:04:31] INFO search_env.py:101: search('Dostoevsky Crime and Punishment city founded') 3 results (1.58s)
+[2026-04-04 15:04:32] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=city%20where%20Dostoevsky%20wrote%20Crime%20and%20Punishment 200
+[2026-04-04 15:04:32] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=city+where+Dostoevsky+wrote+Crime+and+Punishment&limit=1 200
+[2026-04-04 15:04:33] INFO lib.rs:484: response: https://yandex.com/search/site/?text=city+where+Dostoevsky+wrote+Crime+and+Punishment&web=1&searchid=7700469 200
+[2026-04-04 15:04:33] INFO search_env.py:101: search('city where Dostoevsky wrote Crime and Punishment') 3 results (1.08s)
+[2026-04-04 15:05:16] INFO remote_grpo.py:65: Remote gen: 6 completions in 43.8s (server: 43.8s)
+ 61%|██████    | 243/400 [1:54:42<6:23:54, 146.72s/it][2026-04-04 15:05:35] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:05:35] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:05:35] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:05:35] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:05:43] INFO remote_grpo.py:88: Step 243: weights synced
+                                                      {'loss': '-0.1156', 'grad_norm': '12.25', 'learning_rate': '3.95e-06', 'num_tokens': '2.196e+06', 'completions/mean_length': '771.9', 'completions/min_length': '569', 'completions/max_length': '936', 'completions/clipped_ratio': '0.25', 'completions/mean_terminated_length': '796.7', 'completions/min_terminated_length': '569', 'completions/max_terminated_length': '936', 'tools/call_frequency': '0.75', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.25', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '0.75', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '1.075', 'reward_std': '0.5825', 'frac_reward_zero_std': '0', 'entropy': '0.1032', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '130.5', 'epoch': '2.43'}
+ 61%|██████    | 243/400 [1:54:50<6:23:54, 146.72s/it][2026-04-04 15:06:34] INFO remote_grpo.py:65: Remote gen: 8 completions in 50.4s (server: 50.4s)
+[2026-04-04 15:06:34] INFO search_env.py:80: search('men's 100-meter sprint world record holder') cache hit (0.00s)
+[2026-04-04 15:06:34] INFO search_env.py:80: search('men's 100-meter sprint world record holder') cache hit (0.00s)
+[2026-04-04 15:06:34] INFO search_env.py:80: search('men's 100m world record holder') cache hit (0.00s)
+[2026-04-04 15:06:34] INFO search_env.py:80: search('men's 100-meter sprint world record holder') cache hit (0.00s)
+[2026-04-04 15:06:34] INFO search_env.py:80: search('Voyager 1 launch date') cache hit (0.00s)
+[2026-04-04 15:06:34] INFO search_env.py:80: search('Voyager 1 launch date') cache hit (0.00s)
+[2026-04-04 15:06:34] INFO search_env.py:80: search('Voyager 1 launch date') cache hit (0.00s)
+[2026-04-04 15:06:34] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=NASA%20spacecraft%20launched%20in%201977%20besides%20Voyager%201 200
+[2026-04-04 15:06:34] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=NASA+spacecraft+launched+in+1977+besides+Voyager+1&limit=1 200
+[2026-04-04 15:06:35] INFO lib.rs:484: response: https://html.duckduckgo.com/html/ 200
+[2026-04-04 15:06:35] INFO search_env.py:101: search('NASA spacecraft launched in 1977 besides Voyager 1') 1 results (1.38s)
+[2026-04-04 15:06:35] INFO search_env.py:80: search('Voyager 1 launch date') cache hit (0.00s)
+[2026-04-04 15:07:40] INFO remote_grpo.py:65: Remote gen: 8 completions in 65.5s (server: 65.4s)
+[2026-04-04 15:07:41] INFO search_env.py:80: search('NASA spacecraft launched in 1977') cache hit (0.00s)
+[2026-04-04 15:07:41] INFO search_env.py:80: search('NASA spacecraft launched in 1977') cache hit (0.00s)
+[2026-04-04 15:08:08] INFO remote_grpo.py:65: Remote gen: 2 completions in 27.9s (server: 27.9s)
+ 61%|██████    | 244/400 [1:57:34<6:40:37, 154.09s/it][2026-04-04 15:08:26] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:08:27] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:08:27] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:08:27] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:08:35] INFO remote_grpo.py:88: Step 244: weights synced
+                                                      {'loss': '-0.01518', 'grad_norm': '0.2704', 'learning_rate': '3.925e-06', 'num_tokens': '2.206e+06', 'completions/mean_length': '823.6', 'completions/min_length': '714', 'completions/max_length': '944', 'completions/clipped_ratio': '0.625', 'completions/mean_terminated_length': '882.7', 'completions/min_terminated_length': '760', 'completions/max_terminated_length': '944', 'tools/call_frequency': '1.375', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.25', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '1', 'rewards/efficiency_reward/std': '0', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.625', 'rewards/truncation_reward/std': '0.5175', 'reward': '1.087', 'reward_std': '0.3623', 'frac_reward_zero_std': '0', 'entropy': '0.1223', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '162.1', 'epoch': '2.44'}
+ 61%|██████    | 244/400 [1:57:42<6:40:37, 154.09s/it][2026-04-04 15:09:35] INFO remote_grpo.py:65: Remote gen: 8 completions in 60.0s (server: 59.9s)
+[2026-04-04 15:09:35] INFO search_env.py:80: search('Apollo 11 recovery ship') cache hit (0.00s)
+[2026-04-04 15:09:35] INFO search_env.py:80: search('Apollo 11 recovery ship name') cache hit (0.00s)
+[2026-04-04 15:09:35] INFO search_env.py:80: search('Apollo 11 recovery ship') cache hit (0.00s)
+[2026-04-04 15:09:35] INFO search_env.py:80: search('Apollo 11 recovery ship name') cache hit (0.00s)
+[2026-04-04 15:10:05] INFO remote_grpo.py:65: Remote gen: 4 completions in 30.0s (server: 30.0s)
+ 61%|██████▏   | 245/400 [1:59:31<6:09:57, 143.21s/it][2026-04-04 15:10:24] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:10:24] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:10:25] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:10:25] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:10:33] INFO remote_grpo.py:88: Step 245: weights synced
+                                                      {'loss': '0', 'grad_norm': '0', 'learning_rate': '3.9e-06', 'num_tokens': '2.215e+06', 'completions/mean_length': '643.8', 'completions/min_length': '563', 'completions/max_length': '790', 'completions/clipped_ratio': '0.5', 'completions/mean_terminated_length': '563', 'completions/min_terminated_length': '563', 'completions/max_terminated_length': '563', 'tools/call_frequency': '0.5', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.5', 'rewards/efficiency_reward/std': '0.5345', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '0.7', 'reward_std': '0.2673', 'frac_reward_zero_std': '1', 'entropy': '0.1162', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '108.4', 'epoch': '2.45'}
+ 61%|██████▏   | 245/400 [1:59:40<6:09:57, 143.21s/it][2026-04-04 15:12:01] INFO remote_grpo.py:65: Remote gen: 8 completions in 88.3s (server: 88.3s)
+[2026-04-04 15:12:01] INFO search_env.py:80: search('Glastonbury Festival county') cache hit (0.00s)
+[2026-04-04 15:12:01] INFO search_env.py:80: search('Glastonbury Festival county') cache hit (0.00s)
+[2026-04-04 15:12:01] INFO search_env.py:80: search('Glastonbury Festival county town river') cache hit (0.00s)
+[2026-04-04 15:12:01] INFO search_env.py:80: search('Glastonbury Festival county') cache hit (0.00s)
+[2026-04-04 15:12:01] INFO search_env.py:80: search('inventor of the telephone') cache hit (0.00s)
+[2026-04-04 15:12:01] INFO search_env.py:80: search('inventor of the telephone birthplace') cache hit (0.00s)
+[2026-04-04 15:13:00] INFO remote_grpo.py:65: Remote gen: 6 completions in 59.3s (server: 59.3s)
+ 62%|██████▏   | 246/400 [2:02:25<6:31:08, 152.39s/it][2026-04-04 15:13:18] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:13:18] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:13:18] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:13:18] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:13:26] INFO remote_grpo.py:88: Step 246: weights synced
+                                                      {'loss': '-0.003567', 'grad_norm': '5.458', 'learning_rate': '3.875e-06', 'num_tokens': '2.224e+06', 'completions/mean_length': '787.9', 'completions/min_length': '786', 'completions/max_length': '801', 'completions/clipped_ratio': '0.75', 'completions/mean_terminated_length': '786', 'completions/min_terminated_length': '786', 'completions/max_terminated_length': '786', 'tools/call_frequency': '0.75', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '0.75', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.375', 'rewards/truncation_reward/std': '0.5175', 'reward': '0.6375', 'reward_std': '0.1553', 'frac_reward_zero_std': '0', 'entropy': '0.1195', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '164.5', 'epoch': '2.46'}
+ 62%|██████▏   | 246/400 [2:02:34<6:31:08, 152.39s/it][2026-04-04 15:13:53] INFO remote_grpo.py:65: Remote gen: 8 completions in 26.7s (server: 26.7s)
+[2026-04-04 15:13:53] INFO search_env.py:80: search('Nobel Prize in Physics 1921 winner') cache hit (0.00s)
+[2026-04-04 15:13:53] INFO search_env.py:80: search('Nobel Prize in Physics 1921 winner') cache hit (0.00s)
+[2026-04-04 15:13:53] INFO search_env.py:80: search('Nobel Prize in Physics 1921 winner') cache hit (0.00s)
+[2026-04-04 15:13:53] INFO search_env.py:80: search('Nobel Prize in Physics 1921 winner') cache hit (0.00s)
+[2026-04-04 15:13:53] INFO search_env.py:80: search('Nobel Prize in Physics 1921 winner') cache hit (0.00s)
+[2026-04-04 15:13:53] INFO search_env.py:80: search('Nobel Prize in Physics 1921 winner') cache hit (0.00s)
+[2026-04-04 15:13:53] INFO search_env.py:80: search('Nobel Prize in Physics 1921 winner') cache hit (0.00s)
+[2026-04-04 15:13:53] INFO search_env.py:80: search('Nobel Prize in Physics 1921 winner') cache hit (0.00s)
+[2026-04-04 15:14:56] INFO remote_grpo.py:65: Remote gen: 8 completions in 62.7s (server: 62.7s)
+ 62%|██████▏   | 247/400 [2:04:21<6:00:23, 141.33s/it][2026-04-04 15:15:14] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:15:14] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:15:14] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:15:14] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:15:22] INFO remote_grpo.py:88: Step 247: weights synced
+                                                      {'loss': '0', 'grad_norm': '0', 'learning_rate': '3.85e-06', 'num_tokens': '2.233e+06', 'completions/mean_length': '610', 'completions/min_length': '467', 'completions/max_length': '753', 'completions/clipped_ratio': '0.5', 'completions/mean_terminated_length': '753', 'completions/min_terminated_length': '753', 'completions/max_terminated_length': '753', 'tools/call_frequency': '1', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '1', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '1', 'rewards/efficiency_reward/std': '0', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '1.95', 'reward_std': '0', 'frac_reward_zero_std': '1', 'entropy': '0.1035', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '106.1', 'epoch': '2.47'}
+ 62%|██████▏   | 247/400 [2:04:29<6:00:23, 141.33s/it][2026-04-04 15:16:31] INFO remote_grpo.py:65: Remote gen: 8 completions in 68.8s (server: 68.8s)
+[2026-04-04 15:16:31] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=number%20of%20amendments%20to%20the%20United%20States%20Constitution 200
+[2026-04-04 15:16:31] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=number+of+amendments+to+the+United+States+Constitution&limit=1 200
+[2026-04-04 15:16:32] INFO lib.rs:484: response: https://yandex.com/search/site/?text=number+of+amendments+to+the+United+States+Constitution&web=1&searchid=2415616 200
+[2026-04-04 15:16:32] INFO search_env.py:101: search('number of amendments to the United States Constitu') 5 results (1.12s)
+[2026-04-04 15:16:32] INFO search_env.py:80: search('northernmost USMCA member nation capital city rive') cache hit (0.00s)
+[2026-04-04 15:17:24] INFO remote_grpo.py:65: Remote gen: 2 completions in 52.7s (server: 52.7s)
+ 62%|██████▏   | 248/400 [2:06:50<6:04:24, 143.84s/it][2026-04-04 15:17:43] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:17:43] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:17:44] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:17:44] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:17:52] INFO remote_grpo.py:88: Step 248: weights synced
+                                                      {'loss': '-0.05262', 'grad_norm': '30.15', 'learning_rate': '3.825e-06', 'num_tokens': '2.241e+06', 'completions/mean_length': '619.8', 'completions/min_length': '598', 'completions/max_length': '772', 'completions/clipped_ratio': '0.25', 'completions/mean_terminated_length': '598', 'completions/min_terminated_length': '598', 'completions/max_terminated_length': '598', 'tools/call_frequency': '0.25', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.125', 'rewards/retrieval_reward/std': '0.3536', 'rewards/efficiency_reward/mean': '0.25', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.875', 'rewards/truncation_reward/std': '0.3536', 'reward': '0.6625', 'reward_std': '0.4357', 'frac_reward_zero_std': '0', 'entropy': '0.1244', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '140.4', 'epoch': '2.48'}
+ 62%|██████▏   | 248/400 [2:06:59<6:04:24, 143.84s/it][2026-04-04 15:18:28] INFO remote_grpo.py:65: Remote gen: 8 completions in 36.1s (server: 36.1s)
+[2026-04-04 15:18:28] INFO search_env.py:80: search('Machu Picchu UNESCO World Heritage Site country') cache hit (0.00s)
+[2026-04-04 15:18:28] INFO search_env.py:80: search('Machu Picchu UNESCO World Heritage Site country') cache hit (0.00s)
+[2026-04-04 15:18:28] INFO search_env.py:80: search('Machu Picchu UNESCO World Heritage Site country') cache hit (0.00s)
+[2026-04-04 15:18:28] INFO search_env.py:80: search('Apollo 11 launch date') cache hit (0.00s)
+[2026-04-04 15:19:24] INFO remote_grpo.py:65: Remote gen: 4 completions in 56.7s (server: 56.6s)
+ 62%|██████▏   | 249/400 [2:08:50<5:43:20, 136.43s/it][2026-04-04 15:19:43] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:19:43] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:19:43] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:19:43] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:19:51] INFO remote_grpo.py:88: Step 249: weights synced
+                                                      {'loss': '-0.3121', 'grad_norm': '11.88', 'learning_rate': '3.8e-06', 'num_tokens': '2.249e+06', 'completions/mean_length': '595', 'completions/min_length': '350', 'completions/max_length': '856', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '562.3', 'completions/min_terminated_length': '350', 'completions/max_terminated_length': '856', 'tools/call_frequency': '0.5', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.125', 'rewards/retrieval_reward/std': '0.3536', 'rewards/efficiency_reward/mean': '0.5', 'rewards/efficiency_reward/std': '0.5345', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '0.825', 'reward_std': '0.5175', 'frac_reward_zero_std': '0', 'entropy': '0.1098', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '109.8', 'epoch': '2.49'}
+ 62%|██████▏   | 249/400 [2:08:58<5:43:20, 136.43s/it][2026-04-04 15:20:46] INFO remote_grpo.py:65: Remote gen: 8 completions in 55.7s (server: 55.6s)
+[2026-04-04 15:20:47] INFO search_env.py:80: search('1996 Summer Olympics mascot Izzy full official nam') cache hit (0.00s)
+[2026-04-04 15:20:47] INFO search_env.py:80: search('1996 Summer Olympics mascot Izzy full official nam') cache hit (0.00s)
+[2026-04-04 15:20:47] INFO search_env.py:80: search('1996 Summer Olympics mascot Izzy full official nam') cache hit (0.00s)
+[2026-04-04 15:20:47] INFO search_env.py:80: search('1996 Summer Olympics mascot Izzy full official nam') cache hit (0.00s)
+[2026-04-04 15:20:47] INFO search_env.py:80: search('founding year of Kingston Jamaica') cache hit (0.00s)
+[2026-04-04 15:20:47] INFO search_env.py:80: search('founding year of Kingston Jamaica') cache hit (0.00s)
+[2026-04-04 15:20:47] INFO search_env.py:80: search('founding year of Kingston Jamaica') cache hit (0.00s)
+[2026-04-04 15:20:47] INFO search_env.py:80: search('founding year of Kingston Jamaica') cache hit (0.00s)
+[2026-04-04 15:21:20] INFO remote_grpo.py:65: Remote gen: 8 completions in 33.6s (server: 33.5s)
+ 62%|██████▎   | 250/400 [2:10:46<5:26:01, 130.41s/it][2026-04-04 15:21:39] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:21:39] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:21:39] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:21:39] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:21:47] INFO remote_grpo.py:88: Step 250: weights synced
+                                                      {'loss': '0', 'grad_norm': '0', 'learning_rate': '3.775e-06', 'num_tokens': '2.257e+06', 'completions/mean_length': '579.5', 'completions/min_length': '468', 'completions/max_length': '691', 'completions/clipped_ratio': '0.5', 'completions/mean_terminated_length': '691', 'completions/min_terminated_length': '691', 'completions/max_terminated_length': '691', 'tools/call_frequency': '1', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '1', 'rewards/retrieval_reward/std': '0', 'rewards/efficiency_reward/mean': '1', 'rewards/efficiency_reward/std': '0', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '0.5', 'rewards/truncation_reward/std': '0.5345', 'reward': '1.8', 'reward_std': '0.1604', 'frac_reward_zero_std': '1', 'entropy': '0.12', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '106.8', 'epoch': '2.5'}
+ 62%|██████▎   | 250/400 [2:10:54<5:26:01, 130.41s/it][2026-04-04 15:21:47] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:21:47] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:21:47] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:21:47] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:22:32] INFO remote_grpo.py:65: Remote gen: 8 completions in 43.4s (server: 43.4s)
+[2026-04-04 15:22:33] INFO lib.rs:484: response: https://en.wikipedia.org/w/api.php?action=opensearch&profile=fuzzy&limit=1&search=President%20of%20the%20United%20States%20during%20Pearl%20Harbor%20attack 200
+[2026-04-04 15:22:33] INFO lib.rs:484: response: https://grokipedia.com/api/typeahead?query=President+of+the+United+States+during+Pearl+Harbor+attack&limit=1 200
+[2026-04-04 15:22:33] INFO lib.rs:484: response: https://yandex.com/search/site/?text=President+of+the+United+States+during+Pearl+Harbor+attack&web=1&searchid=4189222 200
+[2026-04-04 15:22:33] INFO search_env.py:101: search('President of the United States during Pearl Harbor') 1 results (1.21s)
+[2026-04-04 15:22:33] INFO search_env.py:80: search('President of the United States during Pearl Harbor') cache hit (0.00s)
+[2026-04-04 15:22:33] INFO search_env.py:80: search('inventor of the telephone') cache hit (0.00s)
+[2026-04-04 15:22:33] INFO search_env.py:80: search('inventor of the telephone') cache hit (0.00s)
+[2026-04-04 15:22:33] INFO search_env.py:80: search('inventor of the telephone') cache hit (0.00s)
+[2026-04-04 15:22:33] INFO search_env.py:80: search('inventor of the telephone') cache hit (0.00s)
+[2026-04-04 15:23:06] INFO remote_grpo.py:65: Remote gen: 6 completions in 32.9s (server: 32.9s)
+ 63%|██████▎   | 251/400 [2:12:32<5:05:53, 123.18s/it][2026-04-04 15:23:25] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:23:25] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:23:25] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:23:25] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:23:34] INFO remote_grpo.py:88: Step 251: weights synced
+                                                      {'loss': '-0.1016', 'grad_norm': '2.651', 'learning_rate': '3.75e-06', 'num_tokens': '2.266e+06', 'completions/mean_length': '592.2', 'completions/min_length': '395', 'completions/max_length': '673', 'completions/clipped_ratio': '0.25', 'completions/mean_terminated_length': '580.3', 'completions/min_terminated_length': '395', 'completions/max_terminated_length': '673', 'tools/call_frequency': '0.75', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.75', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '0.75', 'rewards/efficiency_reward/std': '0.4629', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '1.575', 'reward_std': '0.6944', 'frac_reward_zero_std': '0.5', 'entropy': '0.1114', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '95.14', 'epoch': '2.51'}
+ 63%|██████▎   | 251/400 [2:12:41<5:05:53, 123.18s/it][2026-04-04 15:24:28] INFO remote_grpo.py:65: Remote gen: 8 completions in 54.2s (server: 54.2s)
+[2026-04-04 15:24:28] INFO search_env.py:80: search('number of amendments to the US Constitution') cache hit (0.00s)
+[2026-04-04 15:24:28] INFO search_env.py:80: search('number of amendments to the United States Constitu') cache hit (0.00s)
+[2026-04-04 15:24:28] INFO search_env.py:80: search('current men's 100m world record holder nationality') cache hit (0.00s)
+[2026-04-04 15:24:28] INFO search_env.py:80: search('current men's 100m world record holder nationality') cache hit (0.00s)
+[2026-04-04 15:24:28] INFO search_env.py:80: search('men's 100m sprint world record holder nationality') cache hit (0.00s)
+[2026-04-04 15:25:05] INFO remote_grpo.py:65: Remote gen: 5 completions in 37.1s (server: 37.1s)
+ 63%|██████▎   | 252/400 [2:14:31<5:00:36, 121.87s/it][2026-04-04 15:25:24] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:25:24] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:25:24] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:25:24] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:25:32] INFO remote_grpo.py:88: Step 252: weights synced
+                                                      {'loss': '-0.1412', 'grad_norm': '19.25', 'learning_rate': '3.725e-06', 'num_tokens': '2.274e+06', 'completions/mean_length': '659.1', 'completions/min_length': '490', 'completions/max_length': '812', 'completions/clipped_ratio': '0.375', 'completions/mean_terminated_length': '618.8', 'completions/min_terminated_length': '490', 'completions/max_terminated_length': '812', 'tools/call_frequency': '0.625', 'tools/failure_frequency': '0', 'rewards/retrieval_reward/mean': '0.25', 'rewards/retrieval_reward/std': '0.4629', 'rewards/efficiency_reward/mean': '0.625', 'rewards/efficiency_reward/std': '0.5175', 'rewards/thinking_reward/mean': '0.5', 'rewards/thinking_reward/std': '0', 'rewards/truncation_reward/mean': '1', 'rewards/truncation_reward/std': '0', 'reward': '1.013', 'reward_std': '0.6232', 'frac_reward_zero_std': '0', 'entropy': '0.1177', 'clip_ratio/low_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/high_max': '0', 'clip_ratio/region_mean': '0', 'step_time': '109.2', 'epoch': '2.52'}
+ 63%|██████▎   | 252/400 [2:14:40<5:00:36, 121.87s/it][2026-04-04 15:26:34] INFO remote_grpo.py:65: Remote gen: 8 completions in 61.9s (server: 61.9s)
+ 63%|██████▎   | 253/400 [2:15:53<4:29:25, 109.97s/it][2026-04-04 15:26:46] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:26:46] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"
+[2026-04-04 15:26:46] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-14B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-04-04 15:26:46] INFO _client.py:1025: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-14B/40c069824f4251a91eefaf281ebe4c544efd3e18/config.json "HTTP/1.1 200 OK"

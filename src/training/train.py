@@ -213,10 +213,14 @@ def main():
         trainer.training_step = _filtered_training_step
         logger.info("Zero variance filtering enabled")
 
-    # Train
-    logger.info("Starting training...")
+    # Train (resume from checkpoint if specified)
+    resume_from = config.get("resume_from_checkpoint")
+    if resume_from:
+        logger.info(f"Resuming from checkpoint: {resume_from}")
+    else:
+        logger.info("Starting training from scratch...")
     t0 = time.time()
-    trainer.train()
+    trainer.train(resume_from_checkpoint=resume_from)
     logger.info(f"Training completed in {time.time()-t0:.1f}s")
 
     # Save

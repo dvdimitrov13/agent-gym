@@ -20,7 +20,7 @@ temperature: 0.7
 learning_rate: 1e-5
 
 # Training length
-num_train_epochs: 3
+num_train_epochs: 4
 logging_steps: 1
 save_steps: 50
 
@@ -41,3 +41,4 @@ zero_variance_filtering: true
 
 # Output
 output_dir: "checkpoints/qwen3-14b-grpo-pipeline"
+resume_from_checkpoint: "checkpoints/qwen3-14b-grpo-pipeline/checkpoint-200"
