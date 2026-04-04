@@ -230,24 +230,34 @@ def main():
         trainer.training_step = _filtered_training_step
         logger.info("Zero variance filtering enabled")
 
-    # Length scheduling (SID-1 style): progressively increase max_completion_length
-    length_stages = config.get("length_schedule")  # e.g. [[0, 256], [8, 512], [16, 1024]]
-    if length_stages:
-        _original_max_len = trainer.max_completion_length
+    # Curriculum scheduling (SID-1 style): progressively increase difficulty
+    length_stages = config.get("length_schedule")  # e.g. [[0, 256], [100, 512], [200, 1024]]
+    tool_iter_stages = config.get("tool_iter_schedule")  # e.g. [[0, 3], [100, 6], [200, 10]]
 
-        class _LengthScheduleCallback(TrainerCallback):
+    if length_stages or tool_iter_stages:
+        class _CurriculumCallback(TrainerCallback):
             def on_step_begin(self, args, state, control, **kwargs):
                 step = state.global_step
-                current_len = length_stages[0][1]
-                for stage_step, stage_len in length_stages:
-                    if step >= stage_step:
-                        current_len = stage_len
-                if trainer.max_completion_length != current_len:
-                    trainer.max_completion_length = current_len
-                    logger.info(f"Length schedule: step {step} → max_completion_length={current_len}")
+                if length_stages:
+                    current_len = length_stages[0][1]
+                    for stage_step, stage_len in length_stages:
+                        if step >= stage_step:
+                            current_len = stage_len
+                    if trainer.max_completion_length != current_len:
+                        trainer.max_completion_length = current_len
+                        logger.info(f"Curriculum: step {step} → max_completion_length={current_len}")
 
-        trainer.add_callback(_LengthScheduleCallback())
-        logger.info(f"Length scheduling enabled: {length_stages}")
+                if tool_iter_stages:
+                    current_iters = tool_iter_stages[0][1]
+                    for stage_step, stage_iters in tool_iter_stages:
+                        if step >= stage_step:
+                            current_iters = stage_iters
+                    if trainer.max_tool_calling_iterations != current_iters:
+                        trainer.max_tool_calling_iterations = current_iters
+                        logger.info(f"Curriculum: step {step} → max_tool_calling_iterations={current_iters}")
+
+        trainer.add_callback(_CurriculumCallback())
+        logger.info(f"Curriculum scheduling enabled: length={length_stages}, tool_iters={tool_iter_stages}")
 
     # Train (resume from checkpoint if specified)
     resume_from = config.get("resume_from_checkpoint")

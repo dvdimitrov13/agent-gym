@@ -62,6 +62,10 @@ def main():
             "num_hops": ex.get("num_hops", 0),
         })
 
+    # Sort by hop count for curriculum learning: 1-hop first, then 2-hop, then 3-hop.
+    # With sequential (no shuffle) sampling, model sees easy examples first.
+    prepped.sort(key=lambda x: x["num_hops"])
+
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     with open(args.output, "w") as f:
         for ex in prepped:
