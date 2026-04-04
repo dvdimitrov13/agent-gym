@@ -175,36 +175,39 @@ def main():
         return SearchEnvironmentV2() if use_v2_env else SearchEnvironment()
     logger.info(f"Environment: {'SearchEnvironmentV2 (snippet IDs)' if use_v2_env else 'SearchEnvironment'}")
 
-    # Create trainer — use RemoteGRPOTrainer if inference server configured
+    # Create trainer
     inference_server = config.get("inference_server_url")
+    use_tito = config.get("use_tito", False)
     t0 = time.time()
 
+    trainer_kwargs = dict(
+        model=model,
+        processing_class=tokenizer,
+        args=grpo_config,
+        train_dataset=dataset,
+        reward_funcs=reward_funcs,
+        environment_factory=env_factory,
+        peft_config=peft_config,
+    )
+
     if inference_server:
+        # Dual-GPU: remote inference server
         from src.training.remote_grpo import RemoteGRPOTrainer
-        use_tito = config.get("use_tito", False)
         logger.info(f"Creating RemoteGRPOTrainer (server: {inference_server}, tito: {use_tito})...")
         trainer = RemoteGRPOTrainer(
-            model=model,
-            processing_class=tokenizer,
-            args=grpo_config,
-            train_dataset=dataset,
-            reward_funcs=reward_funcs,
-            environment_factory=env_factory,
-            peft_config=peft_config,
+            **trainer_kwargs,
             inference_server_url=inference_server,
             use_tito=use_tito,
         )
+    elif use_tito:
+        # Single-GPU with TI/TO: token-space tool calling
+        from src.training.tito_trainer import TiToGRPOTrainer
+        logger.info("Creating TiToGRPOTrainer (single GPU, TI/TO)...")
+        trainer = TiToGRPOTrainer(**trainer_kwargs)
     else:
+        # Single-GPU standard: TRL handles everything
         logger.info("Creating GRPOTrainer (local generation)...")
-        trainer = GRPOTrainer(
-            model=model,
-            processing_class=tokenizer,
-            args=grpo_config,
-            train_dataset=dataset,
-            reward_funcs=reward_funcs,
-            environment_factory=env_factory,
-            peft_config=peft_config,
-        )
+        trainer = GRPOTrainer(**trainer_kwargs)
     logger.info(f"Trainer created in {time.time()-t0:.1f}s")
 
     # Zero variance filtering: wrap the training step to skip batches with no reward signal
