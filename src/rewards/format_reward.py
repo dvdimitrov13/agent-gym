@@ -1,12 +1,15 @@
-"""Format reward — checks the model produces valid tool calls and a ranking.
+"""Format reward — rewards tool use and submit_answer completion.
 
-Two checks:
-1. Tool calls present (model actually used tools)
-2. Final response includes a RANKING: line with valid snippet IDs
+Bootstrapping signal: teaches the model to always use tools and
+end with submit_answer. Becomes redundant once NDCG provides signal.
 
-Returns 1.0 if both, 0.5 if only tools used, 0.0 if no tools at all.
+Score:
+  1.0 — submit_answer was called (ideal)
+  0.5 — tools were used but no submit (searching at least)
+  0.0 — no tools at all (just text response)
 """
 
+import json
 import re
 
 
@@ -17,27 +20,28 @@ def format_reward(
     rewards = []
     for completion in completions:
         has_tools = False
-        has_ranking = False
+        has_submit = False
 
         for msg in completion:
             if msg.get("role") != "assistant":
                 continue
 
-            # Check tool calls (TRL OpenAI format)
-            if msg.get("tool_calls"):
+            # Check TRL OpenAI format: tool_calls key
+            for tc in msg.get("tool_calls", []):
                 has_tools = True
+                func = tc.get("function", {})
+                name = func.get("name", "")
+                if name == "submit_answer":
+                    has_submit = True
 
+            # Check raw text for tool calls (TI/TO completions)
             content = msg.get("content", "")
-            if not isinstance(content, str):
-                continue
+            if isinstance(content, str) and "<tool_call>" in content:
+                has_tools = True
+                if "submit_answer" in content:
+                    has_submit = True
 
-            # Check for RANKING line in final response
-            if "RANKING:" in content.upper():
-                ids = re.findall(r'[SR]\d+', content)
-                if ids:
-                    has_ranking = True
-
-        if has_tools and has_ranking:
+        if has_submit:
             rewards.append(1.0)
         elif has_tools:
             rewards.append(0.5)
