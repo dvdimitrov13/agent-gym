@@ -6,9 +6,9 @@ instead of re-templating (TI/TO approach from SID-1).
 Key behaviors:
   - submit_answer immediately terminates a trajectory (no extra generation)
   - No tool call = trajectory terminated (agent must always use tools)
-  - Final-round forcing: injects "you must submit" when time runs out
-  - force_submit disabled after N steps so model learns to submit on its own
   - Thinking tokens stripped from carried-forward context
+  - GPU memory logged each round
+  - Only NEW tokens searched for tool calls (prevents re-detection bug)
 """
 
 import json
@@ -28,8 +28,6 @@ from src.training.tito import (
 
 logger = logging.getLogger(__name__)
 
-_FINAL_ROUND_SUFFIX = None
-
 
 def _find_tc_end(cids: list[int]) -> int:
     """Find position after </tool_call> in token list."""
@@ -42,32 +40,12 @@ def _find_tc_end(cids: list[int]) -> int:
 class TiToGRPOTrainer(GRPOTrainer):
     """GRPOTrainer with token-space tool calling (TI/TO)."""
 
-    def __init__(self, *args, force_submit_until_step: int = 300, **kwargs):
+    def __init__(self, *args, **kwargs):
+        # Remove custom kwargs before passing to parent
+        kwargs.pop("force_submit_until_step", None)
         super().__init__(*args, **kwargs)
         _init_token_ids(self.processing_class)
-        self.force_submit_until_step = force_submit_until_step
-        self._current_step = 0
-
-        global _FINAL_ROUND_SUFFIX
-        # Two variants: with and without thinking suppression
-        # The "no think" variant starts the tool call directly, giving the model
-        # no choice but to complete the submit_answer JSON
-        self._final_suffix_normal = self.processing_class.encode(
-            "\n<|im_end|>\n<|im_start|>system\n"
-            "Final round: search and read are no longer available. "
-            "You must now call submit_answer with your ranked passage IDs.\n"
-            "<|im_end|>\n<|im_start|>assistant\n",
-            add_special_tokens=False,
-        )
-        self._final_suffix_no_think = self.processing_class.encode(
-            "\n<|im_end|>\n<|im_start|>system\n"
-            "Final round: search and read are no longer available. "
-            "You must now call submit_answer with your ranked passage IDs.\n"
-            '<|im_end|>\n<|im_start|>assistant\n<tool_call>\n{"name": "submit_answer", "arguments": {"passage_ids": [',
-            add_special_tokens=False,
-        )
-        _FINAL_ROUND_SUFFIX = self._final_suffix_normal  # default
-        logger.info(f"TiToGRPOTrainer: TI/TO enabled, force_submit until step {force_submit_until_step}")
+        logger.info("TiToGRPOTrainer: TI/TO enabled (no forced submit)")
 
     def _tool_call_loop(self, prompts, prompt_ids, completion_ids, completions,
                         logprobs, images, multimodal_fields):
@@ -77,7 +55,7 @@ class TiToGRPOTrainer(GRPOTrainer):
           - submit_answer → execute, STOP trajectory immediately
           - search/read → execute, splice result, generate next turn
           - no tool call → STOP trajectory (agent must always use tools)
-          - final iteration + force_submit → inject "must submit" message
+          - Only searches NEW tokens for tool calls (not old spliced content)
         """
         tokenizer = self.processing_class
         device = next(self.model.parameters()).device
@@ -86,34 +64,24 @@ class TiToGRPOTrainer(GRPOTrainer):
 
         tool_mask_list = [[1] * len(cids) for cids in completion_ids]
 
-        force_submit = self._current_step < self.force_submit_until_step
-        self._current_step += 1
-
-        # Track active completions (not yet submitted or terminated)
+        # Track active completions and where new tokens start per completion
         active = set(range(len(completion_ids)))
-        # Track where new tokens start for each completion (to avoid re-detecting old tool calls)
         new_tokens_start = {idx: 0 for idx in range(len(completion_ids))}
 
         for iteration in range(self.max_tool_calling_iterations):
             if not active:
                 break
 
-            is_last_iter = (iteration == self.max_tool_calling_iterations - 1)
-            do_force = is_last_iter and force_submit
-
-            # Classify each active completion's tool call
-            # IMPORTANT: only look in NEW tokens to avoid re-detecting old tool calls
-            submitted = []      # (idx, name, args) — called submit_answer
-            searching = []      # (idx, name, args) — called search/read
-            no_tool = []        # idx — no tool call, terminate
+            # Classify each active completion's tool call (NEW tokens only)
+            submitted = []
+            searching = []
+            no_tool = []
 
             for idx in list(active):
                 cids = completion_ids[idx] if isinstance(completion_ids[idx], list) else completion_ids[idx].tolist()
-                # Only search for tool calls in tokens generated since last round
                 search_start = new_tokens_start.get(idx, 0)
                 new_portion = cids[search_start:]
                 span = _find_tool_call(new_portion)
-                # Adjust span to full completion_ids coordinates
                 if span:
                     span = (span[0] + search_start, span[1] + search_start)
                 if not span:
@@ -129,43 +97,37 @@ class TiToGRPOTrainer(GRPOTrainer):
                 else:
                     searching.append((idx, name, args))
 
-            # 1. Handle submit_answer — execute and STOP (no further generation)
+            # 1. submit_answer → execute and STOP
             for idx, name, args in submitted:
                 tool_call_count += 1
                 result = self._dispatch_tito_tool(name, args)
                 cids = completion_ids[idx] if isinstance(completion_ids[idx], list) else completion_ids[idx].tolist()
-                tc_end = _find_tc_end(cids)
+                tc_end = _find_tc_end(cids[new_tokens_start.get(idx, 0):]) + new_tokens_start.get(idx, 0)
                 kept = cids[:tc_end]
                 splice = _encode_tool_result(tokenizer, result)
                 tool_mask_list[idx] = tool_mask_list[idx][:tc_end] + [0] * len(splice)
                 completion_ids[idx] = kept + splice
                 active.discard(idx)
-                logger.debug(f"TI/TO: completion {idx} submitted ranking")
 
-            # 2. Handle no-tool — terminate immediately
+            # 2. No tool call → terminate
             for idx in no_tool:
                 active.discard(idx)
 
             if not active:
                 break
 
-            # 3. Handle search/read — execute, splice, prepare next generation
+            # 3. search/read → execute, splice, prepare next generation
             gen_prompts = []
             gen_idxs = []
 
             for idx, name, args in searching:
                 if idx not in active:
                     continue
-
-                # On force round, don't execute search/read — force submit below
-                if do_force:
-                    continue
-
                 tool_call_count += 1
                 result = self._dispatch_tito_tool(name, args)
 
                 cids = completion_ids[idx] if isinstance(completion_ids[idx], list) else completion_ids[idx].tolist()
-                tc_end = _find_tc_end(cids)
+                tc_end = _find_tc_end(cids[new_tokens_start.get(idx, 0):]) + new_tokens_start.get(idx, 0)
                 kept = cids[:tc_end]
                 splice = _encode_tool_result(tokenizer, result)
 
@@ -177,57 +139,32 @@ class TiToGRPOTrainer(GRPOTrainer):
                 gen_prompts.append(pid + ctx + splice)
                 gen_idxs.append(idx)
 
-            # 4. Force submit on remaining active completions if last iteration
-            if do_force:
-                # For first 50 steps, prefix the tool call JSON so model just fills in IDs
-                suffix = self._final_suffix_no_think if self._current_step <= 50 else self._final_suffix_normal
-                for idx in list(active):
-                    cids = completion_ids[idx] if isinstance(completion_ids[idx], list) else completion_ids[idx].tolist()
-                    pid = prompt_ids[idx] if isinstance(prompt_ids[idx], list) else prompt_ids[idx].tolist()
-                    ctx = strip_thinking_tokens(cids)
-                    prompt = pid + ctx + list(suffix)
-                    gen_prompts.append(prompt)
-                    gen_idxs.append(idx)
-                    tool_mask_list[idx] = tool_mask_list[idx] + [0] * len(suffix)
-                    completion_ids[idx] = cids + list(suffix)
-
-            # 5. Batch generate next turn
-            #    For forced rounds in first 50 steps, suppress <think> so model
-            #    goes straight to tool call instead of burning tokens on thinking
-            suppress_think = do_force and self._current_step <= 50
+            # 4. Batch generate next turn
             if gen_prompts:
-                new_tokens_list = self._batch_generate(
-                    gen_prompts, device, tokenizer,
-                    suppress_think=suppress_think,
-                )
-                gen_time = time.time()  # logged below
+                new_tokens_list = self._batch_generate(gen_prompts, device, tokenizer)
+
+                mem_used = torch.cuda.memory_allocated() / 1e9
+                mem_reserved = torch.cuda.memory_reserved() / 1e9
 
                 for i, idx in enumerate(gen_idxs):
                     new_tokens = new_tokens_list[i]
-                    # Mark where new tokens start for next iteration's tool call search
                     new_tokens_start[idx] = len(completion_ids[idx])
                     completion_ids[idx] = completion_ids[idx] + new_tokens
                     tool_mask_list[idx] = tool_mask_list[idx] + [1] * len(new_tokens)
                     new_text = tokenizer.decode(new_tokens, skip_special_tokens=True)
                     completions[idx].append({"role": "assistant", "content": new_text})
 
-                # Log GPU memory for monitoring OOM risk
-                mem_used = torch.cuda.memory_allocated() / 1e9
-                mem_reserved = torch.cuda.memory_reserved() / 1e9
-                label = "FORCED" if do_force else f"round {iteration+1}"
-                logger.info(f"TI/TO {label}: {len(gen_idxs)} continuations "
+                logger.info(f"TI/TO round {iteration+1}: {len(gen_idxs)} continuations "
                             f"(GPU: {mem_used:.1f}GB alloc, {mem_reserved:.1f}GB reserved)")
 
-        n_submitted = len(completion_ids) - len(active)
-        logger.info(f"TI/TO done: {n_submitted}/{len(completion_ids)} submitted, {tool_call_count} tool calls")
+        n_active = len(active)
+        n_done = len(completion_ids) - n_active
+        logger.info(f"TI/TO done: {n_done}/{len(completion_ids)} finished, {tool_call_count} tool calls")
 
         return tool_mask_list, completions, completion_ids, logprobs, tool_call_count, tool_failure_count
 
-    def _batch_generate(self, prompts: list[list[int]], device, tokenizer,
-                        suppress_think: bool = False) -> list[list[int]]:
-        """Batch generate from a list of token ID prompts. Returns new tokens per prompt."""
-        from src.training.tito import _THINK_START_ID
-
+    def _batch_generate(self, prompts, device, tokenizer):
+        """Batch generate from token ID prompts. Returns new tokens per prompt."""
         max_len = max(len(p) for p in prompts)
         pad_id = tokenizer.pad_token_id or tokenizer.eos_token_id
 
@@ -241,20 +178,16 @@ class TiToGRPOTrainer(GRPOTrainer):
         input_ids = torch.tensor(padded, device=device)
         attention_mask = torch.tensor(attn_masks, device=device)
 
-        gen_kwargs = dict(
-            input_ids=input_ids,
-            attention_mask=attention_mask,
-            max_new_tokens=self.max_completion_length,
-            temperature=self.args.temperature,
-            top_p=0.9,
-            do_sample=True,
-            pad_token_id=pad_id,
-        )
-        if suppress_think and _THINK_START_ID is not None:
-            gen_kwargs["suppress_tokens"] = [_THINK_START_ID]
-
         with torch.no_grad():
-            outputs = self.model.generate(**gen_kwargs)
+            outputs = self.model.generate(
+                input_ids=input_ids,
+                attention_mask=attention_mask,
+                max_new_tokens=self.max_completion_length,
+                temperature=self.args.temperature,
+                top_p=0.9,
+                do_sample=True,
+                pad_token_id=pad_id,
+            )
 
         results = []
         for i in range(len(prompts)):
@@ -264,7 +197,7 @@ class TiToGRPOTrainer(GRPOTrainer):
             results.append(new_tokens)
         return results
 
-    def _dispatch_tito_tool(self, name: str, args: dict) -> str:
+    def _dispatch_tito_tool(self, name, args):
         """Dispatch a tool call."""
         if self.tools:
             for tool in self.tools:
@@ -288,7 +221,7 @@ class TiToGRPOTrainer(GRPOTrainer):
 class TrajectoryLoggingCallback(TrainerCallback):
     """Log a full decoded trajectory every N steps for diagnostics."""
 
-    def __init__(self, every_n_steps: int = 10, log_dir: str = "/root/trajectories"):
+    def __init__(self, every_n_steps=10, log_dir="/root/trajectories"):
         self.every_n_steps = every_n_steps
         self.log_dir = log_dir
         os.makedirs(log_dir, exist_ok=True)
@@ -297,12 +230,8 @@ class TrajectoryLoggingCallback(TrainerCallback):
         step = state.global_step
         if step == 0 or step % self.every_n_steps != 0:
             return
-
         log_path = os.path.join(self.log_dir, f"step_{step:04d}.json")
-        log_data = {
-            "step": step,
-            "metrics": {k: str(v) for k, v in (logs or {}).items()},
-        }
+        log_data = {"step": step, "metrics": {k: str(v) for k, v in (logs or {}).items()}}
         with open(log_path, "w") as f:
             json.dump(log_data, f, indent=2)
         logger.info(f"Trajectory log saved: {log_path}")

@@ -12,17 +12,27 @@ from src.env.search_env import SearchEnvironment
 
 
 class SearchEnvironmentV2(SearchEnvironment):
-    """SearchEnvironment with snippet IDs and ranking submission."""
+    """SearchEnvironment with snippet IDs and ranking submission. No cache."""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._s_count = 0
         self._r_count = 0
+        # Disable caches for clean training signal
+        from src.env import search_env
+        search_env._search_cache = _NoCache()
+        search_env._page_cache = _NoCache()
 
     def reset(self, **kwargs) -> str | None:
         self._s_count = 0
         self._r_count = 0
         return super().reset(**kwargs)
+
+
+class _NoCache:
+    """Dummy cache that never hits."""
+    def get(self, *args, **kwargs): return None
+    def set(self, *args, **kwargs): pass
 
     def search(self, query: str, max_results: int = 5) -> str:
         """Search the web. Returns snippets tagged with IDs like [S1], [S2].

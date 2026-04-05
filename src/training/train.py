@@ -210,9 +210,8 @@ def main():
     elif use_tito:
         # Single-GPU with TI/TO: token-space tool calling
         from src.training.tito_trainer import TiToGRPOTrainer, TrajectoryLoggingCallback
-        force_submit_until = config.get("force_submit_until_step", 300)
-        logger.info(f"Creating TiToGRPOTrainer (single GPU, TI/TO, force_submit until step {force_submit_until})...")
-        trainer = TiToGRPOTrainer(**trainer_kwargs, force_submit_until_step=force_submit_until)
+        logger.info("Creating TiToGRPOTrainer (single GPU, TI/TO)...")
+        trainer = TiToGRPOTrainer(**trainer_kwargs)
         trainer.add_callback(TrajectoryLoggingCallback(every_n_steps=10))
     else:
         # Single-GPU standard: TRL handles everything

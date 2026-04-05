@@ -1,13 +1,13 @@
-# V2 single-GPU config — Blackwell 98GB RTX PRO 6000
-# Curriculum: progressive length, tool iterations, and data difficulty
+# V2 single-GPU config — Blackwell 98GB
+# Clean setup: no forced submit, no cache, bug-fixed TI/TO
 model_name: "Qwen/Qwen3-14B"
 dataset: "data/train_trl_v2.jsonl"
 
 per_device_train_batch_size: 2
 gradient_accumulation_steps: 4
 num_generations: 4
-max_completion_length: 512  # starting value, increases via schedule
-max_tool_calling_iterations: 3  # starting value, increases via schedule
+max_completion_length: 512
+max_tool_calling_iterations: 5
 
 # GRPO (length-biased, SID-1 style)
 loss_type: "grpo"
@@ -41,19 +41,12 @@ length_schedule:
   - [0, 512]
   - [150, 1024]
 
-# Tool iterations: 3 → 6 → 10
+# Tool iterations: 5 (1-hop phase) → 10 (multi-hop phase)
 tool_iter_schedule:
-  - [0, 3]
-  - [100, 6]
-  - [200, 10]
-
-# Force submit_ranking on final round until step 300, then let model decide
-force_submit_until_step: 200
+  - [0, 5]
+  - [100, 10]
 
 # Data is pre-sorted: 1-hop first, then 2-hop, then 3-hop
-
-# Fresh start with clean data
-# resume_from_checkpoint:
 
 # Output
 output_dir: "checkpoints/qwen3-14b-grpo-v2"
