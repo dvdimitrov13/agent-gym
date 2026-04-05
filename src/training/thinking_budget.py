@@ -18,6 +18,7 @@ class ThinkingBudgetProcessor(LogitsProcessor):
     def __init__(self, tokenizer: PreTrainedTokenizerBase, max_thinking_tokens: int = 256,
                  force_tool_after_think: bool = True):
         self.max_thinking_tokens = max_thinking_tokens
+        self.soft_nudge_start = max_thinking_tokens // 2  # default: half of max
         self.force_tool_after_think = force_tool_after_think
         self.think_start_id = tokenizer.encode("<think>", add_special_tokens=False)[0]
         self.think_end_id = tokenizer.encode("</think>", add_special_tokens=False)[0]
@@ -27,6 +28,11 @@ class ThinkingBudgetProcessor(LogitsProcessor):
         self._in_think = {}
         self._think_tokens = {}
         self._just_ended_think = {}  # True = last token was </think> or \n after it
+
+    def set_budget(self, soft_nudge_start: int, hard_cap: int):
+        """Update thinking budget (called by curriculum callback)."""
+        self.soft_nudge_start = soft_nudge_start
+        self.max_thinking_tokens = hard_cap
 
     def reset(self, assume_in_think: bool = True):
         """Reset state. If assume_in_think=True, start as if <think> was just generated.
@@ -77,9 +83,10 @@ class ThinkingBudgetProcessor(LogitsProcessor):
                     # Hard close: force </think>
                     scores[i, :] = float('-inf')
                     scores[i, self.think_end_id] = 0
-                elif self._think_tokens[i] >= self.max_thinking_tokens // 2:
-                    # Soft nudge starting at 50% (128 tokens), progressively stronger
-                    progress = (self._think_tokens[i] - self.max_thinking_tokens // 2) / (self.max_thinking_tokens // 2)
+                elif self._think_tokens[i] >= self.soft_nudge_start:
+                    # Soft nudge, progressively stronger toward hard cap
+                    remaining = self.max_thinking_tokens - self.soft_nudge_start
+                    progress = (self._think_tokens[i] - self.soft_nudge_start) / max(remaining, 1)
                     # Boost scales from +2 at 50% to +15 at 100%
                     boost = 2.0 + 13.0 * progress
                     scores[i, self.think_end_id] += boost

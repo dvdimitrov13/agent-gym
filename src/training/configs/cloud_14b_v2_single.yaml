@@ -41,10 +41,17 @@ use_tito: true
 #   Steps 30-69:  2-hop × 2 epochs, 768 tokens, 7 iters
 #   Steps 70-99:  3-hop × 2 epochs, 1024 tokens, 10 iters
 #   Steps 100-199: mixed (shuffled), 1024 tokens, 10 iters
-# No thinking — 512 is enough without <think> blocks
+# Completion + thinking budget scale together
 length_schedule:
   - [0, 512]
-  - [120, 1024]
+  - [30, 768]
+  - [70, 1024]
+
+# Thinking budget: [step, soft_nudge_start, hard_cap]
+thinking_schedule:
+  - [0, 128, 256]
+  - [30, 192, 320]
+  - [70, 256, 384]
 
 tool_iter_schedule:
   - [0, 5]

@@ -241,7 +241,9 @@ def main():
     length_stages = config.get("length_schedule")  # e.g. [[0, 256], [100, 512], [200, 1024]]
     tool_iter_stages = config.get("tool_iter_schedule")  # e.g. [[0, 3], [100, 6], [200, 10]]
 
-    if length_stages or tool_iter_stages:
+    thinking_stages = config.get("thinking_schedule")  # e.g. [[0, 128, 256], [30, 192, 320]]
+
+    if length_stages or tool_iter_stages or thinking_stages:
         class _CurriculumCallback(TrainerCallback):
             def on_step_begin(self, args, state, control, **kwargs):
                 step = state.global_step
@@ -263,8 +265,23 @@ def main():
                         trainer.max_tool_calling_iterations = current_iters
                         logger.info(f"Curriculum: step {step} → max_tool_calling_iterations={current_iters}")
 
+                if thinking_stages and hasattr(trainer, '_thinking_processor') and trainer._thinking_processor:
+                    current_soft = thinking_stages[0][1]
+                    current_hard = thinking_stages[0][2]
+                    for entry in thinking_stages:
+                        if step >= entry[0]:
+                            current_soft = entry[1]
+                            current_hard = entry[2]
+                    proc = trainer._thinking_processor
+                    if proc.soft_nudge_start != current_soft or proc.max_thinking_tokens != current_hard:
+                        proc.set_budget(current_soft, current_hard)
+                        # Also update thinking multiplier thresholds
+                        from src.rewards.thinking_reward import set_thinking_thresholds
+                        set_thinking_thresholds(current_soft, current_hard)
+                        logger.info(f"Curriculum: step {step} → thinking soft={current_soft} hard={current_hard}")
+
         trainer.add_callback(_CurriculumCallback())
-        logger.info(f"Curriculum scheduling enabled: length={length_stages}, tool_iters={tool_iter_stages}")
+        logger.info(f"Curriculum: length={length_stages}, tool_iters={tool_iter_stages}, thinking={thinking_stages}")
 
     # Train (resume from checkpoint if specified)
     resume_from = config.get("resume_from_checkpoint")

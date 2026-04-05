@@ -26,17 +26,29 @@ def _count_think_tokens_approx(completion: list[dict]) -> int:
     return total_chars // 4
 
 
+# Current thinking budget — updated by curriculum callback via set_thinking_thresholds
+_soft_threshold = 128
+_hard_threshold = 256
+
+
+def set_thinking_thresholds(soft: int, hard: int):
+    """Update thresholds to match current curriculum stage."""
+    global _soft_threshold, _hard_threshold
+    _soft_threshold = soft
+    _hard_threshold = hard
+
+
 def thinking_multiplier(completion: list[dict]) -> float:
     """Compute thinking multiplier for a single completion.
 
-    ≤128 tokens: 1.0
-    128-256 tokens: linear from 1.0 to 0.5
-    ≥256 tokens: 0.5
+    ≤soft: 1.0
+    soft-hard: linear from 1.0 to 0.5
+    ≥hard: 0.5
     """
     tokens = _count_think_tokens_approx(completion)
-    if tokens <= 128:
+    if tokens <= _soft_threshold:
         return 1.0
-    elif tokens >= 256:
+    elif tokens >= _hard_threshold:
         return 0.5
     else:
-        return 1.0 - 0.5 * (tokens - 128) / (256 - 128)
+        return 1.0 - 0.5 * (tokens - _soft_threshold) / (_hard_threshold - _soft_threshold)
