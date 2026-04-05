@@ -67,6 +67,8 @@ class TiToGRPOTrainer(GRPOTrainer):
         # Track active completions and where new tokens start per completion
         active = set(range(len(completion_ids)))
         new_tokens_start = {idx: 0 for idx in range(len(completion_ids))}
+        total_submitted = 0
+        total_no_tool = 0
 
         for iteration in range(self.max_tool_calling_iterations):
             if not active:
@@ -108,10 +110,16 @@ class TiToGRPOTrainer(GRPOTrainer):
                 tool_mask_list[idx] = tool_mask_list[idx][:tc_end] + [0] * len(splice)
                 completion_ids[idx] = kept + splice
                 active.discard(idx)
+                total_submitted += 1
+                ids_str = args.get("passage_ids", [])
+                logger.info(f"TI/TO [{idx}] submit_answer({ids_str})")
 
             # 2. No tool call → terminate
             for idx in no_tool:
                 active.discard(idx)
+            total_no_tool += len(no_tool)
+            if no_tool:
+                logger.info(f"TI/TO iter {iteration}: {len(no_tool)} completions terminated (no tool call)")
 
             if not active:
                 break
@@ -124,6 +132,8 @@ class TiToGRPOTrainer(GRPOTrainer):
                 if idx not in active:
                     continue
                 tool_call_count += 1
+                args_short = json.dumps(args)[:80]
+                logger.info(f"TI/TO [{idx}] {name}({args_short})")
                 result = self._dispatch_tito_tool(name, args)
 
                 cids = completion_ids[idx] if isinstance(completion_ids[idx], list) else completion_ids[idx].tolist()
@@ -157,9 +167,10 @@ class TiToGRPOTrainer(GRPOTrainer):
                 logger.info(f"TI/TO round {iteration+1}: {len(gen_idxs)} continuations "
                             f"(GPU: {mem_used:.1f}GB alloc, {mem_reserved:.1f}GB reserved)")
 
-        n_active = len(active)
-        n_done = len(completion_ids) - n_active
-        logger.info(f"TI/TO done: {n_done}/{len(completion_ids)} finished, {tool_call_count} tool calls")
+        avg_len = sum(len(c) if isinstance(c, list) else c.shape[0] for c in completion_ids) / len(completion_ids)
+        logger.info(f"TI/TO done: {total_submitted} submitted, {total_no_tool} no-tool, "
+                     f"{len(active)} still active, {tool_call_count} tool calls, "
+                     f"avg completion={avg_len:.0f} tokens")
 
         return tool_mask_list, completions, completion_ids, logprobs, tool_call_count, tool_failure_count
 
