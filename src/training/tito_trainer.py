@@ -170,8 +170,14 @@ class TiToGRPOTrainer(GRPOTrainer):
                     completion_ids[idx] = cids + list(_FINAL_ROUND_SUFFIX)
 
             # 5. Batch generate next turn
+            #    For forced rounds in first 50 steps, suppress <think> so model
+            #    goes straight to tool call instead of burning tokens on thinking
+            suppress_think = do_force and self._current_step <= 50
             if gen_prompts:
-                new_tokens_list = self._batch_generate(gen_prompts, device, tokenizer)
+                new_tokens_list = self._batch_generate(
+                    gen_prompts, device, tokenizer,
+                    suppress_think=suppress_think,
+                )
                 gen_time = time.time()  # logged below
 
                 for i, idx in enumerate(gen_idxs):
@@ -181,16 +187,23 @@ class TiToGRPOTrainer(GRPOTrainer):
                     new_text = tokenizer.decode(new_tokens, skip_special_tokens=True)
                     completions[idx].append({"role": "assistant", "content": new_text})
 
+                # Log GPU memory for monitoring OOM risk
+                mem_used = torch.cuda.memory_allocated() / 1e9
+                mem_reserved = torch.cuda.memory_reserved() / 1e9
                 label = "FORCED" if do_force else f"round {iteration+1}"
-                logger.info(f"TI/TO {label}: {len(gen_idxs)} continuations")
+                logger.info(f"TI/TO {label}: {len(gen_idxs)} continuations "
+                            f"(GPU: {mem_used:.1f}GB alloc, {mem_reserved:.1f}GB reserved)")
 
         n_submitted = len(completion_ids) - len(active)
         logger.info(f"TI/TO done: {n_submitted}/{len(completion_ids)} submitted, {tool_call_count} tool calls")
 
         return tool_mask_list, completions, completion_ids, logprobs, tool_call_count, tool_failure_count
 
-    def _batch_generate(self, prompts: list[list[int]], device, tokenizer) -> list[list[int]]:
+    def _batch_generate(self, prompts: list[list[int]], device, tokenizer,
+                        suppress_think: bool = False) -> list[list[int]]:
         """Batch generate from a list of token ID prompts. Returns new tokens per prompt."""
+        from src.training.tito import _THINK_START_ID
+
         max_len = max(len(p) for p in prompts)
         pad_id = tokenizer.pad_token_id or tokenizer.eos_token_id
 
@@ -204,16 +217,20 @@ class TiToGRPOTrainer(GRPOTrainer):
         input_ids = torch.tensor(padded, device=device)
         attention_mask = torch.tensor(attn_masks, device=device)
 
+        gen_kwargs = dict(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            max_new_tokens=self.max_completion_length,
+            temperature=self.args.temperature,
+            top_p=0.9,
+            do_sample=True,
+            pad_token_id=pad_id,
+        )
+        if suppress_think and _THINK_START_ID is not None:
+            gen_kwargs["suppress_tokens"] = [_THINK_START_ID]
+
         with torch.no_grad():
-            outputs = self.model.generate(
-                input_ids=input_ids,
-                attention_mask=attention_mask,
-                max_new_tokens=self.max_completion_length,
-                temperature=self.args.temperature,
-                top_p=0.9,
-                do_sample=True,
-                pad_token_id=pad_id,
-            )
+            outputs = self.model.generate(**gen_kwargs)
 
         results = []
         for i in range(len(prompts)):
