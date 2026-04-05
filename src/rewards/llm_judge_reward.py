@@ -117,14 +117,14 @@ def _extract_trajectory(completion: list[dict]) -> tuple[str, str, bool]:
         elif role == "tool":
             content = msg.get("content", "")
             if isinstance(content, str):
-                # Parse snippet IDs
-                for line in content.split("\n"):
-                    m = re.match(r'^\[([SR]\d+)\](.*)', line)
-                    if m:
-                        sid = m.group(1)
-                        rest = m.group(2).strip()
-                        # Get next non-empty line as content
-                        snippets[sid] = rest[:200]
+                _parse_snippets(content, snippets)
+
+        # Also check assistant content for spliced tool_response blocks (TI/TO)
+        if role == "assistant":
+            content = msg.get("content", "")
+            if isinstance(content, str) and "<tool_response>" in content:
+                for resp_match in re.finditer(r'<tool_response>(.*?)</tool_response>', content, re.DOTALL):
+                    _parse_snippets(resp_match.group(1), snippets)
                 # Show truncated result
                 preview = content[:100].replace("\n", " ")
                 trajectory_lines.append(f"  ← {preview}...")
