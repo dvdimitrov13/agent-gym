@@ -6,7 +6,7 @@ dataset: "data/train_trl_v2_curriculum.jsonl"
 per_device_train_batch_size: 2
 gradient_accumulation_steps: 2
 num_generations: 4
-max_completion_length: 512
+max_completion_length: 1024
 max_tool_calling_iterations: 5
 
 # GRPO (length-biased, SID-1 style)
@@ -41,10 +41,8 @@ use_tito: true
 #   Steps 30-69:  2-hop × 2 epochs, 768 tokens, 7 iters
 #   Steps 70-99:  3-hop × 2 epochs, 1024 tokens, 10 iters
 #   Steps 100-199: mixed (shuffled), 1024 tokens, 10 iters
-length_schedule:
-  - [0, 512]
-  - [30, 768]
-  - [70, 1024]
+# Flat 1024 — model needs room to think + submit
+# length_schedule: none, flat 1024 throughout
 
 tool_iter_schedule:
   - [0, 5]
