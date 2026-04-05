@@ -40,12 +40,20 @@ def _find_tc_end(cids: list[int]) -> int:
 class TiToGRPOTrainer(GRPOTrainer):
     """GRPOTrainer with token-space tool calling (TI/TO)."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, disable_thinking: bool = True, **kwargs):
         # Remove custom kwargs before passing to parent
         kwargs.pop("force_submit_until_step", None)
         super().__init__(*args, **kwargs)
         _init_token_ids(self.processing_class)
-        logger.info("TiToGRPOTrainer: TI/TO enabled (no forced submit)")
+        self.disable_thinking = disable_thinking
+        if disable_thinking:
+            # Suppress <think> token in TRL's initial generation via generation_config
+            from src.training.tito import _THINK_START_ID
+            if _THINK_START_ID is not None:
+                self.generation_config.suppress_tokens = [_THINK_START_ID]
+            logger.info("TiToGRPOTrainer: TI/TO enabled, thinking DISABLED")
+        else:
+            logger.info("TiToGRPOTrainer: TI/TO enabled, thinking on")
 
     def _tool_call_loop(self, prompts, prompt_ids, completion_ids, completions,
                         logprobs, images, multimodal_fields):
@@ -183,6 +191,8 @@ class TiToGRPOTrainer(GRPOTrainer):
 
     def _batch_generate(self, prompts, device, tokenizer):
         """Batch generate from token ID prompts. Returns new tokens per prompt."""
+        from src.training.tito import _THINK_START_ID
+
         max_len = max(len(p) for p in prompts)
         pad_id = tokenizer.pad_token_id or tokenizer.eos_token_id
 
@@ -196,16 +206,21 @@ class TiToGRPOTrainer(GRPOTrainer):
         input_ids = torch.tensor(padded, device=device)
         attention_mask = torch.tensor(attn_masks, device=device)
 
+        gen_kwargs = dict(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            max_new_tokens=self.max_completion_length,
+            temperature=self.args.temperature,
+            top_p=0.9,
+            do_sample=True,
+            pad_token_id=pad_id,
+        )
+        # Suppress <think> token to disable internal reasoning
+        if self.disable_thinking and _THINK_START_ID is not None:
+            gen_kwargs["suppress_tokens"] = [_THINK_START_ID]
+
         with torch.no_grad():
-            outputs = self.model.generate(
-                input_ids=input_ids,
-                attention_mask=attention_mask,
-                max_new_tokens=self.max_completion_length,
-                temperature=self.args.temperature,
-                top_p=0.9,
-                do_sample=True,
-                pad_token_id=pad_id,
-            )
+            outputs = self.model.generate(**gen_kwargs)
 
         results = []
         for i in range(len(prompts)):

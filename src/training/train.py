@@ -157,8 +157,8 @@ def main():
     # V2 reward/env selection
     use_v2 = config.get("use_v2_rewards", False)
     if use_v2:
-        reward_funcs = [ndcg_reward, efficiency_reward, thinking_reward, format_reward]
-        grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.5, 0.5]
+        reward_funcs = [ndcg_reward, efficiency_reward, format_reward]
+        grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.5]
     else:
         reward_funcs = [retrieval_reward, efficiency_reward, thinking_reward, truncation_reward]
         grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.3, 0.3]
