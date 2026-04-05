@@ -62,6 +62,13 @@ class TiToGRPOTrainer(GRPOTrainer):
         tool_call_count = 0
         tool_failure_count = 0
 
+        # Debug: log what TRL passes us
+        for idx, cids in enumerate(completion_ids):
+            cids_list = cids if isinstance(cids, list) else cids.tolist()
+            text = tokenizer.decode(cids_list[-50:], skip_special_tokens=False)
+            has_tc = any(t == 151657 for t in cids_list)  # <tool_call> token
+            logger.info(f"TI/TO input [{idx}]: {len(cids_list)} tokens, has_tool_call={has_tc}, tail=...{text[-80:]}")
+
         tool_mask_list = [[1] * len(cids) for cids in completion_ids]
 
         # Track active completions and where new tokens start per completion
