@@ -128,13 +128,6 @@ class TiToGRPOTrainer(GRPOTrainer):
         tool_call_count = 0
         tool_failure_count = 0
 
-        # Debug: log what TRL passes us
-        for idx, cids in enumerate(completion_ids):
-            cids_list = cids if isinstance(cids, list) else cids.tolist()
-            text = tokenizer.decode(cids_list[-50:], skip_special_tokens=False)
-            has_tc = any(t == 151657 for t in cids_list)  # <tool_call> token
-            logger.info(f"TI/TO input [{idx}]: {len(cids_list)} tokens, has_tool_call={has_tc}, tail=...{text[-80:]}")
-
         tool_mask_list = [[1] * len(cids) for cids in completion_ids]
 
         # Track active completions and where new tokens start per completion
@@ -159,12 +152,6 @@ class TiToGRPOTrainer(GRPOTrainer):
                 span = _find_tool_call(new_portion)
                 if span:
                     span = (span[0] + search_start, span[1] + search_start)
-                # DEBUG: log what we're checking
-                if iteration > 0:
-                    new_text = tokenizer.decode(new_portion[:50], skip_special_tokens=False) if new_portion else "(empty)"
-                    logger.info(f"TI/TO check [{idx}] iter={iteration} search_start={search_start} "
-                                f"new_len={len(new_portion)} span={span} "
-                                f"start='{new_text[:80]}'")
                 if not span:
                     no_tool.append(idx)
                     continue
@@ -230,23 +217,7 @@ class TiToGRPOTrainer(GRPOTrainer):
 
             # 4. Batch generate next turn
             if gen_prompts:
-                logger.info(f"TI/TO generating round {iteration+1} for {len(gen_prompts)} prompts "
-                            f"(prompt lens: {[len(p) for p in gen_prompts]})")
                 new_tokens_list = self._batch_generate(gen_prompts, device, tokenizer)
-                # DEBUG: decode FULL raw output of each generation
-                for dbg_i, dbg_tokens in enumerate(new_tokens_list):
-                    dbg_text = tokenizer.decode(dbg_tokens, skip_special_tokens=False)
-                    has_tc = "<tool_call>" in dbg_text
-                    has_tc_end = "</tool_call>" in dbg_text
-                    has_submit = "submit_answer" in dbg_text
-                    has_think_end = "</think>" in dbg_text
-                    logger.info(f"TI/TO gen [{dbg_i}] {len(dbg_tokens)} tokens: "
-                                f"</think>={has_think_end} <tool_call>={has_tc} "
-                                f"</tool_call>={has_tc_end} submit={has_submit}")
-                    # Log the FULL text, split into chunks
-                    for chunk_start in range(0, len(dbg_text), 300):
-                        logger.info(f"TI/TO gen [{dbg_i}] text[{chunk_start}:]: "
-                                    f"{dbg_text[chunk_start:chunk_start+300]}")
 
                 mem_used = torch.cuda.memory_allocated() / 1e9
                 mem_reserved = torch.cuda.memory_reserved() / 1e9
