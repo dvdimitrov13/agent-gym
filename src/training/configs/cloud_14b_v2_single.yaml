@@ -6,7 +6,7 @@ dataset: "data/train_trl_v2.jsonl"
 per_device_train_batch_size: 2
 gradient_accumulation_steps: 4
 num_generations: 4
-max_completion_length: 256  # starting value, increases via schedule
+max_completion_length: 512  # starting value, increases via schedule
 max_tool_calling_iterations: 3  # starting value, increases via schedule
 
 # GRPO (length-biased, SID-1 style)
@@ -36,11 +36,10 @@ use_v2_rewards: true
 use_tito: true
 
 # Curriculum scheduling
-# Length: 256 → 512 → 1024 (generation budget per round)
+# Length: 512 → 1024
 length_schedule:
-  - [0, 256]
-  - [100, 512]
-  - [200, 1024]
+  - [0, 512]
+  - [150, 1024]
 
 # Tool iterations: 3 → 6 → 10
 tool_iter_schedule:
