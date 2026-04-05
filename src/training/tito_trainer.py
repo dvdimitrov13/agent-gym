@@ -49,13 +49,24 @@ class TiToGRPOTrainer(GRPOTrainer):
         self._current_step = 0
 
         global _FINAL_ROUND_SUFFIX
-        final_msg = (
+        # Two variants: with and without thinking suppression
+        # The "no think" variant starts the tool call directly, giving the model
+        # no choice but to complete the submit_answer JSON
+        self._final_suffix_normal = self.processing_class.encode(
             "\n<|im_end|>\n<|im_start|>system\n"
             "Final round: search and read are no longer available. "
             "You must now call submit_answer with your ranked passage IDs.\n"
-            "<|im_end|>\n<|im_start|>assistant\n"
+            "<|im_end|>\n<|im_start|>assistant\n",
+            add_special_tokens=False,
         )
-        _FINAL_ROUND_SUFFIX = self.processing_class.encode(final_msg, add_special_tokens=False)
+        self._final_suffix_no_think = self.processing_class.encode(
+            "\n<|im_end|>\n<|im_start|>system\n"
+            "Final round: search and read are no longer available. "
+            "You must now call submit_answer with your ranked passage IDs.\n"
+            '<|im_end|>\n<|im_start|>assistant\n<tool_call>\n{"name": "submit_answer", "arguments": {"passage_ids": [',
+            add_special_tokens=False,
+        )
+        _FINAL_ROUND_SUFFIX = self._final_suffix_normal  # default
         logger.info(f"TiToGRPOTrainer: TI/TO enabled, force_submit until step {force_submit_until_step}")
 
     def _tool_call_loop(self, prompts, prompt_ids, completion_ids, completions,
@@ -159,15 +170,17 @@ class TiToGRPOTrainer(GRPOTrainer):
 
             # 4. Force submit on remaining active completions if last iteration
             if do_force:
+                # For first 50 steps, prefix the tool call JSON so model just fills in IDs
+                suffix = self._final_suffix_no_think if self._current_step <= 50 else self._final_suffix_normal
                 for idx in list(active):
                     cids = completion_ids[idx] if isinstance(completion_ids[idx], list) else completion_ids[idx].tolist()
                     pid = prompt_ids[idx] if isinstance(prompt_ids[idx], list) else prompt_ids[idx].tolist()
                     ctx = strip_thinking_tokens(cids)
-                    prompt = pid + ctx + list(_FINAL_ROUND_SUFFIX)
+                    prompt = pid + ctx + list(suffix)
                     gen_prompts.append(prompt)
                     gen_idxs.append(idx)
-                    tool_mask_list[idx] = tool_mask_list[idx] + [0] * len(_FINAL_ROUND_SUFFIX)
-                    completion_ids[idx] = cids + list(_FINAL_ROUND_SUFFIX)
+                    tool_mask_list[idx] = tool_mask_list[idx] + [0] * len(suffix)
+                    completion_ids[idx] = cids + list(suffix)
 
             # 5. Batch generate next turn
             #    For forced rounds in first 50 steps, suppress <think> so model
