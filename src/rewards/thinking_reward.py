@@ -1,69 +1,53 @@
-"""Thinking reward — encourage brief planning, penalize long rambling.
+"""Thinking reward — scales other rewards based on thinking length.
 
-Qwen3 naturally produces <think>...</think> blocks. We want:
-- Short thinking (planning what to search) → 1.0
-- Long thinking (reasoning from memory instead of searching) → decays to 0.0
-- No thinking → 0.5 (neutral)
+Acts as a penalty that decays total reward for verbose thinking:
+  ≤128 tokens: 0.0 (no penalty, other rewards at full value)
+  128-256 tokens: linear decay from 0.0 to -1.0
+  ≥256 tokens: -1.0 (max penalty, ~50% reward reduction)
 
-Measured in tokens (not words) for precise budget control.
-Default: 1.0 if ≤128 tokens, linear decay to 0.0 at 256 tokens.
+With other rewards summing to ~2.0 max (judge=1.0 + efficiency=0.5 + format=0.5),
+a -1.0 penalty at 256 tokens reduces total from 2.0 to 1.0 (50% reduction).
+
+Measured in tokens by counting characters in <think> blocks (÷4 approximation).
 """
 
 import re
 
 
-def _count_think_tokens(completion: list[dict], tokenizer=None) -> int:
-    """Count total tokens in <think> blocks across all assistant messages.
-
-    Falls back to word count * 1.3 if no tokenizer provided.
-    """
-    total_text = ""
+def _count_think_tokens_approx(completion: list[dict]) -> int:
+    """Count approximate tokens in <think> blocks (chars ÷ 4)."""
+    total_chars = 0
     for msg in completion:
         if msg.get("role") != "assistant":
             continue
         content = msg.get("content", "")
-        if isinstance(content, list):
-            texts = [b.get("text", "") for b in content
-                     if isinstance(b, dict) and b.get("type") == "text"]
-            content = " ".join(texts)
+        if not isinstance(content, str):
+            continue
         for match in re.finditer(r"<think>(.*?)</think>", content, re.DOTALL):
-            total_text += match.group(1).strip() + " "
-
-    if not total_text.strip():
-        return 0
-
-    if tokenizer:
-        return len(tokenizer.encode(total_text, add_special_tokens=False))
-    # Approximate: 1 word ≈ 1.3 tokens
-    return int(len(total_text.split()) * 1.3)
+            total_chars += len(match.group(1))
+    return total_chars // 4  # rough token estimate
 
 
 def thinking_reward(
     completions: list[list[dict]],
-    short_threshold: int = 128,
-    long_threshold: int = 256,
     **kwargs,
 ) -> list[float]:
-    """Score thinking length: brief planning good, long rambling bad.
+    """Penalty for verbose thinking. Returns 0 to -1.
 
-    Args:
-        short_threshold: Token count at or below which score is 1.0
-        long_threshold: Token count at or above which score is 0.0
+    ≤128 tokens: 0.0 (no penalty)
+    128-256 tokens: linear from 0.0 to -1.0
+    ≥256 tokens: -1.0
     """
     rewards = []
     for completion in completions:
-        total_tokens = _count_think_tokens(completion)
+        tokens = _count_think_tokens_approx(completion)
 
-        if total_tokens == 0:
-            rewards.append(0.5)
-            continue
-
-        if total_tokens <= short_threshold:
-            score = 1.0
-        elif total_tokens >= long_threshold:
-            score = 0.0
+        if tokens <= 128:
+            penalty = 0.0
+        elif tokens >= 256:
+            penalty = -1.0
         else:
-            score = 1.0 - (total_tokens - short_threshold) / (long_threshold - short_threshold)
+            penalty = -1.0 * (tokens - 128) / (256 - 128)
 
-        rewards.append(score)
+        rewards.append(penalty)
     return rewards

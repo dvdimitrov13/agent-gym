@@ -40,20 +40,28 @@ def _find_tc_end(cids: list[int]) -> int:
 class TiToGRPOTrainer(GRPOTrainer):
     """GRPOTrainer with token-space tool calling (TI/TO)."""
 
-    def __init__(self, *args, disable_thinking: bool = True, **kwargs):
+    def __init__(self, *args, thinking_budget: int = 256, **kwargs):
         # Remove custom kwargs before passing to parent
         kwargs.pop("force_submit_until_step", None)
+        kwargs.pop("disable_thinking", None)
         super().__init__(*args, **kwargs)
         _init_token_ids(self.processing_class)
-        self.disable_thinking = disable_thinking
-        if disable_thinking:
-            # Suppress <think> token in TRL's initial generation via generation_config
-            from src.training.tito import _THINK_START_ID
-            if _THINK_START_ID is not None:
-                self.generation_config.suppress_tokens = [_THINK_START_ID]
-            logger.info("TiToGRPOTrainer: TI/TO enabled, thinking DISABLED")
+
+        # Thinking budget: cap <think> blocks at N tokens via LogitsProcessor
+        self.thinking_budget = thinking_budget
+        if thinking_budget > 0:
+            from src.training.thinking_budget import ThinkingBudgetProcessor
+            self._thinking_processor = ThinkingBudgetProcessor(
+                self.processing_class, max_thinking_tokens=thinking_budget,
+            )
+            # Add to TRL's initial generation config
+            if not hasattr(self.generation_config, 'logits_processor') or self.generation_config.logits_processor is None:
+                self.generation_config.logits_processor = []
+            self.generation_config.logits_processor.append(self._thinking_processor)
+            logger.info(f"TiToGRPOTrainer: TI/TO enabled, thinking budget={thinking_budget} tokens")
         else:
-            logger.info("TiToGRPOTrainer: TI/TO enabled, thinking on")
+            self._thinking_processor = None
+            logger.info("TiToGRPOTrainer: TI/TO enabled, no thinking budget")
 
     def _tool_call_loop(self, prompts, prompt_ids, completion_ids, completions,
                         logprobs, images, multimodal_fields):
@@ -191,8 +199,6 @@ class TiToGRPOTrainer(GRPOTrainer):
 
     def _batch_generate(self, prompts, device, tokenizer):
         """Batch generate from token ID prompts. Returns new tokens per prompt."""
-        from src.training.tito import _THINK_START_ID
-
         max_len = max(len(p) for p in prompts)
         pad_id = tokenizer.pad_token_id or tokenizer.eos_token_id
 
@@ -215,9 +221,10 @@ class TiToGRPOTrainer(GRPOTrainer):
             do_sample=True,
             pad_token_id=pad_id,
         )
-        # Suppress <think> token to disable internal reasoning
-        if self.disable_thinking and _THINK_START_ID is not None:
-            gen_kwargs["suppress_tokens"] = [_THINK_START_ID]
+        # Apply thinking budget processor to continuation rounds too
+        if self._thinking_processor is not None:
+            self._thinking_processor.reset()
+            gen_kwargs["logits_processor"] = [self._thinking_processor]
 
         with torch.no_grad():
             outputs = self.model.generate(**gen_kwargs)

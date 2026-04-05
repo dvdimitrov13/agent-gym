@@ -18,7 +18,7 @@ SYSTEM_PROMPT = (
     "Each tool result has a snippet ID (like [S1], [R1]). "
     "When you have found the passages needed to answer the question, "
     "call submit_answer with the passage IDs ordered by relevance. "
-    "You must always end your turn with a tool call."
+    "Think briefly before each action. You must always end your turn with a tool call."
 )
 
 

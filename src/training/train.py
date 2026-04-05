@@ -154,8 +154,8 @@ def main():
     use_v2 = config.get("use_v2_rewards", False)
     if use_v2:
         from src.rewards.llm_judge_reward import llm_judge_reward
-        reward_funcs = [llm_judge_reward, efficiency_reward, format_reward]
-        grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.5]
+        reward_funcs = [llm_judge_reward, efficiency_reward, format_reward, thinking_reward]
+        grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.5, 1.0]  # thinking at 1.0 since it's a penalty (0 to -1)
     else:
         reward_funcs = [retrieval_reward, efficiency_reward, thinking_reward, truncation_reward]
         grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.3, 0.3]
