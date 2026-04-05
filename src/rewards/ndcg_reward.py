@@ -231,7 +231,7 @@ def _extract_model_ranking(completion: list[dict]) -> list[str]:
     return []
 
 
-RELEVANCE_THRESHOLD = 0.65  # below this cosine similarity, treat as irrelevant
+RELEVANCE_THRESHOLD = 0.45  # tested: relevant=0.628 passes, irrelevant=0.413 fails
 
 
 def _compute_relevance_embedding(snippet_emb: np.ndarray, gold_embs: np.ndarray) -> float:
