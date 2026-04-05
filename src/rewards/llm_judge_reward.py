@@ -213,7 +213,10 @@ def llm_judge_reward(
             rewards.append(0.0)
             continue
 
+        logger.info(f"LLM judge calling: q='{question[:50]}' has_submit={has_submit} "
+                     f"passages='{passages_text[:80]}'")
         score = _judge_single(client, question, trajectory_text, passages_text)
+        logger.info(f"LLM judge result: {score:.3f}")
         rewards.append(score)
 
     n_scored = sum(1 for r in rewards if r > 0)

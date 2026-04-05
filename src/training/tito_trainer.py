@@ -59,6 +59,21 @@ class TiToGRPOTrainer(GRPOTrainer):
             self._thinking_processor = None
             logger.info("TiToGRPOTrainer: TI/TO enabled, no thinking budget")
 
+    def _calculate_rewards(self, inputs, prompts, completions, completion_ids_list):
+        """Override to apply thinking multiplier as a scalar on all rewards."""
+        import torch
+        from src.rewards.thinking_reward import thinking_multiplier
+
+        # Let TRL compute rewards normally
+        rewards_per_func = super()._calculate_rewards(inputs, prompts, completions, completion_ids_list)
+
+        # Apply thinking multiplier to each rollout's total
+        for i, completion in enumerate(completions):
+            mult = thinking_multiplier(completion)
+            rewards_per_func[i, :] *= mult
+
+        return rewards_per_func
+
     def _generate_single_turn(self, prompt_ids, images, multimodal_fields):
         """Override to inject thinking budget processor into generation.
 
