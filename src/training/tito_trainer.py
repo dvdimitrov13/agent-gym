@@ -60,16 +60,42 @@ class TiToGRPOTrainer(GRPOTrainer):
             logger.info("TiToGRPOTrainer: TI/TO enabled, no thinking budget")
 
     def _generate_single_turn(self, prompt_ids, images, multimodal_fields):
-        """Override to inject thinking budget processor into generation."""
+        """Override to inject thinking budget processor into generation.
+
+        TRL passes generation_config to model.generate(), which doesn't accept
+        logits_processor. We wrap the model's generate method to inject it.
+        """
         if self._thinking_processor is not None:
-            # Store original generation_kwargs and inject processor
-            orig_kwargs = getattr(self, 'generation_kwargs', {})
-            if not hasattr(self, 'generation_kwargs'):
-                self.generation_kwargs = {}
             self._thinking_processor.reset()
-            self.generation_kwargs['logits_processor'] = [self._thinking_processor]
-            result = super()._generate_single_turn(prompt_ids, images, multimodal_fields)
-            self.generation_kwargs = orig_kwargs
+            processor = self._thinking_processor
+
+            # Temporarily wrap model.generate to inject logits_processor
+            import types
+            unwrapped = self.model
+            while hasattr(unwrapped, 'module'):
+                unwrapped = unwrapped.module
+            if hasattr(unwrapped, 'base_model'):  # PEFT
+                base = unwrapped.base_model
+                if hasattr(base, 'model'):
+                    base = base.model
+            else:
+                base = unwrapped
+
+            original_generate = base.generate
+
+            def patched_generate(*args, **kwargs):
+                existing = kwargs.get('logits_processor', [])
+                if not isinstance(existing, list):
+                    existing = list(existing) if existing else []
+                processor.reset()
+                kwargs['logits_processor'] = existing + [processor]
+                return original_generate(*args, **kwargs)
+
+            base.generate = patched_generate
+            try:
+                result = super()._generate_single_turn(prompt_ids, images, multimodal_fields)
+            finally:
+                base.generate = original_generate
             return result
         return super()._generate_single_turn(prompt_ids, images, multimodal_fields)
 
