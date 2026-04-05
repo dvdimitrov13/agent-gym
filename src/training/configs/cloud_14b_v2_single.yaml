@@ -36,31 +36,20 @@ use_v2_env: true
 use_v2_rewards: true
 use_tito: true
 
-# Curriculum schedule (aligned to pre-sorted data):
-# Epochs 1-2 (sorted): 1-hop → 2-hop → 3-hop, twice
-#   Steps  0-14:  1-hop, 512 tokens, 5 iters
-#   Steps 15-34:  2-hop, 768 tokens, 7 iters
-#   Steps 35-49:  3-hop, 1024 tokens, 10 iters
-#   Steps 50-64:  1-hop again, 512 tokens, 5 iters
-#   Steps 65-84:  2-hop again, 768 tokens, 7 iters
-#   Steps 85-99:  3-hop again, 1024 tokens, 10 iters
-# Epochs 3-4 (shuffled): all mixed at full budget
-#   Steps 100-199: 1024 tokens, 10 iters
+# Curriculum schedule (consecutive per difficulty):
+#   Steps  0-29:  1-hop × 2 epochs, 512 tokens, 5 iters
+#   Steps 30-69:  2-hop × 2 epochs, 768 tokens, 7 iters
+#   Steps 70-99:  3-hop × 2 epochs, 1024 tokens, 10 iters
+#   Steps 100-199: mixed (shuffled), 1024 tokens, 10 iters
 length_schedule:
   - [0, 512]
-  - [15, 768]
-  - [35, 1024]
-  - [50, 512]
-  - [65, 768]
-  - [85, 1024]
+  - [30, 768]
+  - [70, 1024]
 
 tool_iter_schedule:
   - [0, 5]
-  - [15, 7]
-  - [35, 10]
-  - [50, 5]
-  - [65, 7]
-  - [85, 10]
+  - [30, 7]
+  - [70, 10]
 
 # Output
 output_dir: "checkpoints/qwen3-14b-grpo-v2"
