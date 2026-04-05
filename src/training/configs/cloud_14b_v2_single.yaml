@@ -1,10 +1,10 @@
 # V2 single-GPU config — Blackwell 98GB
-# Clean setup: no forced submit, no cache, bug-fixed TI/TO
+# Clean: bug-fixed TI/TO, no forced submit, no cache
 model_name: "Qwen/Qwen3-14B"
 dataset: "data/train_trl_v2.jsonl"
 
-per_device_train_batch_size: 2
-gradient_accumulation_steps: 4
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 2
 num_generations: 4
 max_completion_length: 512
 max_tool_calling_iterations: 5
@@ -35,18 +35,18 @@ use_v2_env: true
 use_v2_rewards: true
 use_tito: true
 
-# Curriculum scheduling
-# Length: 512 → 1024
+# Curriculum (aligned to sorted data: 60 1-hop, 80 2-hop, 60 3-hop)
+# Epoch 1: steps 0-29 (1-hop), 30-69 (2-hop), 70-99 (3-hop)
+# Epochs 2-4: mixed
 length_schedule:
   - [0, 512]
-  - [150, 1024]
+  - [30, 768]
+  - [70, 1024]
 
-# Tool iterations: 5 (1-hop phase) → 10 (multi-hop phase)
 tool_iter_schedule:
   - [0, 5]
-  - [100, 10]
-
-# Data is pre-sorted: 1-hop first, then 2-hop, then 3-hop
+  - [30, 7]
+  - [70, 10]
 
 # Output
 output_dir: "checkpoints/qwen3-14b-grpo-v2"
