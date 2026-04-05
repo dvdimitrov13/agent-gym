@@ -233,15 +233,20 @@ class TiToGRPOTrainer(GRPOTrainer):
                 logger.info(f"TI/TO generating round {iteration+1} for {len(gen_prompts)} prompts "
                             f"(prompt lens: {[len(p) for p in gen_prompts]})")
                 new_tokens_list = self._batch_generate(gen_prompts, device, tokenizer)
-                # DEBUG: decode raw output of each generation
+                # DEBUG: decode FULL raw output of each generation
                 for dbg_i, dbg_tokens in enumerate(new_tokens_list):
                     dbg_text = tokenizer.decode(dbg_tokens, skip_special_tokens=False)
                     has_tc = "<tool_call>" in dbg_text
+                    has_tc_end = "</tool_call>" in dbg_text
                     has_submit = "submit_answer" in dbg_text
                     has_think_end = "</think>" in dbg_text
                     logger.info(f"TI/TO gen [{dbg_i}] {len(dbg_tokens)} tokens: "
-                                f"</think>={has_think_end} <tool_call>={has_tc} submit={has_submit} "
-                                f"text='{dbg_text[:120]}...'")
+                                f"</think>={has_think_end} <tool_call>={has_tc} "
+                                f"</tool_call>={has_tc_end} submit={has_submit}")
+                    # Log the FULL text, split into chunks
+                    for chunk_start in range(0, len(dbg_text), 300):
+                        logger.info(f"TI/TO gen [{dbg_i}] text[{chunk_start}:]: "
+                                    f"{dbg_text[chunk_start:chunk_start+300]}")
 
                 mem_used = torch.cuda.memory_allocated() / 1e9
                 mem_reserved = torch.cuda.memory_reserved() / 1e9
