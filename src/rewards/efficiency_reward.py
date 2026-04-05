@@ -1,86 +1,79 @@
-"""Efficiency reward — penalize trajectories that use more tool calls than the reference.
+"""Efficiency reward — penalize search count deviation from ideal.
 
-The reference trajectory (from Sonnet) represents the ideal number of steps.
-If the model takes more steps, it gets penalized proportionally.
+Ideal search count = num_hops (a 3-hop question should take 3 searches).
+Score: max(0, 1 - abs(search_count - num_hops) / num_hops)
+Perfect at exactly num_hops, penalized for more or fewer.
 
-Score: max(0, 1 - extra_steps / gold_steps)
-- Same or fewer steps → 1.0
-- Double the steps → 0.0
+Only counts search calls, ignores read and submit_answer.
+Returns 0 if submit_answer wasn't called (gated on submission).
 """
 
+import json
+import re
 
-def _count_tool_calls(completion: list[dict], exclude: set[str] | None = None) -> int:
-    """Count tool calls in a completion, optionally excluding certain tools.
 
-    Supports TRL format (tool_calls key on assistant messages)
-    and Anthropic format (type=tool_use content blocks).
-    """
-    exclude = exclude or set()
+def _count_search_calls(completion: list[dict]) -> int:
+    """Count search tool calls in a completion."""
     count = 0
     for msg in completion:
         if msg.get("role") != "assistant":
             continue
-        # TRL / OpenAI format: tool_calls key on the message
-        tool_calls = msg.get("tool_calls", [])
-        if tool_calls:
-            import json as _json
-            for tc in tool_calls:
-                func = tc.get("function", {})
-                name = func.get("name", "")
-                if name not in exclude:
-                    count += 1
-            continue
-        # Anthropic format: type=tool_use blocks in content list
-        content = msg.get("content", [])
-        if isinstance(content, list):
-            for block in content:
-                if isinstance(block, dict) and block.get("type") == "tool_use":
-                    name = block.get("name", "")
-                    if name not in exclude:
-                        count += 1
+        for tc in msg.get("tool_calls", []):
+            func = tc.get("function", {})
+            if func.get("name") == "search":
+                count += 1
+        # Also check raw text (TI/TO completions)
+        content = msg.get("content", "")
+        if isinstance(content, str):
+            count += len(re.findall(r'"name"\s*:\s*"search"', content))
     return count
+
+
+def _has_submit(completion: list[dict]) -> bool:
+    """Check if submit_answer was called."""
+    for msg in completion:
+        if msg.get("role") != "assistant":
+            continue
+        for tc in msg.get("tool_calls", []):
+            if tc.get("function", {}).get("name") == "submit_answer":
+                return True
+        content = msg.get("content", "")
+        if isinstance(content, str) and "submit_answer" in content:
+            return True
+    return False
 
 
 def efficiency_reward(
     completions: list[list[dict]],
-    gold_tool_count: list[int] | None = None,
+    num_hops: list[int] | None = None,
     **kwargs,
 ) -> list[float]:
-    """Penalize excess tool calls beyond the reference trajectory.
+    """Score efficiency: how close is search count to ideal (num_hops)?
 
-    Returns max(0, 1 - extra_steps / gold_steps).
-    If gold_tool_count is not provided, returns 1.0 for all (no penalty).
+    Returns max(0, 1 - abs(searches - num_hops) / num_hops).
+    Gated on submit_answer — no credit if model didn't submit.
     """
-    if gold_tool_count is None:
-        return [1.0] * len(completions)
+    if num_hops is None:
+        return [0.0] * len(completions)
 
     rewards = []
-    for completion, gold_count in zip(completions, gold_tool_count):
-        # Exclude submit_answer from count — it's a terminal action, not a search step
-        model_count = _count_tool_calls(completion, exclude={"submit_answer"})
-
-        # No efficiency credit if the model didn't submit — prevents gaming
-        # by doing zero searches and getting perfect "efficiency"
-        has_submit = any(
-            tc.get("function", {}).get("name") == "submit_answer"
-            for msg in completion if msg.get("role") == "assistant"
-            for tc in msg.get("tool_calls", [])
-        )
-        if not has_submit:
-            # Also check raw text (TI/TO completions)
-            has_submit = any(
-                "submit_answer" in (msg.get("content", "") or "")
-                for msg in completion if msg.get("role") == "assistant"
-            )
-
-        if not has_submit:
+    for completion, ideal in zip(completions, num_hops):
+        if not _has_submit(completion):
             rewards.append(0.0)
-        elif gold_count <= 0:
+            continue
+
+        ideal = int(ideal)
+        if ideal <= 0:
             rewards.append(1.0)
-        elif model_count == 0:
+            continue
+
+        search_count = _count_search_calls(completion)
+        if search_count == 0:
             rewards.append(0.0)
-        else:
-            extra = max(0, model_count - gold_count)
-            score = max(0.0, 1.0 - extra / gold_count)
-            rewards.append(score)
+            continue
+
+        deviation = abs(search_count - ideal)
+        score = max(0.0, 1.0 - deviation / ideal)
+        rewards.append(score)
+
     return rewards

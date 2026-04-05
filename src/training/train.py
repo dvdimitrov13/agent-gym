@@ -123,13 +123,9 @@ def main():
     dataset = load_dataset(config["dataset"])
     logger.info(f"Dataset size: {len(dataset)} examples")
 
-    # Precompute gold embeddings for NDCG reward (v2 only)
+    # V2: LLM judge reward — no precomputation needed (API calls at reward time)
     if config.get("use_v2_rewards", False):
-        from src.rewards.ndcg_reward import precompute_gold_embeddings, set_gold_embedding_index
-        gold_passages_list = [ex.get("gold_passages", []) for ex in dataset]
-        gold_embs = precompute_gold_embeddings(gold_passages_list)
-        set_gold_embedding_index(gold_embs, gold_passages_list)
-        logger.info("Gold embeddings precomputed and indexed")
+        logger.info("V2 rewards: LLM judge + efficiency + format (no embedding precomputation)")
 
     # GRPO config
     output_dir = config.get("output_dir", "checkpoints/debug")
@@ -157,7 +153,8 @@ def main():
     # V2 reward/env selection
     use_v2 = config.get("use_v2_rewards", False)
     if use_v2:
-        reward_funcs = [ndcg_reward, efficiency_reward, format_reward]
+        from src.rewards.llm_judge_reward import llm_judge_reward
+        reward_funcs = [llm_judge_reward, efficiency_reward, format_reward]
         grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.5]
     else:
         reward_funcs = [retrieval_reward, efficiency_reward, thinking_reward, truncation_reward]
