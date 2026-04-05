@@ -28,10 +28,15 @@ class ThinkingBudgetProcessor(LogitsProcessor):
         self._think_tokens = {}
         self._just_ended_think = {}  # True = last token was </think> or \n after it
 
-    def reset(self):
+    def reset(self, assume_in_think: bool = True):
+        """Reset state. If assume_in_think=True, start as if <think> was just generated.
+        This is needed because we prepend <think> to the prompt, so the model
+        starts generating inside a think block but the processor doesn't see
+        the prepended token."""
         self._in_think = {}
         self._think_tokens = {}
         self._just_ended_think = {}
+        self._assume_in_think = assume_in_think
 
     def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor) -> torch.FloatTensor:
         batch_size = input_ids.shape[0]
@@ -55,7 +60,12 @@ class ThinkingBudgetProcessor(LogitsProcessor):
             if last_token == self.think_start_id:
                 self._in_think[i] = True
                 self._think_tokens[i] = 0
-            elif last_token == self.think_end_id:
+            elif i not in self._in_think and self._assume_in_think:
+                # First token for this sequence — assume we're in think
+                # because <think> was prepended to the prompt
+                self._in_think[i] = True
+                self._think_tokens[i] = 0
+            if last_token == self.think_end_id:
                 self._in_think[i] = False
                 if self.force_tool_after_think:
                     self._just_ended_think[i] = "need_newline"

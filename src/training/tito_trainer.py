@@ -82,13 +82,27 @@ class TiToGRPOTrainer(GRPOTrainer):
                 base = unwrapped
 
             original_generate = base.generate
+            think_prefix_ids = self.processing_class.encode("<think>\n", add_special_tokens=False)
 
             def patched_generate(*args, **kwargs):
                 existing = kwargs.get('logits_processor', [])
                 if not isinstance(existing, list):
                     existing = list(existing) if existing else []
-                processor.reset()
+                processor.reset(assume_in_think=True)
                 kwargs['logits_processor'] = existing + [processor]
+
+                # Prepend <think>\n to input_ids to guarantee thinking mode
+                inp = kwargs.get('input_ids', args[0] if args else None)
+                if inp is not None:
+                    prefix = torch.tensor([think_prefix_ids], device=inp.device).expand(inp.shape[0], -1)
+                    kwargs['input_ids'] = torch.cat([inp, prefix], dim=1)
+                    if 'attention_mask' in kwargs and kwargs['attention_mask'] is not None:
+                        prefix_mask = torch.ones(inp.shape[0], len(think_prefix_ids),
+                                                 device=kwargs['attention_mask'].device, dtype=kwargs['attention_mask'].dtype)
+                        kwargs['attention_mask'] = torch.cat([kwargs['attention_mask'], prefix_mask], dim=1)
+                    if args:
+                        args = args[1:]  # remove input_ids from positional args
+
                 return original_generate(*args, **kwargs)
 
             base.generate = patched_generate
@@ -234,13 +248,21 @@ class TiToGRPOTrainer(GRPOTrainer):
         return tool_mask_list, completions, completion_ids, logprobs, tool_call_count, tool_failure_count
 
     def _batch_generate(self, prompts, device, tokenizer):
-        """Batch generate from token ID prompts. Returns new tokens per prompt."""
-        max_len = max(len(p) for p in prompts)
+        """Batch generate from token ID prompts. Returns new tokens per prompt.
+
+        Prepends <think> to each prompt to guarantee thinking mode entry.
+        ThinkingBudgetProcessor then caps thinking and forces <tool_call>.
+        """
+        # Prepend <think>\n to each prompt so model enters thinking mode
+        think_prefix = tokenizer.encode("<think>\n", add_special_tokens=False)
+        prompts_with_think = [p + think_prefix for p in prompts]
+
+        max_len = max(len(p) for p in prompts_with_think)
         pad_id = tokenizer.pad_token_id or tokenizer.eos_token_id
 
         padded = []
         attn_masks = []
-        for p in prompts:
+        for p in prompts_with_think:
             padding = [pad_id] * (max_len - len(p))
             padded.append(padding + p)
             attn_masks.append([0] * len(padding) + [1] * len(p))
@@ -257,20 +279,20 @@ class TiToGRPOTrainer(GRPOTrainer):
             do_sample=True,
             pad_token_id=pad_id,
         )
-        # Apply thinking budget processor to continuation rounds too
         if self._thinking_processor is not None:
-            self._thinking_processor.reset()
+            self._thinking_processor.reset(assume_in_think=True)
             gen_kwargs["logits_processor"] = [self._thinking_processor]
 
         with torch.no_grad():
             outputs = self.model.generate(**gen_kwargs)
 
         results = []
-        for i in range(len(prompts)):
+        for i in range(len(prompts_with_think)):
             new_tokens = outputs[i, max_len:].tolist()
             while new_tokens and new_tokens[-1] == pad_id:
                 new_tokens.pop()
-            results.append(new_tokens)
+            # Prepend think_prefix to returned tokens so it's part of the completion
+            results.append(list(think_prefix) + new_tokens)
         return results
 
     def _dispatch_tito_tool(self, name, args):
