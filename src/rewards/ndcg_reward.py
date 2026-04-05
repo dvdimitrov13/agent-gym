@@ -28,48 +28,59 @@ _embed_model = None
 _gold_embedding_index = None
 
 
-# Centroid embedding per example (mean of gold passage embeddings) for fast lookup
-_gold_centroids = None  # shape (N, embed_dim)
-_INDEX_MATCH_THRESHOLD = 0.90  # cosine sim threshold for matching to precomputed
+# FAISS index for fast centroid lookup (CPU, saves GPU memory)
+_faiss_index = None
+_INDEX_MATCH_THRESHOLD = 0.80  # cosine sim threshold (centroids dilute similarity)
 
 
 def set_gold_embedding_index(embeddings: list, gold_passages_list: list[list[dict]] | None = None):
-    """Store precomputed gold embeddings and build centroid index for fast lookup."""
-    global _gold_embedding_index, _gold_centroids
+    """Store precomputed gold embeddings and build FAISS index for fast lookup."""
+    import faiss
+
+    global _gold_embedding_index, _faiss_index
     _gold_embedding_index = embeddings
 
-    # Build centroid for each example (mean of its gold passage embeddings)
+    # Build centroids (mean of gold passage embeddings per example)
+    dim = None
     centroids = []
     for emb in embeddings:
         if emb is not None and len(emb) > 0:
-            centroid = emb.mean(axis=0)
-            centroid = centroid / (np.linalg.norm(centroid) + 1e-8)  # normalize
+            if dim is None:
+                dim = emb.shape[1]
+            centroid = emb.mean(axis=0).astype(np.float32)
             centroids.append(centroid)
         else:
-            centroids.append(np.zeros(384))  # placeholder
-    _gold_centroids = np.stack(centroids)
+            centroids.append(np.zeros(dim or 384, dtype=np.float32))
+
+    centroids_matrix = np.stack(centroids)
+    # Normalize for cosine similarity via inner product
+    faiss.normalize_L2(centroids_matrix)
+
+    # Build flat inner-product index on CPU
+    _faiss_index = faiss.IndexFlatIP(centroids_matrix.shape[1])
+    _faiss_index.add(centroids_matrix)
 
     n = sum(1 for e in embeddings if e is not None)
-    logger.info(f"NDCG: gold embedding index set ({n}/{len(embeddings)} examples, centroid shape {_gold_centroids.shape})")
+    logger.info(f"NDCG: FAISS index built ({n}/{len(embeddings)} examples, dim={centroids_matrix.shape[1]}, CPU)")
 
 
 def _lookup_precomputed(gold_passages: list[dict]) -> np.ndarray | None:
-    """Find matching precomputed gold embeddings via centroid similarity."""
-    if _gold_centroids is None or _gold_embedding_index is None:
+    """Find matching precomputed gold embeddings via FAISS centroid search."""
+    if _faiss_index is None or _gold_embedding_index is None:
         return None
 
-    # Embed first gold passage as a query
+    import faiss
+
     texts = [p.get("content", "") for p in gold_passages if p.get("content")]
     if not texts:
         return None
 
-    query_emb = _embed_texts([texts[0]])[0]
-    query_norm = query_emb / (np.linalg.norm(query_emb) + 1e-8)
+    query_emb = _embed_texts([texts[0]])[0].astype(np.float32).reshape(1, -1)
+    faiss.normalize_L2(query_emb)
 
-    # Cosine similarity against all centroids
-    sims = np.dot(_gold_centroids, query_norm)
-    best_idx = int(np.argmax(sims))
-    best_sim = float(sims[best_idx])
+    sim, idx = _faiss_index.search(query_emb, 1)
+    best_sim = float(sim[0][0])
+    best_idx = int(idx[0][0])
 
     if best_sim >= _INDEX_MATCH_THRESHOLD:
         return _gold_embedding_index[best_idx]
