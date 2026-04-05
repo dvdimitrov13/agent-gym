@@ -31,7 +31,7 @@ from peft import LoraConfig
 from src.env.search_env import SearchEnvironment
 from src.env.search_env_v2 import SearchEnvironmentV2
 from src.rewards import (
-    retrieval_reward, efficiency_reward, thinking_reward, truncation_reward,
+    retrieval_reward, efficiency_reward, truncation_reward,
     ndcg_reward, format_reward,
 )
 from src.utils.device import get_device, get_dtype
@@ -158,8 +158,8 @@ def main():
         grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.5]
         # Thinking multiplier applied as scalar in TiToGRPOTrainer._calculate_rewards
     else:
-        reward_funcs = [retrieval_reward, efficiency_reward, thinking_reward, truncation_reward]
-        grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.3, 0.3]
+        reward_funcs = [retrieval_reward, efficiency_reward, truncation_reward]
+        grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.3]
 
     # vLLM server mode settings
     if use_vllm:
