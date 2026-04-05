@@ -3,6 +3,7 @@
 Wraps the base SearchEnvironment to:
   - Add snippet IDs ([S1], [S2], [R1], etc.) to tool results
   - Provide submit_answer() tool for structured ranking output
+  - Disable search/page caches for clean training signal
 
 The snippet counter resets on each reset() call (per-episode).
 """
@@ -11,8 +12,14 @@ import re
 from src.env.search_env import SearchEnvironment
 
 
+class _NoCache:
+    """Dummy cache that never hits."""
+    def get(self, *args, **kwargs): return None
+    def set(self, *args, **kwargs): pass
+
+
 class SearchEnvironmentV2(SearchEnvironment):
-    """SearchEnvironment with snippet IDs and ranking submission. No cache."""
+    """SearchEnvironment with snippet IDs, submit_answer, and no cache."""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -27,12 +34,6 @@ class SearchEnvironmentV2(SearchEnvironment):
         self._s_count = 0
         self._r_count = 0
         return super().reset(**kwargs)
-
-
-class _NoCache:
-    """Dummy cache that never hits."""
-    def get(self, *args, **kwargs): return None
-    def set(self, *args, **kwargs): pass
 
     def search(self, query: str, max_results: int = 5) -> str:
         """Search the web. Returns snippets tagged with IDs like [S1], [S2].
