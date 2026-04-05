@@ -305,8 +305,14 @@ class TiToGRPOTrainer(GRPOTrainer):
             self._thinking_processor.reset(assume_in_think=True)
             gen_kwargs["logits_processor"] = [self._thinking_processor]
 
+        # Must set eval mode during generation — LoRA dropout in train mode
+        # causes degenerate output. TRL does this via unwrap_model_for_generation.
+        was_training = self.model.training
+        self.model.eval()
         with torch.no_grad():
             outputs = self.model.generate(**gen_kwargs)
+        if was_training:
+            self.model.train()
 
         results = []
         for i in range(len(prompts_with_think)):
