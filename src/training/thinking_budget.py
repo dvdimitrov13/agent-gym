@@ -73,7 +73,11 @@ class ThinkingBudgetProcessor(LogitsProcessor):
             if self._in_think.get(i, False):
                 self._think_tokens[i] = self._think_tokens.get(i, 0) + 1
 
-                if self._think_tokens[i] >= self.max_thinking_tokens // 2:
+                if self._think_tokens[i] >= self.max_thinking_tokens:
+                    # Hard close: force </think>
+                    scores[i, :] = float('-inf')
+                    scores[i, self.think_end_id] = 0
+                elif self._think_tokens[i] >= self.max_thinking_tokens // 2:
                     # Soft nudge starting at 50% (128 tokens), progressively stronger
                     progress = (self._think_tokens[i] - self.max_thinking_tokens // 2) / (self.max_thinking_tokens // 2)
                     # Boost scales from +2 at 50% to +15 at 100%
