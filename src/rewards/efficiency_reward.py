@@ -59,11 +59,25 @@ def efficiency_reward(
         # Exclude submit_answer from count — it's a terminal action, not a search step
         model_count = _count_tool_calls(completion, exclude={"submit_answer"})
 
-        if gold_count <= 0:
-            # No reference — no penalty
+        # No efficiency credit if the model didn't submit — prevents gaming
+        # by doing zero searches and getting perfect "efficiency"
+        has_submit = any(
+            tc.get("function", {}).get("name") == "submit_answer"
+            for msg in completion if msg.get("role") == "assistant"
+            for tc in msg.get("tool_calls", [])
+        )
+        if not has_submit:
+            # Also check raw text (TI/TO completions)
+            has_submit = any(
+                "submit_answer" in (msg.get("content", "") or "")
+                for msg in completion if msg.get("role") == "assistant"
+            )
+
+        if not has_submit:
+            rewards.append(0.0)
+        elif gold_count <= 0:
             rewards.append(1.0)
         elif model_count == 0:
-            # Model didn't use tools at all when it should have
             rewards.append(0.0)
         else:
             extra = max(0, model_count - gold_count)
