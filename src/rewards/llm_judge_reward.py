@@ -68,7 +68,7 @@ def _extract_trajectory(completion: list[dict]) -> tuple[str, str, bool]:
         role = msg.get("role", "")
 
         if role == "assistant":
-            # Extract tool calls
+            # Extract tool calls from structured format
             for tc in msg.get("tool_calls", []):
                 func = tc.get("function", {})
                 name = func.get("name", "")
@@ -85,20 +85,34 @@ def _extract_trajectory(completion: list[dict]) -> tuple[str, str, bool]:
                     trajectory_lines.append(f"→ submit_answer({passage_ids})")
                 elif name == "search":
                     query = args.get("query", "?")
-                    trajectory_lines.append(f"→ search(\"{query}\")")
+                    trajectory_lines.append(f'→ search("{query}")')
                 elif name == "read":
                     url = args.get("url", "?")[:60]
                     trajectory_lines.append(f"→ read({url})")
 
-            # Check raw text for tool calls too
+            # Also parse <tool_call> blocks from raw text (TRL passes decoded text)
             content = msg.get("content", "")
-            if isinstance(content, str) and "submit_answer" in content:
-                match = re.search(r'"passage_ids"\s*:\s*\[(.*?)\]', content)
-                if match:
-                    ids = re.findall(r'"([SR]\d+)"', match.group(1))
-                    if ids and not passage_ids:
-                        passage_ids = ids
-                        has_submit = True
+            if isinstance(content, str) and "<tool_call>" in content:
+                for tc_match in re.finditer(r'<tool_call>\s*(\{.*?\})\s*</tool_call>', content, re.DOTALL):
+                    try:
+                        tc_data = json.loads(tc_match.group(1))
+                        name = tc_data.get("name", "")
+                        args = tc_data.get("arguments", {})
+                        if isinstance(args, str):
+                            args = json.loads(args)
+
+                        if name == "submit_answer" and not has_submit:
+                            has_submit = True
+                            passage_ids = args.get("passage_ids", [])
+                            trajectory_lines.append(f"→ submit_answer({passage_ids})")
+                        elif name == "search":
+                            query = args.get("query", "?")
+                            trajectory_lines.append(f'→ search("{query}")')
+                        elif name == "read":
+                            url = args.get("url", "?")[:60]
+                            trajectory_lines.append(f"→ read({url})")
+                    except (json.JSONDecodeError, TypeError):
+                        pass
 
         elif role == "tool":
             content = msg.get("content", "")
