@@ -29,6 +29,30 @@ from src.training.tito import (
 logger = logging.getLogger(__name__)
 
 
+def _parse_result_snippets(result_text: str, store: dict):
+    """Parse snippet IDs and content from a tool result into the store."""
+    import re
+    current_id = None
+    current_text = []
+    for line in result_text.split("\n"):
+        m = re.match(r'^\[([SR]\d+)\]', line)
+        if m:
+            if current_id and current_text:
+                store[current_id] = " ".join(current_text)
+            current_id = m.group(1)
+            rest = line[m.end():].strip()
+            current_text = [rest] if rest else []
+        elif current_id and line.strip():
+            current_text.append(line.strip())
+        elif not line.strip():
+            if current_id and current_text:
+                store[current_id] = " ".join(current_text)
+            current_id = None
+            current_text = []
+    if current_id and current_text:
+        store[current_id] = " ".join(current_text)
+
+
 def _find_tc_end(cids: list[int]) -> int:
     """Find position after </tool_call> in token list."""
     for j in range(len(cids) - 1, -1, -1):
@@ -60,9 +84,14 @@ class TiToGRPOTrainer(GRPOTrainer):
             logger.info("TiToGRPOTrainer: TI/TO enabled, no thinking budget")
 
     def _calculate_rewards(self, inputs, prompts, completions, completion_ids_list):
-        """Override to apply thinking multiplier as a scalar on all rewards."""
+        """Override to set snippet store and apply thinking multiplier."""
         import torch
         from src.rewards.thinking_reward import thinking_multiplier
+        from src.rewards.llm_judge_reward import set_snippet_store
+
+        # Set snippet store so judge reward can find passage content
+        if hasattr(self, '_snippet_store'):
+            set_snippet_store(self._snippet_store)
 
         # Let TRL compute rewards normally
         rewards_per_func = super()._calculate_rewards(inputs, prompts, completions, completion_ids_list)
@@ -150,6 +179,8 @@ class TiToGRPOTrainer(GRPOTrainer):
         new_tokens_start = {idx: 0 for idx in range(len(completion_ids))}
         total_submitted = 0
         total_no_tool = 0
+        # Store snippet ID → content for each completion (for reward functions)
+        snippet_store = {idx: {} for idx in range(len(completion_ids))}
 
         for iteration in range(self.max_tool_calling_iterations):
             if not active:
@@ -217,6 +248,9 @@ class TiToGRPOTrainer(GRPOTrainer):
                 logger.info(f"TI/TO [{idx}] {name}({args_short})")
                 result = self._dispatch_tito_tool(name, args)
 
+                # Store snippets from tool result for reward functions
+                _parse_result_snippets(result, snippet_store[idx])
+
                 cids = completion_ids[idx] if isinstance(completion_ids[idx], list) else completion_ids[idx].tolist()
                 tc_end = _find_tc_end(cids[new_tokens_start.get(idx, 0):]) + new_tokens_start.get(idx, 0)
                 kept = cids[:tc_end]
@@ -252,6 +286,9 @@ class TiToGRPOTrainer(GRPOTrainer):
         logger.info(f"TI/TO done: {total_submitted} submitted, {total_no_tool} no-tool, "
                      f"{len(active)} still active, {tool_call_count} tool calls, "
                      f"avg completion={avg_len:.0f} tokens")
+
+        # Store snippet_store for reward functions to access
+        self._snippet_store = snippet_store
 
         return tool_mask_list, completions, completion_ids, logprobs, tool_call_count, tool_failure_count
 

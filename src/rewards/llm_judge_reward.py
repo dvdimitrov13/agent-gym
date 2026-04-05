@@ -19,6 +19,16 @@ logger = logging.getLogger(__name__)
 _client = None
 _MODEL = "gpt-4.1-mini"
 
+# Snippet store set by TiToGRPOTrainer after each _tool_call_loop
+# Maps: completion_idx → {snippet_id → content}
+_snippet_store = None
+
+
+def set_snippet_store(store: dict):
+    """Called by TiToGRPOTrainer to provide snippet content for reward."""
+    global _snippet_store
+    _snippet_store = store
+
 
 def _get_client():
     global _client
@@ -54,7 +64,7 @@ Respond with ONLY this JSON:
 {{"relevance": N, "completeness": N, "source_quality": N}}"""
 
 
-def _extract_trajectory(completion: list[dict]) -> tuple[str, str, bool]:
+def _extract_trajectory(completion: list[dict], completion_idx: int = -1) -> tuple[str, str, bool]:
     """Extract trajectory summary, submitted passages text, and whether submit was called.
 
     Returns (trajectory_text, passages_text, has_submit).
@@ -130,10 +140,18 @@ def _extract_trajectory(completion: list[dict]) -> tuple[str, str, bool]:
                 trajectory_lines.append(f"  ← {preview}...")
 
     # Build passages text from submitted IDs
+    # First try snippet_store (set by TI/TO trainer), then fall back to parsed snippets
     if passage_ids:
         passages_lines = []
         for pid in passage_ids:
-            text = snippets.get(pid, "(content not found)")
+            # Try the global snippet store first
+            text = None
+            if _snippet_store and completion_idx >= 0 and completion_idx in _snippet_store:
+                text = _snippet_store[completion_idx].get(pid)
+            if not text:
+                text = snippets.get(pid)
+            if not text:
+                text = "(content not found)"
             passages_lines.append(f"[{pid}] {text[:200]}")
         passages_text = "\n".join(passages_lines)
     else:
@@ -207,7 +225,7 @@ def llm_judge_reward(
             elif isinstance(prompt, str):
                 question = prompt
 
-        trajectory_text, passages_text, has_submit = _extract_trajectory(completion)
+        trajectory_text, passages_text, has_submit = _extract_trajectory(completion, completion_idx=i)
 
         if not has_submit or not question:
             rewards.append(0.0)
