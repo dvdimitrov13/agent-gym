@@ -44,16 +44,14 @@ class ThinkingBudgetProcessor(LogitsProcessor):
         for i in range(batch_size):
             last_token = input_ids[i, -1].item()
 
-            # State: just emitted </think> → force \n<tool_call>
+            # After </think>, strongly boost <tool_call> but don't force it
             if self._just_ended_think.get(i) == "need_newline":
-                scores[i, :] = float('-inf')
-                scores[i, self.newline_id] = 0
+                scores[i, self.newline_id] += 10.0
                 self._just_ended_think[i] = "need_tool_call"
                 continue
             elif self._just_ended_think.get(i) == "need_tool_call":
-                scores[i, :] = float('-inf')
-                scores[i, self.tool_call_id] = 0
-                self._just_ended_think[i] = None  # done
+                scores[i, self.tool_call_id] += 10.0
+                self._just_ended_think[i] = None
                 continue
 
             # Track think block
@@ -76,11 +74,14 @@ class ThinkingBudgetProcessor(LogitsProcessor):
                 self._think_tokens[i] = self._think_tokens.get(i, 0) + 1
 
                 if self._think_tokens[i] >= self.max_thinking_tokens:
-                    # Force </think>
+                    # Hard close: force </think>
                     scores[i, :] = float('-inf')
                     scores[i, self.think_end_id] = 0
-                elif self._think_tokens[i] >= self.max_thinking_tokens * 0.9:
-                    # Soft nudge
-                    scores[i, self.think_end_id] += 5.0
+                elif self._think_tokens[i] >= self.max_thinking_tokens // 2:
+                    # Soft nudge starting at 50% (128 tokens), progressively stronger
+                    progress = (self._think_tokens[i] - self.max_thinking_tokens // 2) / (self.max_thinking_tokens // 2)
+                    # Boost scales from +2 at 50% to +15 at 100%
+                    boost = 2.0 + 13.0 * progress
+                    scores[i, self.think_end_id] += boost
 
         return scores
