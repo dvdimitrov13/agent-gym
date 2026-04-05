@@ -91,6 +91,8 @@ class TiToGRPOTrainer(GRPOTrainer):
 
         # Track active completions (not yet submitted or terminated)
         active = set(range(len(completion_ids)))
+        # Track where new tokens start for each completion (to avoid re-detecting old tool calls)
+        new_tokens_start = {idx: 0 for idx in range(len(completion_ids))}
 
         for iteration in range(self.max_tool_calling_iterations):
             if not active:
@@ -100,13 +102,20 @@ class TiToGRPOTrainer(GRPOTrainer):
             do_force = is_last_iter and force_submit
 
             # Classify each active completion's tool call
+            # IMPORTANT: only look in NEW tokens to avoid re-detecting old tool calls
             submitted = []      # (idx, name, args) — called submit_answer
             searching = []      # (idx, name, args) — called search/read
             no_tool = []        # idx — no tool call, terminate
 
             for idx in list(active):
                 cids = completion_ids[idx] if isinstance(completion_ids[idx], list) else completion_ids[idx].tolist()
-                span = _find_tool_call(cids)
+                # Only search for tool calls in tokens generated since last round
+                search_start = new_tokens_start.get(idx, 0)
+                new_portion = cids[search_start:]
+                span = _find_tool_call(new_portion)
+                # Adjust span to full completion_ids coordinates
+                if span:
+                    span = (span[0] + search_start, span[1] + search_start)
                 if not span:
                     no_tool.append(idx)
                     continue
@@ -195,6 +204,8 @@ class TiToGRPOTrainer(GRPOTrainer):
 
                 for i, idx in enumerate(gen_idxs):
                     new_tokens = new_tokens_list[i]
+                    # Mark where new tokens start for next iteration's tool call search
+                    new_tokens_start[idx] = len(completion_ids[idx])
                     completion_ids[idx] = completion_ids[idx] + new_tokens
                     tool_mask_list[idx] = tool_mask_list[idx] + [1] * len(new_tokens)
                     new_text = tokenizer.decode(new_tokens, skip_special_tokens=True)
