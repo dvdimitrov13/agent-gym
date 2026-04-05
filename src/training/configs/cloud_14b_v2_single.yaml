@@ -48,7 +48,13 @@ tool_iter_schedule:
   - [100, 6]
   - [200, 10]
 
+# Force submit_ranking on final round until step 300, then let model decide
+force_submit_until_step: 300
+
 # Data is pre-sorted: 1-hop first, then 2-hop, then 3-hop
+
+# Fresh start with clean data
+# resume_from_checkpoint:
 
 # Output
 output_dir: "checkpoints/qwen3-14b-grpo-v2"

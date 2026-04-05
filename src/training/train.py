@@ -123,6 +123,14 @@ def main():
     dataset = load_dataset(config["dataset"])
     logger.info(f"Dataset size: {len(dataset)} examples")
 
+    # Precompute gold embeddings for NDCG reward (v2 only)
+    if config.get("use_v2_rewards", False):
+        from src.rewards.ndcg_reward import precompute_gold_embeddings, set_gold_embedding_index
+        gold_passages_list = [ex.get("gold_passages", []) for ex in dataset]
+        gold_embs = precompute_gold_embeddings(gold_passages_list)
+        set_gold_embedding_index(gold_embs, gold_passages_list)
+        logger.info("Gold embeddings precomputed and indexed")
+
     # GRPO config
     output_dir = config.get("output_dir", "checkpoints/debug")
     grpo_kwargs = dict(
@@ -149,8 +157,8 @@ def main():
     # V2 reward/env selection
     use_v2 = config.get("use_v2_rewards", False)
     if use_v2:
-        reward_funcs = [ndcg_reward, efficiency_reward]
-        grpo_kwargs["reward_weights"] = [1.0, 0.5]
+        reward_funcs = [ndcg_reward, efficiency_reward, thinking_reward]
+        grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.3]
     else:
         reward_funcs = [retrieval_reward, efficiency_reward, thinking_reward, truncation_reward]
         grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.3, 0.3]
@@ -201,9 +209,11 @@ def main():
         )
     elif use_tito:
         # Single-GPU with TI/TO: token-space tool calling
-        from src.training.tito_trainer import TiToGRPOTrainer
-        logger.info("Creating TiToGRPOTrainer (single GPU, TI/TO)...")
-        trainer = TiToGRPOTrainer(**trainer_kwargs)
+        from src.training.tito_trainer import TiToGRPOTrainer, TrajectoryLoggingCallback
+        force_submit_until = config.get("force_submit_until_step", 300)
+        logger.info(f"Creating TiToGRPOTrainer (single GPU, TI/TO, force_submit until step {force_submit_until})...")
+        trainer = TiToGRPOTrainer(**trainer_kwargs, force_submit_until_step=force_submit_until)
+        trainer.add_callback(TrajectoryLoggingCallback(every_n_steps=10))
     else:
         # Single-GPU standard: TRL handles everything
         logger.info("Creating GRPOTrainer (local generation)...")

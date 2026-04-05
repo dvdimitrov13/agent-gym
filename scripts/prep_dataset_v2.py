@@ -16,7 +16,9 @@ from pathlib import Path
 SYSTEM_PROMPT = (
     "You are a retrieval agent. Use search and read tools to find relevant information. "
     "Each tool result has a snippet ID (like [S1], [R1]). "
-    "When done, call submit_ranking with your passage IDs ordered by relevance and source quality."
+    "When you have found the passages needed to answer the question, "
+    "call submit_answer with the passage IDs ordered by relevance. "
+    "You must always end your turn with a tool call."
 )
 
 

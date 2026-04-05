@@ -1,8 +1,8 @@
-"""SearchEnvironment with snippet IDs and submit_ranking tool for v2 training.
+"""SearchEnvironment with snippet IDs and submit_answer tool for v2 training.
 
 Wraps the base SearchEnvironment to:
   - Add snippet IDs ([S1], [S2], [R1], etc.) to tool results
-  - Provide submit_ranking() tool for structured ranking output
+  - Provide submit_answer() tool for structured ranking output
 
 The snippet counter resets on each reset() call (per-episode).
 """
@@ -73,16 +73,16 @@ class SearchEnvironmentV2(SearchEnvironment):
                 formatted.append(line)
         return "\n".join(formatted)
 
-    def submit_ranking(self, passage_ids: list[str]) -> str:
-        """Submit your final ranking of the most relevant passages, ordered by relevance and source quality.
+    def submit_answer(self, passage_ids: list[str]) -> str:
+        """Submit the passages that answer the question, ordered by relevance. Call this when you have found the information needed to answer the question.
 
         Args:
-            passage_ids: Ordered list of snippet IDs (e.g. ["S3", "R1", "S1"]), most relevant first.
+            passage_ids: Ordered list of snippet IDs that answer the question (e.g. ["S3", "R1", "S1"]), most relevant first.
 
         Returns:
-            Confirmation that the ranking was submitted.
+            Confirmation that the answer was submitted.
         """
         valid = [pid for pid in passage_ids if re.match(r'^[SR]\d+$', pid)]
         if not valid:
             return "Error: no valid passage IDs provided. Use IDs like S1, S2, R1, R2."
-        return f"Ranking submitted: {', '.join(valid)}"
+        return f"Answer submitted: {', '.join(valid)}"

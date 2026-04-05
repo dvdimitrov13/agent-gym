@@ -480,19 +480,63 @@ def extract_json(text: str) -> dict | None:
 
 # --- Pipeline steps ---
 
+def step_research_topic(
+    client: OpenAI,
+    env: SearchEnvironment,
+    seed_topic: str,
+    model: str = DEFAULT_MODEL,
+) -> str:
+    """Step 0: Search the web for real recent events in this topic area.
+
+    Returns a summary of real 2025+ events found, used to ground the
+    question generation step so we don't hallucinate events.
+    """
+    print(f"    [research] searching for real events...", flush=True)
+
+    # Search for real recent events
+    results = env.search(f"{seed_topic} 2025", max_results=5)
+    results2 = env.search(f"{seed_topic} 2026", max_results=3)
+
+    prompt = (
+        f"Based on these search results about '{seed_topic}', "
+        f"list 3-5 specific REAL events from 2025 or 2026 with exact dates, names, and facts. "
+        f"Only include events clearly supported by the search results. "
+        f"Do NOT make up or assume any facts.\n\n"
+        f"Search results:\n{results}\n\n{results2}"
+    )
+    response = client.chat.completions.create(
+        model=model, max_completion_tokens=512,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    facts = response.choices[0].message.content.strip()
+    print(f"    [research] found: {facts[:150]}...", flush=True)
+    return facts
+
+
 def step_generate_question(
     client: OpenAI,
+    env: SearchEnvironment,
     seed_topic: str,
     model: str = DEFAULT_MODEL,
     num_hops: int = 2,
+    researched_facts: str = "",
 ) -> str | None:
-    """Step 1: Generate a question about 2025 events."""
+    """Step 1: Generate a question about 2025 events, grounded in researched facts."""
+    grounding = ""
+    if researched_facts:
+        grounding = (
+            f"\nIMPORTANT: Base your question ONLY on these verified recent facts:\n"
+            f"{researched_facts}\n\n"
+            f"Do NOT invent events. Every fact in your question must come from the list above.\n"
+        )
+
     prompt = QUESTION_PROMPT.format(
         num_hops=num_hops,
         seed_topic=seed_topic,
         hop_format=HOP_FORMAT[num_hops],
         examples=QUESTION_EXAMPLES[num_hops],
-    )
+    ) + grounding
+
     response = client.chat.completions.create(
         model=model, max_completion_tokens=512,
         messages=[{"role": "user", "content": prompt}],
@@ -637,11 +681,17 @@ def generate_training_example(
     num_hops: int = 2,
     try_expand: bool = True,
 ) -> dict | None:
-    """Full pipeline: generate → search → rank → judge → (expand) → save."""
+    """Full pipeline: research → generate → search → rank → judge → (expand) → save."""
 
-    # Step 1: Generate question
+    # Step 0: Research real events in this topic area
+    researched_facts = step_research_topic(client, env, seed_topic, model=model)
+
+    # Step 1: Generate question grounded in researched facts
     print(f"  Step 1: generating {num_hops}-hop question about 2025...", flush=True)
-    question = step_generate_question(client, seed_topic, model=model, num_hops=num_hops)
+    question = step_generate_question(
+        client, env, seed_topic, model=model, num_hops=num_hops,
+        researched_facts=researched_facts,
+    )
     if not question:
         print("  Step 1: failed", flush=True)
         return None

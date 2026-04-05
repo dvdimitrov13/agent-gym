@@ -23,6 +23,36 @@ logger = logging.getLogger(__name__)
 # Lazy-loaded embedding model (shared across calls)
 _embed_model = None
 
+# Precomputed gold embedding index: list of numpy arrays, one per dataset example
+# Set once at training start via set_gold_embedding_index()
+_gold_embedding_index = None
+
+
+_gold_key_to_idx = {}
+
+
+def _gold_passage_key(passages: list[dict]) -> str:
+    """Create a hashable key from gold passages for index lookup."""
+    texts = tuple(p.get("content", "")[:100] for p in passages if p.get("content"))
+    return str(hash(texts))
+
+
+def set_gold_embedding_index(embeddings: list, gold_passages_list: list[list[dict]] | None = None):
+    """Store precomputed gold embeddings for use during training."""
+    global _gold_embedding_index, _gold_key_to_idx
+    _gold_embedding_index = embeddings
+
+    # Build key→index mapping if passages provided
+    if gold_passages_list:
+        _gold_key_to_idx = {}
+        for i, passages in enumerate(gold_passages_list):
+            if passages and embeddings[i] is not None:
+                key = _gold_passage_key(passages)
+                _gold_key_to_idx[key] = i
+
+    n = sum(1 for e in embeddings if e is not None)
+    logger.info(f"NDCG: gold embedding index set ({n}/{len(embeddings)} examples, {len(_gold_key_to_idx)} keys)")
+
 
 def _get_embed_model():
     """Lazy-load bge-small-en-v1.5 on first use."""
@@ -129,7 +159,7 @@ def _parse_snippet_content(content: str, snippets: dict):
 
 
 def _extract_model_ranking(completion: list[dict]) -> list[str]:
-    """Extract the model's ranked snippet IDs from submit_ranking tool call."""
+    """Extract the model's ranked snippet IDs from submit_answer tool call."""
     import json as _json
 
     for msg in reversed(completion):
@@ -137,7 +167,7 @@ def _extract_model_ranking(completion: list[dict]) -> list[str]:
             continue
         for tc in msg.get("tool_calls", []):
             func = tc.get("function", {})
-            if func.get("name") == "submit_ranking":
+            if func.get("name") == "submit_answer":
                 args = func.get("arguments", {})
                 if isinstance(args, str):
                     try:
@@ -221,10 +251,16 @@ def ndcg_reward(
             rewards.append(0.0)
             continue
 
-        # Get gold embeddings (precomputed or compute now)
-        if _gold_embeddings and idx < len(_gold_embeddings) and _gold_embeddings[idx] is not None:
+        # Get gold embeddings: try precomputed index first, then _gold_embeddings arg, then compute
+        gold_embs = None
+        if _gold_embedding_index is not None:
+            # Match by gold passage content hash against the precomputed index
+            gold_key = _gold_passage_key(gold)
+            if gold_key in _gold_key_to_idx:
+                gold_embs = _gold_embedding_index[_gold_key_to_idx[gold_key]]
+        if gold_embs is None and _gold_embeddings and idx < len(_gold_embeddings) and _gold_embeddings[idx] is not None:
             gold_embs = _gold_embeddings[idx]
-        else:
+        if gold_embs is None:
             gold_texts = [p.get("content", "") for p in gold if p.get("content")]
             if not gold_texts:
                 rewards.append(0.0)

@@ -9,12 +9,13 @@ Score: max(0, 1 - extra_steps / gold_steps)
 """
 
 
-def _count_tool_calls(completion: list[dict]) -> int:
-    """Count tool calls in a completion.
+def _count_tool_calls(completion: list[dict], exclude: set[str] | None = None) -> int:
+    """Count tool calls in a completion, optionally excluding certain tools.
 
     Supports TRL format (tool_calls key on assistant messages)
     and Anthropic format (type=tool_use content blocks).
     """
+    exclude = exclude or set()
     count = 0
     for msg in completion:
         if msg.get("role") != "assistant":
@@ -22,14 +23,21 @@ def _count_tool_calls(completion: list[dict]) -> int:
         # TRL / OpenAI format: tool_calls key on the message
         tool_calls = msg.get("tool_calls", [])
         if tool_calls:
-            count += len(tool_calls)
+            import json as _json
+            for tc in tool_calls:
+                func = tc.get("function", {})
+                name = func.get("name", "")
+                if name not in exclude:
+                    count += 1
             continue
         # Anthropic format: type=tool_use blocks in content list
         content = msg.get("content", [])
         if isinstance(content, list):
             for block in content:
                 if isinstance(block, dict) and block.get("type") == "tool_use":
-                    count += 1
+                    name = block.get("name", "")
+                    if name not in exclude:
+                        count += 1
     return count
 
 
@@ -48,7 +56,8 @@ def efficiency_reward(
 
     rewards = []
     for completion, gold_count in zip(completions, gold_tool_count):
-        model_count = _count_tool_calls(completion)
+        # Exclude submit_answer from count — it's a terminal action, not a search step
+        model_count = _count_tool_calls(completion, exclude={"submit_answer"})
 
         if gold_count <= 0:
             # No reference — no penalty
