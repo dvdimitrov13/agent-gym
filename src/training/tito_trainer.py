@@ -54,14 +54,24 @@ class TiToGRPOTrainer(GRPOTrainer):
             self._thinking_processor = ThinkingBudgetProcessor(
                 self.processing_class, max_thinking_tokens=thinking_budget,
             )
-            # Add to TRL's initial generation config
-            if not hasattr(self.generation_config, 'logits_processor') or self.generation_config.logits_processor is None:
-                self.generation_config.logits_processor = []
-            self.generation_config.logits_processor.append(self._thinking_processor)
             logger.info(f"TiToGRPOTrainer: TI/TO enabled, thinking budget={thinking_budget} tokens")
         else:
             self._thinking_processor = None
             logger.info("TiToGRPOTrainer: TI/TO enabled, no thinking budget")
+
+    def _generate_single_turn(self, prompt_ids, images, multimodal_fields):
+        """Override to inject thinking budget processor into generation."""
+        if self._thinking_processor is not None:
+            # Store original generation_kwargs and inject processor
+            orig_kwargs = getattr(self, 'generation_kwargs', {})
+            if not hasattr(self, 'generation_kwargs'):
+                self.generation_kwargs = {}
+            self._thinking_processor.reset()
+            self.generation_kwargs['logits_processor'] = [self._thinking_processor]
+            result = super()._generate_single_turn(prompt_ids, images, multimodal_fields)
+            self.generation_kwargs = orig_kwargs
+            return result
+        return super()._generate_single_turn(prompt_ids, images, multimodal_fields)
 
     def _tool_call_loop(self, prompts, prompt_ids, completion_ids, completions,
                         logprobs, images, multimodal_fields):
