@@ -28,30 +28,52 @@ _embed_model = None
 _gold_embedding_index = None
 
 
-_gold_key_to_idx = {}
-
-
-def _gold_passage_key(passages: list[dict]) -> str:
-    """Create a hashable key from gold passages for index lookup."""
-    texts = tuple(p.get("content", "")[:100] for p in passages if p.get("content"))
-    return str(hash(texts))
+# Centroid embedding per example (mean of gold passage embeddings) for fast lookup
+_gold_centroids = None  # shape (N, embed_dim)
+_INDEX_MATCH_THRESHOLD = 0.90  # cosine sim threshold for matching to precomputed
 
 
 def set_gold_embedding_index(embeddings: list, gold_passages_list: list[list[dict]] | None = None):
-    """Store precomputed gold embeddings for use during training."""
-    global _gold_embedding_index, _gold_key_to_idx
+    """Store precomputed gold embeddings and build centroid index for fast lookup."""
+    global _gold_embedding_index, _gold_centroids
     _gold_embedding_index = embeddings
 
-    # Build key→index mapping if passages provided
-    if gold_passages_list:
-        _gold_key_to_idx = {}
-        for i, passages in enumerate(gold_passages_list):
-            if passages and embeddings[i] is not None:
-                key = _gold_passage_key(passages)
-                _gold_key_to_idx[key] = i
+    # Build centroid for each example (mean of its gold passage embeddings)
+    centroids = []
+    for emb in embeddings:
+        if emb is not None and len(emb) > 0:
+            centroid = emb.mean(axis=0)
+            centroid = centroid / (np.linalg.norm(centroid) + 1e-8)  # normalize
+            centroids.append(centroid)
+        else:
+            centroids.append(np.zeros(384))  # placeholder
+    _gold_centroids = np.stack(centroids)
 
     n = sum(1 for e in embeddings if e is not None)
-    logger.info(f"NDCG: gold embedding index set ({n}/{len(embeddings)} examples, {len(_gold_key_to_idx)} keys)")
+    logger.info(f"NDCG: gold embedding index set ({n}/{len(embeddings)} examples, centroid shape {_gold_centroids.shape})")
+
+
+def _lookup_precomputed(gold_passages: list[dict]) -> np.ndarray | None:
+    """Find matching precomputed gold embeddings via centroid similarity."""
+    if _gold_centroids is None or _gold_embedding_index is None:
+        return None
+
+    # Embed first gold passage as a query
+    texts = [p.get("content", "") for p in gold_passages if p.get("content")]
+    if not texts:
+        return None
+
+    query_emb = _embed_texts([texts[0]])[0]
+    query_norm = query_emb / (np.linalg.norm(query_emb) + 1e-8)
+
+    # Cosine similarity against all centroids
+    sims = np.dot(_gold_centroids, query_norm)
+    best_idx = int(np.argmax(sims))
+    best_sim = float(sims[best_idx])
+
+    if best_sim >= _INDEX_MATCH_THRESHOLD:
+        return _gold_embedding_index[best_idx]
+    return None
 
 
 def _get_embed_model():
@@ -251,13 +273,8 @@ def ndcg_reward(
             rewards.append(0.0)
             continue
 
-        # Get gold embeddings: try precomputed index first, then _gold_embeddings arg, then compute
-        gold_embs = None
-        if _gold_embedding_index is not None:
-            # Match by gold passage content hash against the precomputed index
-            gold_key = _gold_passage_key(gold)
-            if gold_key in _gold_key_to_idx:
-                gold_embs = _gold_embedding_index[_gold_key_to_idx[gold_key]]
+        # Get gold embeddings: try precomputed index (semantic match), then arg, then compute
+        gold_embs = _lookup_precomputed(gold)
         if gold_embs is None and _gold_embeddings and idx < len(_gold_embeddings) and _gold_embeddings[idx] is not None:
             gold_embs = _gold_embeddings[idx]
         if gold_embs is None:

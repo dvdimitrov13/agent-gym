@@ -49,7 +49,7 @@ tool_iter_schedule:
   - [200, 10]
 
 # Force submit_ranking on final round until step 300, then let model decide
-force_submit_until_step: 300
+force_submit_until_step: 200
 
 # Data is pre-sorted: 1-hop first, then 2-hop, then 3-hop
 
