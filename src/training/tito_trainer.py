@@ -223,7 +223,7 @@ class TiToGRPOTrainer(GRPOTrainer):
                 completion_ids[idx] = kept + splice
                 active.discard(idx)
                 total_submitted += 1
-                ids_str = args.get("passage_ids", [])
+                ids_str = args.get("passage_ids", []) if isinstance(args, dict) else args
                 logger.info(f"TI/TO [{idx}] submit_answer({ids_str})")
 
             # 2. No tool call → terminate
