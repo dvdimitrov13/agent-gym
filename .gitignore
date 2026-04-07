@@ -23,6 +23,9 @@ checkpoints/
 logs/
 *.log
 
+# Trajectory snapshots (large, debug-only)
+**/trajectories/
+
 # Weights & Biases
 wandb/
 
