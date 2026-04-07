@@ -156,15 +156,43 @@ This showed that prompt engineering alone could recover significant performance,
 
 CP-1200 achieved **2.25× improvement** over base model in judge score.
 
-### V3: Steps 1-600 (DAPO, No Thinking, Curriculum) — In Progress
+### V3: Steps 1-600 (DAPO, No Thinking, Curriculum)
 
 **Key changes:**
-- **DAPO loss** instead of GRPO (see Section 10)
+- **DAPO loss** instead of GRPO (see Section 9)
 - **Thinking disabled** — prepends empty `<think>\n</think>` block, forces immediate tool calls
 - **Temperature annealing** — 1.0 (steps 0-200) → 0.7 (200-400) → 0.5 (400-600)
 - **Curriculum:** 1-hop (steps 0-29, 384 tokens, 4 iters) → 2-hop (30-69, 512, 5) → 3-hop (70+, 768, 6)
 
-**Status at step 185/600:** avg reward 0.603 → 0.663 (improving), healthy gradients (0.97-1.63).
+**Training dynamics:**
+
+| Phase | Steps | Avg Reward | Avg Grad Norm | Tool Calls/Step |
+|-------|-------|-----------|---------------|-----------------|
+| 1-hop | 1-30 | 0.631 | 0.45 | 2.7 |
+| 2-hop | 31-70 | 0.696 | 0.55 | 3.0 |
+| 3-hop | 71-600 | 0.716 | 1.5 | 4.1 |
+| Final 20 | 580-600 | 0.714 | 2.8 | 4.1 |
+
+Reward improved from 0.60 to 0.71 over training. Gradient norms grew as the model engaged more with harder questions. Tool calls per step nearly doubled (2.7 → 4.1) as the model learned to do multi-step retrieval.
+
+**Eval results (CP-600):**
+
+| Model | Submit Rate | Judge (all) | Judge (submitted) |
+|-------|-----------|-------------|-------------------|
+| Base Qwen3-14B | 12/22 (55%) | 0.450 | 0.826 |
+| V3 CP-600 | 13/22 (59%) | 0.485 | 0.820 |
+
+V3 showed marginal improvement over base (+4% submit rate, +8% judge avg). When the model submitted, quality was high (0.82), but on 9/22 questions it answered from memory without using tools (1 iteration, no submit).
+
+**Analysis:** Disabling thinking removed the model's ability to plan before acting. Without `<think>`, the model couldn't internally reason about whether to search or answer directly — it defaulted to memory on harder questions. V2's thinking-enabled approach (91% submit rate) was significantly more reliable at triggering tool use, even though per-submission quality was slightly lower.
+
+### Training Comparison
+
+The three runs are compared in the following interactive charts:
+
+- **[Reward Trajectory](results/fig_reward_trajectory.html)** — V1 uses additive rewards (>1.0 scale), V2/V3 use multiplicative (0-1 scale). V2 and V3 converge to similar reward levels (~0.71) but through different mechanisms.
+- **[Gradient Norms](results/fig_gradient_norms.html)** — V3 (DAPO) shows steadily increasing gradient norms as training progresses, unlike V1/V2 (GRPO) which are more stable.
+- **[Tool Usage](results/fig_tool_usage.html)** — V3 ramps tool usage from 2.7 to 4.1 calls/step, showing the model learned to search more thoroughly over training.
 
 ---
 
@@ -297,7 +325,42 @@ The jump from 1-hop (0.617) to 2-hop (0.721) shows the model quickly learned the
 
 ## 11. Evaluation
 
-*[Section reserved for final eval results after V3 training completes.]*
+### Eval Setup
+- 22 questions about 2025-2026 events requiring genuine web search
+- LLM judge (GPT 4.1 mini) scores relevance (50%), completeness (30%), source quality (20%)
+- Same judge used for training and evaluation
+- `--disable-thinking` flag matches training setting for V3
+
+### Results Across All Runs
+
+| Model | Submit Rate | Judge (all) | Judge (submitted) | vs Gold |
+|-------|-----------|-------------|-------------------|---------|
+| Gold passages | 22/22 (100%) | 0.895 | 0.895 | 100% |
+| Base Qwen3-14B | 12/22 (55%) | 0.450 | 0.826 | 50% |
+| V1 CP-600 (additive) | 12/22 (55%) | 0.450 | — | 50% |
+| V1 CP-600 (improved prompt) | 18/22 (82%) | 0.587 | — | 66% |
+| **V2 CP-1200 (multiplicative)** | **20/22 (91%)** | **0.655** | **~0.72** | **73%** |
+| V3 CP-600 (DAPO, no think) | 13/22 (59%) | 0.485 | 0.820 | 54% |
+
+### Key Findings
+
+1. **V2 CP-1200 is the best model overall** — 91% submit rate with 0.655 judge average. The combination of thinking + multiplicative rewards + 1200 steps produced the most reliable tool-using agent.
+
+2. **V3 has higher per-submission quality but lower submit rate** — When V3 submits, it scores 0.820 (vs V2's ~0.72). But it only submits on 59% of questions. Disabling thinking hurt the model's ability to decide when to use tools.
+
+3. **Prompt engineering matters significantly** — V1 CP-600 jumped from 55% to 82% submit rate just by improving the system prompt, without any additional training.
+
+4. **Base model is surprisingly capable when it submits** — 0.826 judge average on submitted questions. The base model already knows how to search well; the RL training primarily teaches it to *consistently* use tools rather than answering from memory.
+
+### Latency (V2 CP-1200, Blackwell GPU)
+
+| Iterations | Avg Total | Generation | Tool Execution |
+|-----------|-----------|------------|----------------|
+| 1 | 8.0s | 8.0s (100%) | 0.0s |
+| 2 | 15.0s | 13.2s (88%) | 1.8s (12%) |
+| 3 | 25.5s | 21.9s (86%) | 3.6s (14%) |
+
+Generation dominates latency (86-100%). Tool execution (web search + page reading) is fast relative to autoregressive decoding.
 
 ---
 

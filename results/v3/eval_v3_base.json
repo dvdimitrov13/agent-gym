@@ -1,0 +1,1740 @@
+[
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "no_tool_call",
+        "text": "<think>\n</think>\n\n\nsearch(\"host city of 2026 Winter Olympics opening ceremony\", 5)<|im_end|>"
+      }
+    ],
+    "snippet_store": {},
+    "num_iterations": 1,
+    "submitted": false,
+    "submitted_ids": null,
+    "latency_seconds": 1.3,
+    "gen_time_seconds": 1.2,
+    "tool_time_seconds": 0.0,
+    "question": "Which city hosted the opening ceremony of the 2026 Winter Olympics in February 2026?",
+    "gold_answer": "Milan",
+    "gold_passages": [
+      {
+        "id": "S2",
+        "content": "Feb 6,2026\u00b7The date not to miss is 6February2026. On this day, theOpeningCeremonyof theOlympicWinterGames Milano Cortina2026, produced by Balich Wonder Studio at the Milano San Siro Olympic Stadium, will aim to add a new, inclusive dimension to this global celebration.",
+        "source_url": "https://www.olympics.com/en/milano-cortina-2026/ceremonies/the-olympic-opening-ceremony",
+        "type": "search"
+      },
+      {
+        "id": "S12",
+        "content": "6 Feb 2026\u00b7On the evening of 6 February, the Opening Ceremony of the Winter Olympic Games Milano Cortina 2026 will take place at the San Siro Olympic ...",
+        "source_url": "https://www.olympics.com/en/milano-cortina-2026/news/olympic-opening-ceremony-at-san-siro-everything-you-need-to-know",
+        "type": "search"
+      },
+      {
+        "id": "S15",
+        "content": "The Milano San Siro Olympic Stadium kicks off the spectacle of the Milano Cortina 2026 Olympic Winter Games by hosting the Opening Ceremony.",
+        "source_url": "https://www.olympics.com/en/milano-cortina-2026/venues/milano-san-siro-olympic-stadium",
+        "type": "search"
+      },
+      {
+        "id": "S1",
+        "content": "Theopeningceremonyof the2026WinterOlympicstook place on 6February2026. It started at 20:00 CET (19:00 UTC) and concluded at 23:29. [1] It was held primarily at San Siro in Milan, but also included Livigno, Predazzo, and the streets of Cortina, Italy.",
+        "source_url": "https://en.wikipedia.org/wiki/2026_Winter_Olympics_opening_ceremony",
+        "type": "search"
+      },
+      {
+        "id": "S3",
+        "content": "Feb 7,2026\u00b7Theopeningceremonymarked the official start of the2026WinterOlympicswith celebrations at Milan's San Siro Stadium and at venues in Predazzo, Livigno and Cortina d'Ampezzo.",
+        "source_url": "https://www.cbsnews.com/live-updates/olympics-opening-ceremony-winter-2026/",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "The opening ceremony was on 6 February 2026",
+      "It was held at the Milano San Siro Olympic Stadium / San Siro in Milan",
+      "Milan"
+    ],
+    "num_hops": 1,
+    "judge_score": 0.0
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "no_tool_call",
+        "text": "<think>\n</think>\n\n\nsearch(\"CEO of company acquiring Wiz in 2025\", 5)<|im_end|>"
+      }
+    ],
+    "snippet_store": {},
+    "num_iterations": 1,
+    "submitted": false,
+    "submitted_ids": null,
+    "latency_seconds": 0.6,
+    "gen_time_seconds": 0.6,
+    "tool_time_seconds": 0.0,
+    "question": "What is the first name of the CEO of the company that announced in 2025 that it would acquire Wiz?",
+    "gold_answer": "Sundar",
+    "gold_passages": [
+      {
+        "id": "S16",
+        "content": "SundarPichai,CEO,Google: \"From its earliest days,Google'sstrong security focus has made us a leader in keeping people safe online. Today, businesses and governments that run in the cloud are looking for even stronger security solutions, and greater choice in cloud computing providers.",
+        "source_url": "https://abc.xyz/investor/news/news-details/2025/Google-Announces-Agreement-to-Acquire-Wiz-03-18-2025/default.aspx",
+        "type": "search"
+      },
+      {
+        "id": "S17",
+        "content": "SundarPichai,CEO,Google: \"From its earliest days,Google'sstrong security focus has made us a leader in keeping people safe online. Today, businesses and governments that run in the cloud are looking for even stronger security solutions, and greater choice in cloud computing providers.",
+        "source_url": "https://blog.google/company-news/inside-google/company-announcements/google-agreement-acquire-wiz/",
+        "type": "search"
+      },
+      {
+        "id": "S7",
+        "content": "18 Mar 2025\u00b7Alphabet (GOOGL.O) will buy fast-growing startup Wiz for about $32 billion in its biggest deal ever, the Google parent said Tuesday.Missing:name| Show results with:name",
+        "source_url": "https://www.reuters.com/technology/cybersecurity/google-agrees-buy-cybersecurity-startup-wiz-32-bln-ft-reports-2025-03-18/",
+        "type": "search"
+      },
+      {
+        "id": "S2",
+        "content": "18 Mar 2025\u00b7Google signed a definitive agreement to acquire Wiz. This deal will make it easier for companies to protect themselves across major clouds.",
+        "source_url": "https://blog.google/company-news/inside-google/company-announcements/google-agreement-acquire-wiz/",
+        "type": "search"
+      },
+      {
+        "id": "S8",
+        "content": "18 Mar 2025\u00b7Google on Tuesday signed a \"definitive agreement\" to acquire Wiz, a New York-based cloud security startup, for $32 billion in an all-cash deal.Missing:March| Show results with:March",
+        "source_url": "https://www.cnbc.com/2025/03/18/google-to-acquire-cloud-security-startup-wiz-for-32-billion.html",
+        "type": "search"
+      },
+      {
+        "id": "S1",
+        "content": "... 2025, Google announced an all-cash acquisition of Wiz for $32 billion. Once closed, Wiz will join Google Cloud. The deal \"represent[ed] ...",
+        "source_url": "https://en.wikipedia.org/wiki/Wiz,_Inc.",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "The company that announced in 2025 it would acquire Wiz was Google/Alphabet",
+      "Official announcement snippet names the executive as \u201cSundar Pichai, CEO, Google\u201d",
+      "Sundar"
+    ],
+    "num_hops": 3,
+    "judge_score": 0.0
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "2026 Australian Open men's singles winner country",
+          "max_results": 5
+        },
+        "result": "[S1] 2026AustralianOpen- Wikipedia\n    https://en.wikipedia.org/wiki/2026_Australian_Open\n    The2026AustralianOpenwas a Grand Slam level tennis tournament that was held at Melbourne Park, from 18 January to 1 February2026, with the preliminary rounds played from 12 to 15 January.\n\n[S2] AustralianOpen| Overview | ATP Tour | Tennis\n    https://www.atptour.com/en/tournaments/australian-open/580/overview\n    The2026AustralianOpenran from 18 January-1 February. The Grand Slam season begins in Melbou",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"2026 Australian Open men's singles winner country\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 1,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "2026 Australian Open men's singles winner",
+          "max_results": 5
+        },
+        "result": "[S6] 2026 Australian Open - Men's singles - Wikipedia\n    https://en.wikipedia.org/wiki/2026_Australian_Open_\u2013_Men's_singles\n    Carlos Alcaraz defeated Novak Djokovic in the final, 2-6, 6-2, 6-3, 7-5 to win themen'ssinglestennis title at the2026AustralianOpen. [1] It was his firstAustralianOpentitle and seventh major title overall, becoming the youngest man in tennis history to complete the career Grand Slam insingles(at 22 years, 8 months and 27 days ...\n\n[S7] Major milestone: Alcaraz complete",
+        "generation_text": "<think>\n</think>\n\n\nNone of the search results provide information about the winner of the men's singles title at the 2026 Australian Open or the country they represent. The results mention the tournament dates, location, and some details about the women's final, but not the men's singles winner. I need to search for more specific information about the men's singles winner.\n\nsearch(\"2026 Australian Open men's singles winner\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 2,
+        "type": "tool_call",
+        "tool": "submit_answer",
+        "args": {
+          "passage_ids": [
+            "S6",
+            "S7",
+            "S9",
+            "S10"
+          ]
+        },
+        "result": "Answer submitted: S6, S7, S9, S10",
+        "generation_text": "<think>\n</think>\n\n\nsubmit_answer([\"S6\", \"S7\", \"S9\", \"S10\"])<|im_end|>"
+      }
+    ],
+    "snippet_store": {
+      "S1": "2026AustralianOpen- Wikipedia https://en.wikipedia.org/wiki/2026_Australian_Open The2026AustralianOpenwas a Grand Slam level tennis tournament that was held at Melbourne Park, from 18 January to 1 February2026, with the preliminary rounds played from 12 to 15 January.",
+      "S2": "AustralianOpen| Overview | ATP Tour | Tennis https://www.atptour.com/en/tournaments/australian-open/580/overview The2026AustralianOpenran from 18 January-1 February. The Grand Slam season begins in Melbourne, where fans from across the globe come for stellar tennis and a laid-back atmosphere.",
+      "S3": "Aryna Sabalenka vs Elena Rybakina | Final |AustralianOpen2026... https://www.youtube.com/watch?v=ZsoEmKZdZZo Stream every moment of the2026AustralianOpenlive on TNT Sports and discovery+ TNT Sports marks a new era in sports broadcasting in the UK and Republi...",
+      "S4": "2026AustralianOpenMen'sSinglesDraw - ESPN https://www.espn.com/tennis/australian-open/bracket Visit ESPN to view the complete2026AustralianOpenMen'sSinglesdraw and full bracket with live scores and results.",
+      "S5": "AustralianOpen2026final AS IT HAPPENED: Elena Rybakina WINS... https://www.nine.com.au/sport/tennis/australian-open-2026-womens-final-live-results-scores-winner-aryna-sabalenka-elena-rybakina-updates-20260131-p5nyhw.html WinnerElena Rybakina (C) of Kazakhstan poses with runner-up Aryna Sabalenka (L) and Jennifer Capriati (R) after the Women'sSinglesFinal during day 14 of the2026AustralianOpenat Melbourne Park on January 31,2026in Melbourne,Australia.",
+      "S6": "2026 Australian Open - Men's singles - Wikipedia https://en.wikipedia.org/wiki/2026_Australian_Open_\u2013_Men's_singles Carlos Alcaraz defeated Novak Djokovic in the final, 2-6, 6-2, 6-3, 7-5 to win themen'ssinglestennis title at the2026AustralianOpen. [1] It was his firstAustralianOpentitle and seventh major title overall, becoming the youngest man in tennis history to complete the career Grand Slam insingles(at 22 years, 8 months and 27 days ...",
+      "S7": "Major milestone: Alcaraz completes Slam set with AO 2026 title https://ausopen.com/articles/news/major-milestone-alcaraz-completes-slam-set-ao-2026-title In a historic night at Rod Laver Arena, Carlos Alcaraz became the youngest man to capture a career Grand Slam by earning theAustralianOpen2026men'ssingleschampionship. The world No.1 overcame 10-time AO champion Novak Djokovic 2-6 6-2 6-3 7-5 to secure his maiden AO crown and etch his name onto the Norman Brookes Challenge Cup for the first time.",
+      "S8": "Australian Open 2026 Finals: Full List of Winners, Results, Prize Money https://www.sportshistori.com/2026/01/australian-open-final-full-winners-list-prize-money.html AustralianOpenFinal2026Winners: Complete List ofMen's, Women's and doubles tennis champions in Melbourne.. MELBOURNE -- The first Grand Slam finals of the season are set, with the2026AustralianOpensinglesand doubles championships ready to be decided. MORE:2026AustralianOpenPrize Money: How Much Player Earns Per Round",
+      "S9": "How Carlos Alcaraz beat Novak Djokovic in Australian Open 2026 final to ... https://www.nytimes.com/athletic/live-blogs/australian-open-2026-live-updates-mens-final-alcaraz-djokovic-score-result/tdUNxmGqSj2Q/ Carlos Alcaraz beat Novak Djokovic in four sets \u2014 2-6, 6-2, 6-3, 7-5 \u2014 in the2026AustralianOpenmen'ssinglesfinal to complete the career Grand Slam. 10-timeAustralianOpenchampion ...",
+      "S10": "Australian Open 2026: Carlos Alcaraz beats Novak Djokovic in men's ... https://www.abc.net.au/news/2026-02-01/australian-open-2026-final-live-novak-djokovic-carlos-alcaraz/106293114 Carlos Alcaraz is the youngest man to complete the career Grand Slam, beating 24-time majorwinnerNovak Djokovic in theAustralianOpenfinal."
+    },
+    "num_iterations": 3,
+    "submitted": true,
+    "submitted_ids": {
+      "passage_ids": [
+        "S6",
+        "S7",
+        "S9",
+        "S10"
+      ]
+    },
+    "latency_seconds": 6.6,
+    "gen_time_seconds": 3.9,
+    "tool_time_seconds": 2.3,
+    "question": "Which country does the winner of the men\u2019s singles title at the 2026 Australian Open represent?",
+    "gold_answer": "Spain",
+    "gold_passages": [
+      {
+        "id": "S7",
+        "content": "Tennis -AustralianOpen- Melbourne Park, Melbourne, Australia - February 1,2026Spain's Carlos Alcaraz celebrates with the trophy after winning theAustralianOpenmen'ssinglesagainst Serbia ...",
+        "source_url": "https://www.reuters.com/sports/tennis/list-australian-open-mens-singles-champions-2026-02-01/",
+        "type": "search"
+      },
+      {
+        "id": "S9",
+        "content": "In a historic night at Rod Laver Arena, Carlos Alcaraz became the youngest man to capture a career Grand Slam by earning theAustralianOpen2026men'ssingleschampionship. The world No.1 overcame 10-time AOchampionNovak Djokovic 2-6 6-2 6-3 7-5 to secure his maiden AO crown and etch his name ...",
+        "source_url": "https://ausopen.com/articles/news/major-milestone-alcaraz-completes-slam-set-ao-2026-title",
+        "type": "search"
+      },
+      {
+        "id": "S6",
+        "content": "Carlos Alcaraz defeated Novak Djokovic in the final, 2-6, 6-2, 6-3, 7-5 to win themen'ssinglestennis title at the2026AustralianOpen. [1] It was his firstAustralianOpentitle and seventh major title overall, becoming the youngest man in tennis history to complete the career Grand Slam insingles(at 22 years, 8 months and 27 days old). He was also the youngest man in theOpen...",
+        "source_url": "https://en.wikipedia.org/wiki/2026_Australian_Open_\u2013_Men's_singles",
+        "type": "search"
+      },
+      {
+        "id": "S10",
+        "content": "MELBOURNE, AUSTRALIA - FEBRUARY 01: Serbia's Novak Djokovic receives the runner-up shield following his defeat to Spain's Carlos Alcaraz in themen'ssinglesfinal on Day 15 of theAustralianOpen. tennis tournament in Melbourne on February 01,2026. Mark Avellino / AnadoluNo Use USA No use UK No use Canada No use France No use Japan No use Italy No use Australia No use Spain No use Belgium No ...",
+        "source_url": "https://www.reutersconnect.com/item/australian-open-2026-mens-singles-final/dGFnOnJldXRlcnMuY29tLDIwMjY6bmV3c21sX01UMUFOQURMMDAwMU9aSzdK",
+        "type": "search"
+      },
+      {
+        "id": "S8",
+        "content": "Carlos Alcaraz collapses to the court after winning theAustralianOpenmen'sfinal over Novak Djokovic on Feb. 1,2026.REUTERS",
+        "source_url": "https://nypost.com/2026/02/01/sports/carlos-alcaraz-beats-novak-djokovic-to-win-australian-open-completing-career-grand-slam/",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "2026 Australian Open men\u2019s singles winner: Carlos Alcaraz",
+      "Carlos Alcaraz represents Spain",
+      "Spain"
+    ],
+    "num_hops": 2,
+    "judge_score": 0.79
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "no_tool_call",
+        "text": "<think>\n</think>\n\n\nsearch(\"Company that first closed above a $4 trillion market valuation in July 2025\", 5)<|im_end|>"
+      }
+    ],
+    "snippet_store": {},
+    "num_iterations": 1,
+    "submitted": false,
+    "submitted_ids": null,
+    "latency_seconds": 0.7,
+    "gen_time_seconds": 0.7,
+    "tool_time_seconds": 0.0,
+    "question": "Which quarter did the company that first closed above a $4 trillion market valuation in July 2025 report record revenue for in its February 2026 earnings release?",
+    "gold_answer": "Fourth quarter of fiscal 2026",
+    "gold_passages": [
+      {
+        "id": "S21",
+        "content": "NVIDIA(NASDAQ: NVDA) today reportedrecordrevenuefor the fourthquarterended January 25,2026, of $68.1 billion, up 20% from the previousquarterand up 73% from a year ago. For fiscal2026,revenuewas $215.9 billion, up 65% from a year ago. For thequarter, GAAP and non-GAAP gross margins were 75.0% and 75.2%, respectively.",
+        "source_url": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-fourth-quarter-and-fiscal-2026",
+        "type": "search"
+      },
+      {
+        "id": "S16",
+        "content": "10 Jul 2025\u00b7Nvidia (NVDA.O) , opens new tab rose 0.7% and closed above the $4 trillion valuation milestone for the first time, the S&P 500's second ...",
+        "source_url": "https://www.reuters.com/business/wall-st-futures-ease-after-nvidias-4-trillion-run-data-trade-talks-focus-2025-07-10/",
+        "type": "search"
+      },
+      {
+        "id": "S13",
+        "content": "10 Jul 2025\u00b7Shares of Nvidia ended up 0.75% at $164.10, giving the chipmaker a market value of $4.004 trillion, thanks to surging demand for artificial- ...",
+        "source_url": "https://www.reuters.com/world/china/global-markets-wrapup-1-2025-07-10/",
+        "type": "search"
+      },
+      {
+        "id": "S12",
+        "content": "9 Jul 2025\u00b7Its shares gained 1.4% on Wednesday to close at $503.51. Nvidia has rebounded about 74% from its lows in April, when global markets were jolted ...",
+        "source_url": "https://www.reuters.com/world/china/nvidia-becomes-first-company-clinch-4-trillion-market-value-2025-07-09/",
+        "type": "search"
+      },
+      {
+        "id": "S11",
+        "content": "10 Jul 2025\u00b7Nvidia's stock market value briefly peaked above $4 trillion on Wednesday before closing at about $3.97 trillion. It is worth more than the ...",
+        "source_url": "https://www.reuters.com/business/nvidia-notches-4-trillion-record-close-market-cap-2025-07-10/",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "The company was Nvidia, which Reuters said first closed above a $4 trillion market valuation in July 2025",
+      "Nvidia\u2019s February 25, 2026 earnings release reported record revenue of $68.1 billion for the fourth quarter ended January 25, 2026",
+      "Fourth quarter of fiscal 2026"
+    ],
+    "num_hops": 2,
+    "judge_score": 0.0
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "no_tool_call",
+        "text": "<think>\n</think>\n\n\nsearch(\"first company to reach $4 trillion market value 2026 earnings release\", 5)<|im_end|>"
+      }
+    ],
+    "snippet_store": {},
+    "num_iterations": 1,
+    "submitted": false,
+    "submitted_ids": null,
+    "latency_seconds": 0.7,
+    "gen_time_seconds": 0.7,
+    "tool_time_seconds": 0.0,
+    "question": "What revenue did the company that became the first to reach a $4 trillion market value report for the fiscal quarter it announced in its February 2026 earnings release?",
+    "gold_answer": "$68.1 billion",
+    "gold_passages": [
+      {
+        "id": "R2",
+        "content": "Found 70 matching section(s). Top 5:\n[1]\nNVIDIA (NASDAQ: NVDA) today reported record revenue for the fourth quarter ended January 25, 2026, of $68.1 billion, up 20% from the previous quarter and up 73% from a year ago. For fiscal 2026, revenue was $215.9 billion, up 65% from a year ago.",
+        "source_url": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-fourth-quarter-and-fiscal-2026",
+        "type": "read"
+      },
+      {
+        "id": "S42",
+        "content": "9 Jul 2025\u00b7Nvidia notched a market capitalization of $4 trillion on Wednesday, making it the first public company in the world to reach the milestone ...",
+        "source_url": "https://www.reuters.com/business/view-nvidia-becomes-first-company-hit-4-trillion-market-value-2025-07-09/",
+        "type": "search"
+      },
+      {
+        "id": "S44",
+        "content": "9 Jul 2025\u00b7The stunning rise of Nvidia Corp to become the first publicly traded company valued at $4 trillion underscores the massive importance to the ...",
+        "source_url": "https://www.reuters.com/business/finance/nvidias-4-trillion-milestone-caps-rise-stock-market-behemoth-2025-07-09/",
+        "type": "search"
+      },
+      {
+        "id": "S45",
+        "content": "10 Jul 2025\u00b7Shares of Nvidia ended up 0.75% at $164.10, giving it a market value of $4.004 trillion and extending its lead over Apple and Microsoft as it ...Missing:9| Show results with:9",
+        "source_url": "https://www.reuters.com/business/nvidia-notches-4-trillion-record-close-market-cap-2025-07-10/",
+        "type": "search"
+      },
+      {
+        "id": "S26",
+        "content": "NVIDIA(NASDAQ: NVDA) today reported recordrevenuefor the fourthquarterended January 25,2026, of $68.1 billion, up 20% from the previousquarterand up 73% from a year ago. Forfiscal...",
+        "source_url": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-fourth-quarter-and-fiscal-2026",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "Reuters says Nvidia became the first public company to reach a $4 trillion market value [S42]",
+      "Nvidia\u2019s official February 25, 2026 earnings release says it reported record revenue for the fourth quarter ended January 25, 2026, of $68.1 billion [R2]",
+      "$68.1 billion"
+    ],
+    "num_hops": 3,
+    "judge_score": 0.0
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "president of company that unveiled Switch 2 in 2025",
+          "max_results": 5
+        },
+        "result": "[S1] Nintendo Switch 2 - Wikipedia\n    https://en.wikipedia.org/wiki/Nintendo_Switch_2\n    The NintendoSwitch2[b] is a hybrid video game console developed by Nintendo and released in most regions on June 5,2025. Like the original NintendoSwitch, it can be used as a handheld, as a tablet, or connected via the dock to an external display. The Joy-Con2controllers can be used while magnetically attached or detached from the console. Compared to the originalSwitch, theSwitch2...\n\n[S2] Nintendo Presid",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"president of company that unveiled Switch 2 in 2025\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 1,
+        "type": "tool_call",
+        "tool": "submit_answer",
+        "args": {
+          "passage_ids": [
+            "S3",
+            "S2",
+            "S4",
+            "S5",
+            "S1"
+          ]
+        },
+        "result": "Answer submitted: S3, S2, S4, S5, S1",
+        "generation_text": "<think>\n</think>\n\n\nsubmit_answer([\"S3\", \"S2\", \"S4\", \"S5\", \"S1\"])<|im_end|>"
+      }
+    ],
+    "snippet_store": {
+      "S1": "Nintendo Switch 2 - Wikipedia https://en.wikipedia.org/wiki/Nintendo_Switch_2 The NintendoSwitch2[b] is a hybrid video game console developed by Nintendo and released in most regions on June 5,2025. Like the original NintendoSwitch, it can be used as a handheld, as a tablet, or connected via the dock to an external display. The Joy-Con2controllers can be used while magnetically attached or detached from the console. Compared to the originalSwitch, theSwitch2...",
+      "S2": "Nintendo President on the new Switch 2, tariffs and what's next - CNBC https://www.cnbc.com/2025/04/07/nintendo-president-on-the-new-switch-2-tariffs-and-whats-next.html CNBC got an exclusive interview with Nintendo AmericasPresidentand COO Doug Bowser after theSwitch2wasunveiled.",
+      "S3": "News Release : Jan. 16, 2025 \"Nintendo Switch 2 to be released in 2025\" https://www.nintendo.co.jp/corporate/release/en/2025/250116.html NintendoSwitch2to be released in2025Nintendo Co., Ltd. (HQ: Kyoto, Minami-ku, Japan; Representative Director andPresident: Shuntaro Furukawa, \"Nintendo\" hereafter) announced that NintendoSwitch2, the successor to NintendoSwitch, will be released in2025. Today, Nintendo offered a first look at NintendoSwitch2ina video introducing the hardware.",
+      "S4": "Nintendo President on the new Switch 2, tariffs and what's next for the ... https://www.msn.com/en-us/entertainment/gaming/nintendo-president-on-the-new-switch-2-tariffs-and-whats-next-for-the-company/vi-AA1CrZAF Nintendo of AmericaPresidentDoug Bowser sat down with technology correspondent Steve Kovach in a CNBC exclusive interview after unveiling details about the NintendoSwitch2. They touched on the ...",
+      "S5": "Nintendo of America president Doug Bowser seemingly reveals the ... https://www.techradar.com/gaming/nintendo-of-america-president-doug-bowser-seemingly-reveals-the-nintendo-switch-2-welcome-tour-price Welcome Tour wasunveiledduring the exciting NintendoSwitch2Direct last week, where thecompanyfinally revealed the release date for the upcoming console - June 5,2025- and several launch ..."
+    },
+    "num_iterations": 2,
+    "submitted": true,
+    "submitted_ids": {
+      "passage_ids": [
+        "S3",
+        "S2",
+        "S4",
+        "S5",
+        "S1"
+      ]
+    },
+    "latency_seconds": 3.3,
+    "gen_time_seconds": 1.5,
+    "tool_time_seconds": 1.9,
+    "question": "Who is the president of the company that unveiled the Switch 2 in 2025?",
+    "gold_answer": "Shuntaro Furukawa",
+    "gold_passages": [
+      {
+        "id": "R3",
+        "content": "Found 1 matching section(s). Top 1:\n[1]\nNintendo Switch 2 to be released in 2025 First-look trailer introduces Nintendo Switch 2 Nintendo Switch 2, the successor to the Nintendo Switch system, will be released in 2025. Today Nintendo offered a first look at Nintendo Switch 2 in a video introducing the hardware. Watch the \u201cNintendo Switch 2 \u2013 First-look trailer\u201d and visit the Nintendo Switch 2 website https://www.nintendo.com/successor/en-us/. Nintendo Switch 2 plays Nintendo Switch 2 exclusive games, as well as both physical and digital Nintendo Switch games. Certain Nintendo Switch games may not be supported on or fully compatible with Nintendo Switch 2. Details will be shared [...] North America: New York, April 4-6, 2025 Los Angeles, April 11-13, 2025 Dallas, April 25-27, 2025 Toronto, April 25-27, 2025 Europe: Paris, April 4-6, 2025 London, April 11-13, 2025 Milan, April 25-27, 2025 Berlin, April 25-27, 2025 Madrid, May 9-11, 2025 Amsterdam, May 9-11, 2025 Oceania: Melbourne, May 10-11, 2025 Asia: Tokyo (Makuhari), April 26-27, 2025 Seoul, May 31-June 1, 2025 Hong Kong, To be announced Taipei, To be announced A Nintendo Account is necessary to participate in a Nintendo Switch 2 Experience event. Ticket registrations for consumers will begin in the near future. Please visit https://www.nintendo.com/us/nintendo-switch-2-experience/ for more information.",
+        "source_url": "https://www.nintendo.com/us/whatsnew/nintendo-switch-2-to-be-released-in-2025/",
+        "type": "read"
+      },
+      {
+        "id": "R8",
+        "content": "Found 27 matching section(s). Top 5:\n[1]\nShuntaro Furukawa, President and Representative Director",
+        "source_url": "https://museum-tickets.nintendo.com/en/specified_commercial_transaction",
+        "type": "read"
+      },
+      {
+        "id": "S22",
+        "content": "NintendoSwitch2, the successor to the NintendoSwitchsystem, will be released in2025. Today Nintendo offered a first look atNintendoSwitch2in a video introducing the...",
+        "source_url": "https://www.nintendo.com/us/whatsnew/nintendo-switch-2-to-be-released-in-2025/",
+        "type": "search"
+      },
+      {
+        "id": "S30",
+        "content": "Notices in Accordance with Japan's Specified Commercial Transactions Act Name of the businessNintendoCo., Ltd. RepresentativesShuntaroFurukawa,Presidentand Representative Director Address 11-1 Hokotate-cho, Kamitoba, Minami-ku, Kyoto 601-8501, Japan Phone number, etc. Customer Support Center 0570-011-120 (Navi Dial) \u30fbIf using a VoIP phone or mobile phone subscription plan: 075-662 ...",
+        "source_url": "https://museum-tickets.nintendo.com/en/specified_commercial_transaction",
+        "type": "search"
+      },
+      {
+        "id": "S23",
+        "content": "Jan 16,2025\u00b7Nintendo has officially announced theNintendoSwitch2, the highly anticipated successor to its popular hybrid console. The new system, scheduled for release in2025, wasunveiledtoday...",
+        "source_url": "https://www.forbes.com/sites/darrynking/2025/01/16/nintendo-unveils-nintendo-switch-2-set-for-2025-launch/",
+        "type": "search"
+      },
+      {
+        "id": "S24",
+        "content": "Apr2,2025\u00b7Nintendo unveiled new details on Wednesday about its hugely anticipatedNintendoSwitch2gaming console, which will be the company\u2019s first new console since theNintendoSwitchwas...",
+        "source_url": "https://techcrunch.com/2025/04/02/the-nintendo-switch-2-releases-on-june-5-and-costs-450/",
+        "type": "search"
+      },
+      {
+        "id": "S21",
+        "content": "Jun 5,2025\u00b7TOKYO, June 5 (Reuters) - Gaming fans queued up for the launch ofNintendo's (7974.T)Switch2on Thursday amid pent-up demand for the more powerful next-generation gaming device. \"The...",
+        "source_url": "https://www.reuters.com/business/nintendo-switch-2-launches-globally-with-shortages-expected-amid-pent-up-demand-2025-06-05/",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "Nintendo unveiled/offered a first look at Nintendo Switch 2, which it said would be released in 2025 [R3]",
+      "Nintendo names Shuntaro Furukawa as \u201cPresident and Representative Director\u201d [R8]",
+      "Shuntaro Furukawa"
+    ],
+    "num_hops": 2,
+    "judge_score": 0.77
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "no_tool_call",
+        "text": "<think>\n</think>\n\n\nsearch(\"Uruguay president inaugurated March 2025 vice president\", 5)<|im_end|>"
+      }
+    ],
+    "snippet_store": {},
+    "num_iterations": 1,
+    "submitted": false,
+    "submitted_ids": null,
+    "latency_seconds": 0.6,
+    "gen_time_seconds": 0.6,
+    "tool_time_seconds": 0.0,
+    "question": "Who was inaugurated as vice president alongside the president who took office in Uruguay in March 2025?",
+    "gold_answer": "Carolina Cosse",
+    "gold_passages": [
+      {
+        "id": "S13",
+        "content": "Uruguay'sPresident-elect Yamandu Orsi holds hands withVicePresident-elect Carolina Cosse, accompanied by Sen. Alejandro Sanchez, during their swearing-in ceremony in Congress on Inauguration Day, in Montevideo,Uruguay, Saturday,March1,2025.",
+        "source_url": "https://apnews.com/article/uruguay-president-inauguration-congress-elections-rightwing-leftist-a5d37022c0bbb9615c5bc8f18eaecb29",
+        "type": "search"
+      },
+      {
+        "id": "S21",
+        "content": "Uruguay'sPresident-elect Yamandu Orsi holds hands withVicePresident-elect Carolina Cosse, accompanied by Sen. Alejandro Sanchez, during their swearing-in ceremony in Congress on Inauguration Day, in Montevideo,Uruguay, Saturday,March1,2025.",
+        "source_url": "https://apnews.com/article/uruguay-president-inauguration-congress-elections-rightwing-leftist-a5d37022c0bbb9615c5bc8f18eaecb29",
+        "type": "search"
+      },
+      {
+        "id": "S12",
+        "content": "MONTEVIDEO,March1 (Reuters) -Uruguayis set for a political shift to the center-left as Yamandu Orsitookofficeon Saturday as the country's nextpresident.",
+        "source_url": "https://www.reuters.com/world/americas/uruguay-shifts-center-left-orsi-takes-office-2025-03-01/",
+        "type": "search"
+      },
+      {
+        "id": "S15",
+        "content": "Uruguay'snewPresidentYamandu Orsi andUruguay'snewVicePresidentCarolina Cosse gesture at the balcony, in Montevideo,UruguayMarch1,2025.REUTERS/Andres Cuenca",
+        "source_url": "https://www.straitstimes.com/world/uruguay-shifts-to-center-left-as-orsi-takes-office",
+        "type": "search"
+      },
+      {
+        "id": "S14",
+        "content": "He faces financial balancing actUruguay'sincomingPresidentYamandu Orsi andVicePresidentCarolina Cosse wave as they ride in an open car on Inauguration Day, in Montevideo,March1,2025.",
+        "source_url": "https://www.voanews.com/a/uruguay-s-new-leftist-president-takes-office/7994077.html",
+        "type": "search"
+      },
+      {
+        "id": "S11",
+        "content": "1March- Yamand\u00fa Orsi isinauguratedasPresident. [1] 23 June - A polar front originating from Antarctica hitsUruguay, causing seven deaths and prompting the declaration of a state of emergency. [2] 13 August - The Chamber of Representatives votes 64-35 in favor of legalizing euthanasia, allowing mentally competent adults with terminal or incurable illnesses to request assisted ...",
+        "source_url": "https://en.wikipedia.org/wiki/2025_in_Uruguay",
+        "type": "search"
+      },
+      {
+        "id": "S26",
+        "content": "...Uruguayabide by a presidential ... Carolina Cosse , a former Intendant of Montevideo, is the currentvicepresidentofUruguaysince 1March2025",
+        "source_url": "https://en.wikipedia.org/wiki/Politics_of_Uruguay",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "Yamand\u00fa Orsi took office as Uruguay\u2019s president on March 1, 2025 [S12]",
+      "AP\u2019s inauguration coverage says Vice President-elect Carolina Cosse was sworn in alongside him [S13]/[S21]",
+      "Carolina Cosse"
+    ],
+    "num_hops": 2,
+    "judge_score": 0.0
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "no_tool_call",
+        "text": "<think>\n</think>\n\n\nsearch(\"men's singles title winner 2025 Australian Open\", 5)<|im_end|>"
+      }
+    ],
+    "snippet_store": {},
+    "num_iterations": 1,
+    "submitted": false,
+    "submitted_ids": null,
+    "latency_seconds": 0.6,
+    "gen_time_seconds": 0.6,
+    "tool_time_seconds": 0.0,
+    "question": "What is the capital of the country represented by the winner of the men's singles title at the 2025 Australian Open?",
+    "gold_answer": "Rome",
+    "gold_passages": [
+      {
+        "id": "S2",
+        "content": "Tennis -AustralianOpen- Melbourne Park, Melbourne, Australia -January26,2025Italy's Jannik Sinner reacts after winning the final against Germany's Alexander ZverevREUTERS/Edgar Su Purchase ...",
+        "source_url": "https://www.reuters.com/sports/tennis/australian-open-mens-singles-champion-jannik-sinner-2025-01-26/",
+        "type": "search"
+      },
+      {
+        "id": "S10",
+        "content": "... Italy Flag. Demonym: Noun: Italian(s) Adjective: Italian; Capital City: Rome (+1 GMT); Currency: Euro (EUR); Languages. Italian (official), German (parts of ...",
+        "source_url": "https://globaledge.msu.edu/countries/italy",
+        "type": "search"
+      },
+      {
+        "id": "S1",
+        "content": "Defending champion Jannik Sinner [1] defeated Alexander Zverev in the final, 6-3, 7-6 (7-4), 6-3 to win themen'ssinglestennis title at the2025AustralianOpen. [2] It was his secondAustralianOpentitle and third major title overall. Sinner was the youngest man to defend the title since Jim Courier in 1993, and the youngest to defend his first major title since Rafael Nadal at the ...",
+        "source_url": "https://en.wikipedia.org/wiki/2025_Australian_Open_\u2013_Men's_singles",
+        "type": "search"
+      },
+      {
+        "id": "S9",
+        "content": "Rome was made the capital of Italy (not without protests from Florence, which had been the capital since 1865), and the new state filled the city with ...",
+        "source_url": "https://www.britannica.com/place/Rome",
+        "type": "search"
+      },
+      {
+        "id": "S3",
+        "content": "Jannik Sinner retained hisAustralianOpenmen'ssinglestitle by defeating Alexander Zverev in the2025final at Rod Laver Arena on Sunday, 26January. He is the first Italian to win three Grand Slam crowns.",
+        "source_url": "https://www.firstpost.com/sports/tennis-news/australian-open-mens-singles-final-jannik-sinner-wins-alexander-zverev-13856532.html",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "2025 Australian Open men's singles winner: Jannik Sinner",
+      "Jannik Sinner represents Italy",
+      "Capital of Italy: Rome",
+      "Rome"
+    ],
+    "num_hops": 3,
+    "judge_score": 0.0
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "major rail infrastructure project completed in 2025 Line 15 South",
+          "max_results": 5
+        },
+        "result": "[S1] The Grand Paris Express line 15 South moves for the first time\n    https://www.systra.com/en/news/the-grand-paris-express-line-15-south-moves-for-the-first-time/\n    InApril 2024, the lastrailon thelinewas welded, and the 37km of tunnel are now equipped with track. The final civil engineering operations werecompletedthis summer at Saint-Maur-Cr\u00e9teil station, and all the passenger buildings for the 16 stations are now emerging in the area.\n\n[S2] Line 15 south: first turn of the wheel for the",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"major rail infrastructure project completed in 2025 Line 15 South\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 1,
+        "type": "tool_call",
+        "tool": "submit_answer",
+        "args": {
+          "passage_ids": [
+            "S3",
+            "S5",
+            "S2",
+            "S1",
+            "S4"
+          ]
+        },
+        "result": "Answer submitted: S3, S5, S2, S1, S4",
+        "generation_text": "<think>\n</think>\n\n\nsubmit_answer([\"S3\", \"S5\", \"S2\", \"S1\", \"S4\"])<|im_end|>"
+      }
+    ],
+    "snippet_store": {
+      "S1": "The Grand Paris Express line 15 South moves for the first time https://www.systra.com/en/news/the-grand-paris-express-line-15-south-moves-for-the-first-time/ InApril 2024, the lastrailon thelinewas welded, and the 37km of tunnel are now equipped with track. The final civil engineering operations werecompletedthis summer at Saint-Maur-Cr\u00e9teil station, and all the passenger buildings for the 16 stations are now emerging in the area.",
+      "S2": "Line 15 south: first turn of the wheel for the new Ile-de-France metro https://www.iledefrance-mobilites.fr/en/actualites/essais-dynamiques-ligne-metro-15 The metro of the futureline15has made its first turn. This step heralds the start of dynamic tests in the summer of 2024, before thelineis put into service in2025.",
+      "S3": "Paris M\u00e9tro Line 15 - Detailed Pedia https://www.detailedpedia.com/wiki-Paris_M\u00e9tro_Line_15 Paris M\u00e9troLine15is one of four newlinesof Grand Paris Express, amajorexpansionprojectof the Paris M\u00e9tro. Currently under construction, thelinewill provide a new orbital route through the suburbs of Paris, servicing the departments of Hauts-de-Seine, Val-de-Marne and Seine-Saint-Denis. The southern section of thelineis planned to open in2025, with thecompletedlineplanned to ...",
+      "S4": "Grand Paris Express Line 15: VINCI Energies' Electrification Project https://railwaynews.net/grand-paris-express-line-15-vinci-energies-electrification-project.html The \u20ac71 million Grand Paris ExpressLine15Southelectrification, a massive railwayproject, showcases innovative collaboration and sustainable practices. Discover how Alise JV is leading the way!",
+      "S5": "ORA Consortium to operate Grand Paris Express Line 15 South https://www.railjournal.com/passenger/metros/ora-consortium-to-operate-grand-paris-express-line-15-south/ Line15Southis due open in late2025and will run for 33km from Pont-de-S\u00e8vres to Noisy-Champs, serving 16 stations. Whencompletedthroughout,Line15will run for 75km and form a complete orbital route around Paris, serving 45 municipalities and carrying1.5million passengers a day.Line15Southunder construction at Les Ardoines."
+    },
+    "num_iterations": 2,
+    "submitted": true,
+    "submitted_ids": {
+      "passage_ids": [
+        "S3",
+        "S5",
+        "S2",
+        "S1",
+        "S4"
+      ]
+    },
+    "latency_seconds": 2.7,
+    "gen_time_seconds": 1.5,
+    "tool_time_seconds": 1.2,
+    "question": "Which major rail infrastructure project was completed in 2025 with the opening of the first phase of Line 15 South?",
+    "gold_answer": "Grand Paris Express",
+    "gold_passages": [
+      {
+        "id": "R7",
+        "content": "[3]\n**Paris M\u00e9tro Line 15** is one of four new lines of [Grand Paris Express](https://en.wikipedia.org/wiki/Grand_Paris_Express \"Grand Paris Express\"), a major expansion project of the [Paris M\u00e9tro](https://en.wikipedia.org/wiki/Paris_M%C3%A9tro \"Paris M\u00e9tro\"). Currently under construction, the line will provide a new [orbital route](https://en.wikipedia.org/wiki/Circle_route \"Circle route\") through the suburbs of Paris, servicing the departments of [Hauts-de-Seine](https://en.wikipedia.org/wiki/Hauts-de-Seine \"Hauts-de-Seine\"), [Val-de-Marne](https://en.wikipedia.org/wiki/Val-de-Marne \"Val-de-Marne\") and [Seine-Saint-Denis](https://en.wikipedia.org/wiki/Seine-Saint-Denis \"Seine-Saint-Denis\").[[1]](https://en.wikipedia.org/wiki/Paris_M%C3%A9tro_Line_15#cite_note-1) The southern section of the line is planned to open in April 2027,[[2]](https://en.wikipedia.org/wiki/Paris_M%C3%A9tro_Line_15#cite_note-:3-2) with the completed line planned to open in 2031.[[3]](https://en.wikipedia.org/wiki/Paris_M%C3%A9tro_Line_15#cite_note-:2-3)",
+        "source_url": "https://en.wikipedia.org/wiki/Paris_M%C3%A9tro_Line_15",
+        "type": "read"
+      },
+      {
+        "id": "S37",
+        "content": "Grand Paris Express ; 24 June 2024 (Line 14 extension) \u00b7 RATP for Lines 11 and 14. ORA (RATP Dev, Alstom, ComfortDelGro) for Line 15 south \u00b7 Keolis for Lines 16, ...",
+        "source_url": "https://en.wikipedia.org/wiki/Grand_Paris_Express",
+        "type": "search"
+      },
+      {
+        "id": "R8",
+        "content": "[4]\nThe line is being built by [Soci\u00e9t\u00e9 du Grand Paris](https://en.wikipedia.org/w/index.php?title=Soci%C3%A9t%C3%A9_du_Grand_Paris&action=edit&redlink=1 \"Soci\u00e9t\u00e9 du Grand Paris (page does not exist)\"), a public agency set up by the French Government to deliver the Grand Paris Express project.[[5]](https://en.wikipedia.org/wiki/Paris_M%C3%A9tro_Line_15#cite_note-5)",
+        "source_url": "https://en.wikipedia.org/wiki/Paris_M%C3%A9tro_Line_15",
+        "type": "read"
+      },
+      {
+        "id": "S36",
+        "content": "In line with all Grand Paris Express lines, Line 15 will be fully automated. ... Line 15 South. edit. The southern section (Pont de S\u00e8vres to Noisy\u2013Champs) ...",
+        "source_url": "https://en.wikipedia.org/wiki/Paris_M\u00e9tro_Line_15",
+        "type": "search"
+      },
+      {
+        "id": "S45",
+        "content": "TheGrandParisExpressinvolves the construction of new public transportation lines in the \u00cele-de-France region. This project includes the creation of four new lines (15,16,17,18) for the Paris Metro, as well as extensions for existing Lines 11 and 14.",
+        "source_url": "https://www.railtech.com/all/2023/11/29/first-run-for-grand-paris-express-new-metro-line-15-successful/",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "Line 15 South is part of the Paris M\u00e9tro Line 15 project",
+      "Paris M\u00e9tro Line 15 is one of four new lines of the Grand Paris Express",
+      "Therefore, the major rail infrastructure project is Grand Paris Express"
+    ],
+    "num_hops": 1,
+    "judge_score": 0.85
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "2025 Qatar-Africa Business Forum host city",
+          "max_results": 5
+        },
+        "result": "[S1] Qatar Africa Business Forum: Connecting Qatar and Africa\n    https://qabf.org/\n    Over 300 business leaders, investors, and changemakers from Qatar, Africa, and beyond gather in an annualQatar-AfricaBusinessForum\u2014 a dynamic meeting point for collaboration and opportunity.\n\n[S2] Qatar Africa Business Forum 2025 Takes Pivotal Role as G20 ...\n    https://africatechradio.com/qatar-africa-business-forum-2025-takes-pivotal-role-as-g20-sideline/\n    Nov 25,2025\u00b7JOHANNESBURG \u2013 As world leaders des",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"2025 Qatar-Africa Business Forum host city\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 1,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "Country that signed a peace agreement with the Democratic Republic of the Congo in Washington in 2025",
+          "max_results": 5
+        },
+        "result": "[S6] 2025 DRC-Rwanda peace agreement - Wikipedia\n    https://en.wikipedia.org/wiki/2025_DRC\u2013Rwanda_peace_agreement\n    TheDemocraticRepublicoftheCongo-Rwandapeaceagreement, officially theWashingtonAccords forPeaceand Prosperity, is apeacetreaty intended to end the conflict between theDemocraticRepublicoftheCongo(DRC) and Rwanda,signedon June 27, 2025, inWashington, D.C., United States.\n\n[S7] Peace Agreement Signing Between the Democratic Republic of the Congo ...\n    https://www.state.gov/releas",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"Country that signed a peace agreement with the Democratic Republic of the Congo in Washington in 2025\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 2,
+        "type": "tool_call",
+        "tool": "submit_answer",
+        "args": {
+          "passage_ids": [
+            "S5",
+            "S6"
+          ]
+        },
+        "result": "Answer submitted: S5, S6",
+        "generation_text": "<think>\n</think>\n\n\nsubmit_answer([\"S5\", \"S6\"])<|im_end|>"
+      }
+    ],
+    "snippet_store": {
+      "S1": "Qatar Africa Business Forum: Connecting Qatar and Africa https://qabf.org/ Over 300 business leaders, investors, and changemakers from Qatar, Africa, and beyond gather in an annualQatar-AfricaBusinessForum\u2014 a dynamic meeting point for collaboration and opportunity.",
+      "S2": "Qatar Africa Business Forum 2025 Takes Pivotal Role as G20 ... https://africatechradio.com/qatar-africa-business-forum-2025-takes-pivotal-role-as-g20-sideline/ Nov 25,2025\u00b7JOHANNESBURG \u2013 As world leaders descend on Nasrec Expo Centre for South Africa\u2019s landmark G20 Summit, a parallel powerhouse is unfolding in the city\u2019s bustling business district: theQatarAfricaBusinessForum(QABF)2025.",
+      "S3": "Oumarou Fadil, Other Cameroonian Business Leaders Head to ... https://www.businessincameroon.com/companies/1411-15343-oumarou-fadil-and-others-cameroonian-business-leaders-head-to-johannesburg-for-qatar-africa-forum Nov 14,2025\u00b7Theforum, held under the patronage of theQatarInvestment Authority, will take place in Johannesburg, SouthAfrica, on 18 and 19 November. It will bring together Qatari andAfricanleaders, sovereign wealth funds, major corporations, financial institutions, and regional economic bodies.",
+      "S4": "Forum Qatar-Afrique: Abidjan au c\u0153ur des \u00e9changes en 2025 ... https://www.yeclo.com/forum-qatar-africa-2025-le-qatar-renforce-ses-investissements-en-afrique-via-abidjan Dec 23, 2024 \u00b7La d\u00e9signation d'Abidjan pour accueillir le forumQatar-Africabusiness2025confirme la position strat\u00e9gique de la C\u00f4te d'Ivoire dans les relations \u00e9conomiques Qatar-Afrique.",
+      "S5": "Abidjan accueillera le Qatar Africa Business Forum 2025 https://www.newstimetr.com/abidjan-accueillera-le-qatar-africa-business-forum-2025-1735139706 La capitale \u00e9conomique ivoirienne, Abidjan, va accueillir en2025la quatri\u00e8me \u00e9dition du forumQatar-Africabusiness, a annonc\u00e9 l\u2019ambassadeur du Qatar en C\u00f4te d\u2019Ivoire, Mubarak Hussain Al Marri.",
+      "S6": "2025 DRC-Rwanda peace agreement - Wikipedia https://en.wikipedia.org/wiki/2025_DRC\u2013Rwanda_peace_agreement TheDemocraticRepublicoftheCongo-Rwandapeaceagreement, officially theWashingtonAccords forPeaceand Prosperity, is apeacetreaty intended to end the conflict between theDemocraticRepublicoftheCongo(DRC) and Rwanda,signedon June 27, 2025, inWashington, D.C., United States.",
+      "S7": "Peace Agreement Signing Between the Democratic Republic of the Congo ... https://www.state.gov/releases/office-of-the-spokesperson/2025/06/peace-agreement-signing-between-the-democratic-republic-of-the-congo-and-republic-of-rwanda/ Media Note Office of the Spokesperson June 27, 2025 On June 27, Secretary of State Marco Rubio, Under Secretary for Political Affairs Allison Hooker, and Senior Advisor Massad Boulos hosted the Ministerial signing of thePeaceAgreementbetween theDemocraticRepublicoftheCongoandRepublicofRwanda.",
+      "S8": "Guterres welcomes peace deal between DR Congo and Rwanda https://news.un.org/en/story/2025/06/1165071 UN Secretary-General Ant\u00f3nio Guterres has welcomed thepeaceagreementbetween theDemocraticRepublicoftheCongo(DRC) and Rwandasignedon Friday in the United States capital,Washington, DC.",
+      "S9": "What we know about the Rwanda-Democratic Republic of Congo peace deal ... https://apnews.com/article/congo-rwanda-peace-agreement-trump-us-minerals-f74d15074cbadf35bedf37316bc722a6 2 of 2 | Secretary of State Marco Rubio, center, watches as Rwanda's Foreign Minister Olivier Nduhungirehe, left, andDemocraticRepublicoftheCongo'sForeign Minister Therese Kayikwamba Wagner, right, sign apeaceagreementat the State Department, Friday, June 27, 2025, inWashington. (AP Photo/Mark Schiefelbein).",
+      "S10": "DR Congo, Rwanda sign peace deal in 'turning point' after years of ... https://www.aljazeera.com/news/2025/6/27/dr-congo-and-rwanda-sign-peace-deal-in-turning-point-after-years-of-war TheDemocraticRepublicoftheCongo(DRC) and Rwanda havesignedapeacedeal in the United States to end years of fighting between the neighbouring countries. Meeting at the State Department in ..."
+    },
+    "num_iterations": 3,
+    "submitted": true,
+    "submitted_ids": {
+      "passage_ids": [
+        "S5",
+        "S6"
+      ]
+    },
+    "latency_seconds": 4.6,
+    "gen_time_seconds": 2.1,
+    "tool_time_seconds": 2.5,
+    "question": "What city hosted the 2025 Qatar-Africa Business Forum attended by the president of the country that signed a peace agreement with the Democratic Republic of the Congo in Washington in 2025?",
+    "gold_answer": "Abidjan",
+    "gold_passages": [
+      {
+        "id": "S15",
+        "content": "WASHINGTON,June27 (Reuters) -Rwandaand Democratic Republic of Congosigneda U.S.-brokeredpeaceagreementon Friday, raising hopes for an end to fighting that has killed thousands and ...",
+        "source_url": "https://www.reuters.com/world/africa/rwanda-congo-sign-us-brokered-peace-deal-washington-2025-06-27/",
+        "type": "search"
+      },
+      {
+        "id": "S35",
+        "content": "LeQatar-AfricaBusinessForum2025se d\u00e9roulera \u00e0Abidjan, comme l'a annonc\u00e9 l'ambassadeur du Qatar en C\u00f4te d'Ivoire, Mubarak Hussain Al Marri. Cette d\u00e9claration a \u00e9t\u00e9 faite lors d'une r\u00e9ception le 15 d\u00e9cembre 2024 \u00e0Abidjan, \u00e0 l'occasion de la f\u00eate nationale du Qatar.",
+        "source_url": "https://fr.africanews.com/2024/12/24/cote-divoire-abidjan-accueillera-le-qatar-africa-business-forum-2025/",
+        "type": "search"
+      },
+      {
+        "id": "S33",
+        "content": "La capitale \u00e9conomique ivoirienne,Abidjan, va accueillir en2025la quatri\u00e8me \u00e9dition duforumQatarAfricabusiness, a annonc\u00e9 l'ambassadeur du Qatar en C\u00f4te d'Ivoire, Mubarak Hussain Al Marri.",
+        "source_url": "https://www.yenisafak.com/fr/international/abidjan-accueillera-le-qatar-africa-business-forum-2025-37289",
+        "type": "search"
+      },
+      {
+        "id": "S11",
+        "content": "WASHINGTON/PARIS/KINSHASA,June27 (Reuters) -Rwandaand Democratic Republic of Congosigneda U.S.-brokeredpeaceagreementon Friday, raising hopes for an end to fighting that has killed ...",
+        "source_url": "https://www.reuters.com/world/africa/rwanda-democratic-republic-congo-set-sign-peace-agreement-washington-2025-06-27/",
+        "type": "search"
+      },
+      {
+        "id": "S3",
+        "content": "InJune, the twocountriessignedapeaceagreementinWashingtonaimed at ending decades of conflict. Trump said it would help increase trade between them and the US. The text called for \"respect for the ceasefire\" agreed between Rwanda and DRC in August 2024.",
+        "source_url": "https://www.bbc.com/news/articles/c5y3599gx4qo",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "The country was Rwanda",
+      "The president was Paul Kagame",
+      "The 2025 Qatar-Africa Business Forum was hosted in Abidjan",
+      "Abidjan"
+    ],
+    "num_hops": 3,
+    "judge_score": 0.83
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "no_tool_call",
+        "text": "<think>\n</think>\n\n\nsearch(\"U.S. state classroom cellphone ban 2025-26 school year\", 5)<|im_end|>"
+      }
+    ],
+    "snippet_store": {},
+    "num_iterations": 1,
+    "submitted": false,
+    "submitted_ids": null,
+    "latency_seconds": 0.7,
+    "gen_time_seconds": 0.7,
+    "tool_time_seconds": 0.0,
+    "question": "What is the capital of the U.S. state that enacted a statewide classroom cellphone ban taking effect for the 2025\u201326 school year?",
+    "gold_answer": "Albany",
+    "gold_passages": [
+      {
+        "id": "R3",
+        "content": "[3]\nMarkdown Content:\nGovernor Kathy Hochul today announced that New York is becoming the largest state in the nation to require statewide, bell-to-bell restrictions on smartphones in K-12 schools. The Governor secured this landmark victory as part of the agreement on the FY 2026 State Budget. Following this agreement and enactment of the FY 2026 State Budget, New York State\u2019s distraction-free schools policy will take effect this fall for the 2025-2026 school year. Today\u2019s announcement builds on Governor Hochul\u2019s nation-leading commitment to protecting youth mental health and promoting student success in the digital age, following her action last year to secure and sign a first-in-the-nation law to restrict addictive social media feeds for minors.",
+        "source_url": "https://www.governor.ny.gov/news/distraction-free-schools-governor-hochul-announces-new-york-become-largest-state-nation",
+        "type": "read"
+      },
+      {
+        "id": "R1",
+        "content": "Found 26 matching section(s). Top 5:\n[1]\nThis new requirement will take place in the 2025-26 School Year and applies to all schools in public school districts, as well as charter schools and Boards of Cooperative Educational Services (BOCES).",
+        "source_url": "https://www.governor.ny.gov/news/distraction-free-schools-governor-hochul-announces-new-york-become-largest-state-nation",
+        "type": "read"
+      },
+      {
+        "id": "S10",
+        "content": "This new requirement will take place in the2025-26SchoolYearand applies to allschoolsin publicschooldistricts, as well as charterschoolsand Boards of Cooperative Educational Services (BOCES). Governor Hochul'scellphonepolicy creates astatewidestandard for distraction-freeschoolsin New York including:",
+        "source_url": "https://www.governor.ny.gov/news/distraction-free-schools-governor-hochul-announces-new-york-become-largest-state-nation",
+        "type": "search"
+      },
+      {
+        "id": "S12",
+        "content": "Albany is the capital city of the U.S. state of New York. It is also the county seat of, and the most populous city in, Albany County. Albany is located on ...",
+        "source_url": "https://en.wikipedia.org/wiki/Albany,_New_York",
+        "type": "search"
+      },
+      {
+        "id": "S11",
+        "content": "The New York State Capitol, the seat of the New York state government, is located in Albany, the capital city of the U.S. state of New York. The capitol building is part of the Empire State Plaza complex on State Street in Capitol Park.History\u00b71911 fire\u00b7Visiting and tours\u00b7Gallery",
+        "source_url": "https://en.wikipedia.org/wiki/New_York_State_Capitol",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "The state was New York",
+      "New York\u2019s statewide classroom cellphone ban takes effect in the 2025\u201326 school year",
+      "Albany is the capital of New York",
+      "Albany"
+    ],
+    "num_hops": 2,
+    "judge_score": 0.0
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "2025 Nobel Prize in Physiology or Medicine biological regulator",
+          "max_results": 5
+        },
+        "result": "[S1] Press release: The Nobel Prize in Physiology or Medicine 2025 ...\n    https://www.nobelprize.org/prizes/medicine/2025/press-release/\n    TheNobelPrizeinPhysiologyorMedicine2025was awarded jointly to Mary E. Brunkow, Frederick J. Ramsdell and Shimon Sakaguchi \"for their discoveries concerning peripheral immune tolerance\"\n\n[S2] PDFThe Nobel Prize in Physiology or Medicine 2025\n    https://www.nobelprizemedicine.org/wp-content/uploads/2025/10/2025_PR_eng.pdf\n    Mary Brunkow, Fred Ramsdell and",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"2025 Nobel Prize in Physiology or Medicine biological regulator\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 1,
+        "type": "tool_call",
+        "tool": "submit_answer",
+        "args": {
+          "passage_ids": [
+            "S2",
+            "S3",
+            "S4"
+          ]
+        },
+        "result": "Answer submitted: S2, S3, S4",
+        "generation_text": "<think>\n</think>\n\n\nsubmit_answer([\"S2\", \"S3\", \"S4\"])<|im_end|>"
+      }
+    ],
+    "snippet_store": {
+      "S1": "Press release: The Nobel Prize in Physiology or Medicine 2025 ... https://www.nobelprize.org/prizes/medicine/2025/press-release/ TheNobelPrizeinPhysiologyorMedicine2025was awarded jointly to Mary E. Brunkow, Frederick J. Ramsdell and Shimon Sakaguchi \"for their discoveries concerning peripheral immune tolerance\"",
+      "S2": "PDFThe Nobel Prize in Physiology or Medicine 2025 https://www.nobelprizemedicine.org/wp-content/uploads/2025/10/2025_PR_eng.pdf Mary Brunkow, Fred Ramsdell and Shimon Sakaguchi are awarded theNobelPrizeinPhysiologyorMedicine2025for their fundamental discoveries relating to peripheral immune tolerance. The laureates identified the immune system's security guards, regulatory T cells, which prevent immune cells from aacking our own body.",
+      "S3": "Regulatory T cells: the 2025 Nobel prize in physiology or medicine https://pmc.ncbi.nlm.nih.gov/articles/PMC12829529/ The2025NobelPrizeinPhysiologyorMedicinehas been awarded to Mary Brunkow, Fred Ramsdell, and Shimon Sakaguchi 'for their discoveries concerning peripheral immune tolerance '. The award honours the discovery of a unique subset of immune cells - Regulatory T cells (Tregs) - which differ fundamentally from most immune cells that typically promote inflammation. In contrast, Tregs ...",
+      "S4": "Regulatory T cells from concept to clinic: The 2025 Nobel Prize and its ... https://www.sciencedirect.com/science/article/pii/S2319417026000156 The2025NobelPrizeinPhysiologyorMedicine, awarded to Shimon Sakaguchi, Mary E. Brunkow, and Fred Ramsdell, recognizes the discovery and molecular definition of regulatory T cells (Tregs) as the cornerstone of peripheral immune tolerance. This recognition honors a transformative journey marked by Sakaguchi's identification of CD4 + CD25 + T cells as a regulatory population (1995 ...",
+      "S5": "Nobel Prize in Physiology or Medicine 2025 - Nature https://www.nature.com/collections/ihgdffibdj The2025NobelPrizeinPhysiologyorMedicinehas been awarded jointly to Mary E. Brunkow, Fred Ramsdell and Shimon Sakaguchi \"for their discoveries concerning peripheral immune tolerance ..."
+    },
+    "num_iterations": 2,
+    "submitted": true,
+    "submitted_ids": {
+      "passage_ids": [
+        "S2",
+        "S3",
+        "S4"
+      ]
+    },
+    "latency_seconds": 2.9,
+    "gen_time_seconds": 1.2,
+    "tool_time_seconds": 1.7,
+    "question": "What biological regulator was recognized by the 2025 Nobel Prize in Physiology or Medicine?",
+    "gold_answer": "regulatory T cells",
+    "gold_passages": [
+      {
+        "id": "R2",
+        "content": "[2]\nMary Brunkow, Fred Ramsdell and Shimon Sakaguchi are awarded the Nobel Prize in Physiology or Medicine 2025 for their fundamental discoveries relating to peripheral immune tolerance. The laureates identified the immune system\u2019s security guards, _regulatory T cells_, which prevent immune cells from attacking our own body.",
+        "source_url": "https://www.nobelprize.org/prizes/medicine/2025/press-release/",
+        "type": "read"
+      },
+      {
+        "id": "S7",
+        "content": "Mary Brunkow, Fred Ramsdell and Shimon Sakaguchi are awarded theNobelPrizeinPhysiologyorMedicine2025for their fundamental discoveries ...",
+        "source_url": "https://www.nobelprize.org/prizes/medicine/2025/press-release/",
+        "type": "search"
+      },
+      {
+        "id": "R4",
+        "content": "[4]\nTwo years after this, Shimon Sakaguchi was able to link these discoveries. He proved that the _Foxp3_ gene governs the development of the cells he identified in 1995. These cells, now known as regulatory T cells, monitor other immune cells and ensure that our immune system tolerates our own tissues.",
+        "source_url": "https://www.nobelprize.org/prizes/medicine/2025/press-release/",
+        "type": "read"
+      },
+      {
+        "id": "S2",
+        "content": "TheNobelAssembly at Karolinska Institutet has decided to award the2025NobelPrizeinPhysiologyorMedicineto: Mary E. Brunkow Institute for SystemsBiology, Seattle, USA. Fred Ramsdell Sonoma Biotherapeutics, San Francisco, USA.",
+        "source_url": "https://www.nobelprize.org/prizes/medicine/2025/press-release/",
+        "type": "search"
+      },
+      {
+        "id": "S3",
+        "content": "Who won the2025NobelPrizeforPhysiologyorMedicine?The discovery and characterization ofregulatoryT cells has been selected asNobelPrizewinning research, with three researchers selected to share theprize.",
+        "source_url": "https://www.biotechniques.com/immunology/who-won-the-2025-nobel-prize-for-physiology-or-medicine/",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "2025 Nobel Prize in Physiology or Medicine",
+      "awarded to Mary Brunkow, Fred Ramsdell and Shimon Sakaguchi",
+      "for discoveries concerning peripheral immune tolerance",
+      "the immune system\u2019s \u201csecurity guards\u201d are regulatory T cells",
+      "regulatory T cells"
+    ],
+    "num_hops": 2,
+    "judge_score": 0.85
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "no_tool_call",
+        "text": "<think>\n</think>\n\n\nsearch(\"Blue Ghost lunar lander mission 2025 company headquarters\", 5)<|im_end|>"
+      }
+    ],
+    "snippet_store": {},
+    "num_iterations": 1,
+    "submitted": false,
+    "submitted_ids": null,
+    "latency_seconds": 0.6,
+    "gen_time_seconds": 0.6,
+    "tool_time_seconds": 0.0,
+    "question": "In what city is the company headquartered that launched the Blue Ghost lunar lander mission in 2025?",
+    "gold_answer": "Cedar Park, Texas",
+    "gold_passages": [
+      {
+        "id": "S12",
+        "content": "CedarPark-basedaerospacecompany's Blue Ghost lunar lander made history in March. Now it wants more.Ready tofly: After a bumpy liftoff,Texas-basedFireflylooks to future. TheCedarParkaerospacecompanymade history with its moon landing in March.",
+        "source_url": "https://www.expressnews.com/business/article/firefly-aerospace-blue-ghost-moon-jason-kim-texas-20309931.php",
+        "type": "search"
+      },
+      {
+        "id": "R3",
+        "content": "[3]\n**About Firefly Aerospace**Firefly Aerospace is an end-to-end responsive space company with launch, lunar, and on-orbit services. Headquartered in central Texas, Firefly is a portfolio company of AE Industrial Partners (\u201cAEI\u201d) focused on delivering rapid, reliable, and affordable space access for government and commercial customers. Firefly\u2019s small- to medium-lift launch vehicles, lunar landers, and orbital vehicles provide the space industry with a single source for missions from low Earth orbit to the surface of the Moon and beyond. For more information, visit[www.fireflyspace.com](http://www.fireflyspace.com/).",
+        "source_url": "https://fireflyspace.com/news/firefly-aerospaces-blue-ghost-mission-1-successfully-launches-and-begins-45-day-transit-to-the-moon/",
+        "type": "read"
+      },
+      {
+        "id": "S1",
+        "content": "3 Mar 2025\u00b7Firefly Aerospace succeeded in its first attempt to land on the moon with its uncrewed Blue Ghost spacecraft on Sunday, kicking off a two-week research mission.",
+        "source_url": "https://www.reuters.com/technology/space/us-firm-fireflys-blue-ghost-moon-lander-locks-lunar-touchdown-2025-03-02/",
+        "type": "search"
+      },
+      {
+        "id": "S6",
+        "content": "Fireflywill provide regularmissionupdates on X and on theBlueGhostMission1 webpage. AboutFireflyAerospaceFireflyAerospaceis an end-to-end responsive space company with launch, lunar, and on-orbit services.",
+        "source_url": "https://fireflyspace.com/news/firefly-aerospaces-blue-ghost-mission-1-successfully-launches-and-begins-45-day-transit-to-the-moon/",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "Blue Ghost was launched by Firefly Aerospace [S1][S6]",
+      "Firefly Aerospace is headquartered in central Texas [R3]",
+      "Search results identify Firefly as Cedar Park-based [S12]",
+      "Cedar Park, Texas"
+    ],
+    "num_hops": 2,
+    "judge_score": 0.0
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "no_tool_call",
+        "text": "<think>\n</think>\n\n\nsearch(\"company first to close above $4 trillion market cap in 2025\", 5)<|im_end|>"
+      }
+    ],
+    "snippet_store": {},
+    "num_iterations": 1,
+    "submitted": false,
+    "submitted_ids": null,
+    "latency_seconds": 0.7,
+    "gen_time_seconds": 0.7,
+    "tool_time_seconds": 0.0,
+    "question": "What day of the week was the date when the company that became the first to close above a $4 trillion market capitalization in 2025 reported its first quarterly revenue above $40 billion?",
+    "gold_answer": "Wednesday",
+    "gold_passages": [
+      {
+        "id": "S11",
+        "content": "10 Jul 2025\u00b7Nvidia's stock market value briefly peaked above $4 trillion on Wednesday before closing at about $3.97 trillion. It is worth more than the ...",
+        "source_url": "https://www.reuters.com/business/nvidia-notches-4-trillion-record-close-market-cap-2025-07-10/",
+        "type": "search"
+      },
+      {
+        "id": "R10",
+        "content": "[2]\nMarkdown Content:\nNVIDIA (NASDAQ: NVDA) today reported revenue for the first quarter ended April 27, 2025, of $44.1 billion, up 12% from the previous quarter and up 69% from a year ago.",
+        "source_url": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-first-quarter-fiscal-2026",
+        "type": "read"
+      },
+      {
+        "id": "R6",
+        "content": "[2]\nOn July 10, 2025, Nvidia closed for the first time with a market cap above $4 trillion, after its market cap briefly touched and then retreated from that number during the previous day.[[151]](https://en.wikipedia.org/wiki/Nvidia#cite_note-Randewich-152) Nvidia became the first company to reach a market cap of $4 trillion.[[9]](https://en.wikipedia.org/wiki/Nvidia#cite_note-Mickle-10) At that point, Nvidia was worth more than the combined value of all publicly traded companies in the United Kingdom.[[151]](https://en.wikipedia.org/wiki/Nvidia#cite_note-Randewich-152)",
+        "source_url": "https://en.wikipedia.org/wiki/Nvidia",
+        "type": "read"
+      },
+      {
+        "id": "S12",
+        "content": "9 Jul 2025\u00b7Its shares gained 1.4% on Wednesday to close at $503.51. Nvidia has rebounded about 74% from its lows in April, when global markets were jolted ...Missing:10| Show results with:10",
+        "source_url": "https://www.reuters.com/world/china/nvidia-becomes-first-company-clinch-4-trillion-market-value-2025-07-09/",
+        "type": "search"
+      },
+      {
+        "id": "S21",
+        "content": "Day46,Day4ofWeek7 \u2013 ...Day45,Day3ofWeek7 \u2013 Tuesday,May27,2025Day47,Day5ofWeek7 \u2013 Thursday,May29,2025\u2192",
+        "source_url": "https://www.cotsg.org/2025/05/count50-2025/day-46-day-4-of-week-7-wednesday-may-28-2025/9129",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "Nvidia was the first company to close above a $4 trillion market capitalization in 2025",
+      "Nvidia reported its first quarterly revenue above $40 billion on May 28, 2025 ($44.1 billion)",
+      "May 28, 2025 was Wednesday"
+    ],
+    "num_hops": 3,
+    "judge_score": 0.0
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "2026 Australian Open men's singles champion country",
+          "max_results": 5
+        },
+        "result": "[S1] 2026 Australian Open - Men's singles - Wikipedia\n    https://en.wikipedia.org/wiki/2026_Australian_Open_\u2013_Men's_singles\n    Carlos Alcaraz defeated Novak Djokovic in the final, 2-6, 6-2, 6-3, 7-5 to win themen'ssinglestennis title at the2026AustralianOpen. [1] It was his firstAustralianOpentitle and seventh major title overall, becoming the youngest man in tennis history to complete the career Grand Slam insingles(at 22 years, 8 months and 27 days ...\n\n[S2] Australian Open 2026 Finals: Full",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"2026 Australian Open men's singles champion country\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 1,
+        "type": "tool_call",
+        "tool": "submit_answer",
+        "args": {
+          "passage_ids": [
+            "S1",
+            "S3",
+            "S4"
+          ]
+        },
+        "result": "Answer submitted: S1, S3, S4",
+        "generation_text": "<think>\n</think>\n\n\nsubmit_answer([\"S1\", \"S3\", \"S4\"])<|im_end|>"
+      }
+    ],
+    "snippet_store": {
+      "S1": "2026 Australian Open - Men's singles - Wikipedia https://en.wikipedia.org/wiki/2026_Australian_Open_\u2013_Men's_singles Carlos Alcaraz defeated Novak Djokovic in the final, 2-6, 6-2, 6-3, 7-5 to win themen'ssinglestennis title at the2026AustralianOpen. [1] It was his firstAustralianOpentitle and seventh major title overall, becoming the youngest man in tennis history to complete the career Grand Slam insingles(at 22 years, 8 months and 27 days ...",
+      "S2": "Australian Open 2026 Finals: Full List of Winners, Results, Prize Money https://www.sportshistori.com/2026/01/australian-open-final-full-winners-list-prize-money.html AustralianOpenFinal2026Winners: Complete List ofMen's, Women's and doubles tennischampionsin Melbourne.. MELBOURNE -- The first Grand Slam finals of the season are set, with the2026AustralianOpensinglesand doubles championships ready to be decided. MORE:2026AustralianOpenPrize Money: How Much Player Earns Per Round",
+      "S3": "Major milestone: Alcaraz completes Slam set with AO 2026 title https://ausopen.com/articles/news/major-milestone-alcaraz-completes-slam-set-ao-2026-title In a historic night at Rod Laver Arena, Carlos Alcaraz became the youngest man to capture a career Grand Slam by earning theAustralianOpen2026men'ssingleschampionship. The world No.1 overcame 10-time AOchampionNovak Djokovic 2-6 6-2 6-3 7-5 to secure his maiden AO crown and etch his name onto the Norman Brookes Challenge Cup for the first time.",
+      "S4": "List of Australian Open men's singles champions | Reuters https://www.reuters.com/sports/tennis/list-australian-open-mens-singles-champions-2026-02-01/ Tennis -AustralianOpen- Melbourne Park, Melbourne, Australia - February 1,2026Spain's Carlos Alcaraz celebrates with the trophy after winning theAustralianOpenmen'ssinglesagainst Serbia ...",
+      "S5": "Australian Open 2026: All results, full set scores and match winners ... https://www.olympics.com/en/news/australian-open-2026-all-results-full-set-scores-and-match-winners-from-first-grand-slam-tennis-tournament-of-season Want all the results from the opening Grand Slam tournament of the tennis year? You're in the right place. We've got all the scores and winners from theAustralianOpenbelow, from the opening round starting on Sunday, 18th January, to the finals two weeks later. Click on the date below to find the results for that day."
+    },
+    "num_iterations": 2,
+    "submitted": true,
+    "submitted_ids": {
+      "passage_ids": [
+        "S1",
+        "S3",
+        "S4"
+      ]
+    },
+    "latency_seconds": 3.3,
+    "gen_time_seconds": 1.2,
+    "tool_time_seconds": 2.1,
+    "question": "Which country does the men\u2019s singles champion at the 2026 Australian Open represent?",
+    "gold_answer": "Spain",
+    "gold_passages": [
+      {
+        "id": "R1",
+        "content": "Found 1 matching section(s). Top 1:\n[1]\nIn a historic night at Rod Laver Arena, Carlos Alcaraz became the youngest man to capture a career Grand Slam by earning the Australian Open 2026 men\u2019s singles championship. The world No.1 overcame 10-time AO champion Novak Djokovic 2-6 6-2 6-3 7-5 to secure his maiden AO crown and etch his name onto the Norman Brookes Challenge Cup for the first time. By claiming victory in three hours and two minutes, the 22-year-old smashed a record held by Don Budge since Roland Garros 1938 when the American achieved a career Grand Slam days before his 23rd birthday. Alcaraz is also [...] and on the first, as soon as Djokovic\u2019s forehand sailed out, Alcaraz fell to the ground and covered his face with his hands, soaking in the sweet taste of victory. By prevailing, the 22-year-old extended his record over Djokovic in major finals to 3-0 and preserved a streak he owns alongside Jannik Sinner. The duo captured the last nine Grand Slam men\u2019s singles titles, matching dominance achieved by Djokovic and Nadal between 2010 Roland Garros and 2012 Roland Garros and trailing only the 11 titles amassed by Nadal and Roger Federer between 2005 Roland Garros and the 2007 US Open.",
+        "source_url": "https://ausopen.com/articles/news/major-milestone-alcaraz-completes-slam-set-ao-2026-title",
+        "type": "read"
+      },
+      {
+        "id": "R5",
+        "content": "[5]\n0[1](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_1).**[![Image 6: Spain](https://upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/40px-Flag_of_Spain.svg.png)](https://en.wikipedia.org/wiki/Spain \"Spain\")[Carlos Alcaraz](https://en.wikipedia.org/wiki/Carlos_Alcaraz \"Carlos Alcaraz\") (champion)**0[2](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_8).[![Image 7: Italy](https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/40px-Flag_of_Italy.svg.png)](https://en.wikipedia.org/wiki/Italy \"Italy\")[Jannik Sinner](https://en.wikipedia.org/wiki/Jannik_Sinner \"Jannik Sinner\")_(semifinals)_ 0[3](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_3).[![Image 8: Germany](https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/Flag_of_Germany.svg/40px-Flag_of_Germany.svg.png)](https://en.wikipedia.org/wiki/Germany \"Germany\")[Alexander Zverev](https://en.wikipedia.org/wiki/Alexander_Zverev \"Alexander Zverev\")_(semifinals)_ 0[4](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_6).[![Image 9: Serbia](https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Flag_of_Serbia.svg/40px-Flag_of_Serbia.svg.png)](https://en.wikipedia.org/wiki/Serbia \"Serbia\")[Novak Djokovic](https://en.wikipedia.org/wiki/Novak_Djokovic \"Novak Djokovic\")_(final)_ 0[5](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_5).[![Image 10: Italy](https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/40px-Flag_of_Italy.svg.png)](https://en.wikipedia.org/wiki/Italy \"Italy\")[Lorenzo Musetti](https://en.wikipedia.org/wiki/Lorenzo_Musetti \"Lorenzo Musetti\")_(quarterfinals, retired)_ 0[6](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_2).[![Image 11: Australia](https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_Australia_%28converted%29.svg/40px-Flag_of_Australia_%28converted%29.svg.png)](https://en.wikipedia.org/wiki/Australia \"Australia\")[Alex de Minaur](https://en.wikipedia.org/wiki/Alex_de_Minaur \"Alex de Minaur\")_(quarterfinals)_ 0[7](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_4).[![Image 12: Canada](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Canada_%28Pantone%29.svg/40px-Flag_of_Canada_%28Pantone%29.svg.png)](https://en.wikipedia.org/wiki/Canada \"Canada\")[F\u00e9lix Auger-Aliassime](https://en.wikipedia.org/wiki/F%C3%A9lix_Auger-Aliassime \"F\u00e9lix Auger-Aliassime\")_(first round, retired)_ 0[8](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_7).[![Image 13: United States](https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/40px-Flag_of_the_United_States.svg.png)](https://en.wikipedia.org/wiki/United_States \"United States\")[Ben Shelton](https://en.wikipedia.org/wiki/Ben_Shelton \"Ben Shelton\")_(quarterfinals)_ 0[9](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_5).[![Image 14: United States](https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/40px-Flag_of_the_United_States.svg.png)](https://en.wikipedia.org/wiki/United_States \"United States\")[Taylor Fritz](https://en.wikipedia.org/wiki/Taylor_Fritz \"Taylor Fritz\")_(fourth round)_[10](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_2).[![Image 15: Kazakhstan](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Flag_of_Kazakhstan.svg/40px-Flag_of_Kazakhstan.svg.png)](https://en.wikipedia.org/wiki/Kazakhstan \"Kazakhstan\")[Alexander Bublik](https://en.wikipedia.org/wiki/Alexander_Bublik \"Alexander Bublik\")_(fourth round)_[11](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_4).![Image 16](https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Flag_placeholder.svg/40px-Flag_placeholder.svg.png)[Daniil Medvedev](https://en.wikipedia.org/wiki/Daniil_Medvedev \"Daniil Medvedev\")_(fourth round)_[12](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_7).[![Image 17: Norway](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/40px-Flag_of_Norway.svg.png)](https://en.wikipedia.org/wiki/Norway \"Norway\")[Casper Ruud](https://en.wikipedia.org/wiki/Casper_Ruud \"Casper Ruud\")_(fourth round)_[13](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_3).![Image 18](https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Flag_placeholder.svg/40px-Flag_placeholder.svg.png)[Andrey Rublev](https://en.wikipedia.org/wiki/Andrey_Rublev \"Andrey Rublev\")_(third round)_[14](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_1).[![Image 19: Spain](https://upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/40px-Flag_of_Spain.svg.png)](https://en.wikipedia.org/wiki/Spain \"Spain\")[Alejandro [...] round)_[20](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_2).[![Image 25: Italy](https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/40px-Flag_of_Italy.svg.png)](https://en.wikipedia.org/wiki/Italy \"Italy\")[Flavio Cobolli](https://en.wikipedia.org/wiki/Flavio_Cobolli \"Flavio Cobolli\")_(first round)_[21](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_7).[![Image 26: Canada](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Canada_%28Pantone%29.svg/40px-Flag_of_Canada_%28Pantone%29.svg.png)](https://en.wikipedia.org/wiki/Canada \"Canada\")[Denis Shapovalov](https://en.wikipedia.org/wiki/Denis_Shapovalov \"Denis Shapovalov\")_(second round)_[22](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_8).[![Image 27: Italy](https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/40px-Flag_of_Italy.svg.png)](https://en.wikipedia.org/wiki/Italy \"Italy\")[Luciano Darderi](https://en.wikipedia.org/wiki/Luciano_Darderi \"Luciano Darderi\")_(fourth round)_[23](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_6).[![Image 28: Netherlands](https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/40px-Flag_of_the_Netherlands.svg.png)](https://en.wikipedia.org/wiki/Netherlands \"Netherlands\")[Tallon Griekspoor](https://en.wikipedia.org/wiki/Tallon_Griekspoor \"Tallon Griekspoor\")_(first round)_[24](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_4).[![Image 29: France](https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/40px-Flag_of_France.svg.png)](https://en.wikipedia.org/wiki/France \"France\")[Arthur Rinderknech](https://en.wikipedia.org/wiki/Arthur_Rinderknech \"Arthur Rinderknech\")_(first round)_[25](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_4).[![Image 30: United States](https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/40px-Flag_of_the_United_States.svg.png)](https://en.wikipedia.org/wiki/United_States \"United States\")[Learner Tien](https://en.wikipedia.org/wiki/Learner_Tien \"Learner Tien\")_(quarterfinals)_[26](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_3).[![Image 31: United Kingdom](https://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/40px-Flag_of_the_United_Kingdom.svg.png)](https://en.wikipedia.org/wiki/United_Kingdom \"United Kingdom\")[Cameron Norrie](https://en.wikipedia.org/wiki/Cameron_Norrie \"Cameron Norrie\")_(third round)_[27](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_6).[![Image 32: United States](https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/40px-Flag_of_the_United_States.svg.png)](https://en.wikipedia.org/wiki/United_States \"United States\")[Brandon Nakashima](https://en.wikipedia.org/wiki/Brandon_Nakashima \"Brandon Nakashima\")_(first round)_[28](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_8).[![Image 33: Brazil](https://upload.wikimedia.org/wikipedia/en/thumb/0/05/Flag_of_Brazil.svg/40px-Flag_of_Brazil.svg.png)](https://en.wikipedia.org/wiki/Brazil \"Brazil\")[Jo\u00e3o Fonseca](https://en.wikipedia.org/wiki/Jo%C3%A3o_Fonseca_(tennis) \"Jo\u00e3o Fonseca (tennis)\")_(first round)_[29](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_2).[![Image 34: United States](https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/40px-Flag_of_the_United_States.svg.png)](https://en.wikipedia.org/wiki/United_States \"United States\")[Frances Tiafoe](https://en.wikipedia.org/wiki/Frances_Tiafoe \"Frances Tiafoe\")_(third round)_[30](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_7).[![Image 35: Monaco](https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Flag_of_Monaco.svg/20px-Flag_of_Monaco.svg.png)](https://en.wikipedia.org/wiki/Monaco \"Monaco\")[Valentin Vacherot](https://en.wikipedia.org/wiki/Valentin_Vacherot \"Valentin Vacherot\")_(third round)_[31](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_5).[![Image 36: Greece](https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Greece.svg/40px-Flag_of_Greece.svg.png)](https://en.wikipedia.org/wiki/Greece \"Greece\")[Stefanos Tsitsipas](https://en.wikipedia.org/wiki/Stefanos_Tsitsipas \"Stefanos Tsitsipas\")_(second round)_[32](https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men's_singles#Section_1).[![Image 37: France](https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/40px-Flag_of_France.svg.png)](https://en.wikipedia.org/wiki/France \"France\")[Corentin Moutet](https://en.wikipedia.org/wiki/Corentin_Moutet \"Corentin Moutet\")_(third round)_",
+        "source_url": "https://en.wikipedia.org/wiki/2026_Australian_Open_%E2%80%93_Men%27s_singles",
+        "type": "read"
+      },
+      {
+        "id": "S6",
+        "content": "In a historic night at Rod Laver Arena, Carlos Alcaraz became the youngest man to capture a career Grand Slam by earning theAustralianOpen2026men'ssingleschampionship. The world No.1 overcame 10-time AOchampionNovak Djokovic 2-6 6-2 6-3 7-5 to secure his maiden AO crown and etch his name onto the Norman Brookes Challenge Cup for the first time.",
+        "source_url": "https://ausopen.com/articles/news/major-milestone-alcaraz-completes-slam-set-ao-2026-title",
+        "type": "search"
+      },
+      {
+        "id": "S3",
+        "content": "Feb 1,2026\u00b7Tennis -AustralianOpen - Melbourne Park, Melbourne, Australia - February 1,2026Spain's Carlos Alcaraz celebrates with the trophy after winning theAustralianOpenmen'ssingles...",
+        "source_url": "https://www.reuters.com/sports/tennis/list-australian-open-mens-singles-champions-2026-02-01/",
+        "type": "search"
+      },
+      {
+        "id": "S1",
+        "content": "2026AustralianOpen\u2013Men'ssingles... Carlos Alcaraz defeated Novak Djokovic in the final, 2\u20136, 6\u20132, 6\u20133, 7\u20135 to win themen's singles tennis title at the2026AustralianOpen. [1]",
+        "source_url": "https://en.wikipedia.org/wiki/2026_Australian_Open_\u2013_Men's_singles",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "2026 Australian Open men\u2019s singles champion: Carlos Alcaraz",
+      "AusOpen says Alcaraz won the 2026 men\u2019s singles championship [R1]",
+      "Wikipedia lists champion Carlos Alcaraz with the Spain flag [R5]",
+      "Spain"
+    ],
+    "num_hops": 2,
+    "judge_score": 0.63
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "AI Action Summit February 2025 host city",
+          "max_results": 5
+        },
+        "result": "[S1] AI Action Summit - Wikipedia\n    https://en.wikipedia.org/wiki/AI_Action_Summit\n    The Artificial Intelligence (AI)ActionSummit(French: Sommet pour l'action sur l'intelligence artificielle or Sommet pour l'action sur l'IA, SAIA) was held at the Grand Palais in Paris, France, from 10 to 11February2025. [1][2][3] Thesummitwas co-chaired by French President Emmanuel Macron and Indian Prime Minister Narendra Modi. [4][5][6][7] The2025AIActionSummitfollowed the 2023 ...\n\n[S2] Artificial Intelli",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"AI Action Summit February 2025 host city\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 1,
+        "type": "tool_call",
+        "tool": "submit_answer",
+        "args": {
+          "passage_ids": [
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S5"
+          ]
+        },
+        "result": "Answer submitted: S1, S2, S3, S4, S5",
+        "generation_text": "<think>\n</think>\n\n\nsubmit_answer([\"S1\", \"S2\", \"S3\", \"S4\", \"S5\"])<|im_end|>"
+      }
+    ],
+    "snippet_store": {
+      "S1": "AI Action Summit - Wikipedia https://en.wikipedia.org/wiki/AI_Action_Summit The Artificial Intelligence (AI)ActionSummit(French: Sommet pour l'action sur l'intelligence artificielle or Sommet pour l'action sur l'IA, SAIA) was held at the Grand Palais in Paris, France, from 10 to 11February2025. [1][2][3] Thesummitwas co-chaired by French President Emmanuel Macron and Indian Prime Minister Narendra Modi. [4][5][6][7] The2025AIActionSummitfollowed the 2023 ...",
+      "S2": "Artificial Intelligence Action Summit - \u00c9lys\u00e9e https://www.elysee.fr/en/sommet-pour-l-action-sur-l-ia AIactionsummitFor almost a week, fromFebruary6 to 11,2025, Paris hosted numerous events aimed at strengthening internationalactiontowards artificial intelligence serving the general interest. The week was punctuated by scientific days, a cultural weekend, an internationalsummitat the Grand Palais, numerous parallel events, and a day for businesses.",
+      "S3": "AI Action Summit in Paris | French-American Cultural Foundation https://frenchamericancultural.org/2025/02/17/ai-action-summit-2025-paris-at-the-forefront-of-global-ai-innovation/ AIActionSummit2025in Paris, France. Photo by Judith Litvine. Paris, often called the Silicon Valley of Europe, hosted the Artificial Intelligence (AI)ActionSummitonFebruary10-11,2025, at the iconic Grand Palais. This global gathering brought together Heads of State and Government, leaders of international organizations, CEOs, academics, non-governmental organizations, artists, and ...",
+      "S4": "AI Action Summit (10 & 11 February 2025) - France Diplomatie https://www.diplomatie.gouv.fr/en/french-foreign-policy/digital-diplomacy/news/article/ai-action-summit-10-11-feb-2025 On 10 and 11February2025, Paris will become the artificial intelligence (AI) capital of the world on the occasion of theAIActionSummit. This event will bring together heads of State and Government, international organizations and companies of all sizes, representatives from academia, researchers, non-governmental organizations, artists and other members of civil society from across the globe.",
+      "S5": "AI in the city @ ENS - Accueil https://www.ai-inthecity.ens.psl.eu/en/ OnFebruary10th and 11th of2025, France willhosttheSummitforActionon Artificial Intelligence (AI) at the Grand Palais. The occasion will unite heads of state and government, leaders of international organizations, large and small companies, representatives of academia, researchers, non-governmental organizations, artists and other members of civil society."
+    },
+    "num_iterations": 2,
+    "submitted": true,
+    "submitted_ids": {
+      "passage_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ]
+    },
+    "latency_seconds": 2.5,
+    "gen_time_seconds": 1.4,
+    "tool_time_seconds": 1.1,
+    "question": "Which city hosted the AI Action Summit in February 2025?",
+    "gold_answer": "Paris",
+    "gold_passages": [
+      {
+        "id": "R2",
+        "content": "[2]\nOn 10\u201311 February 2025, France will host the Artificial Intelligence (AI) Action Summit at the Grand Palais, bringing together Heads of State and Government, leaders of international organisations including OECD Secretary-General Mathias Cormann, business leaders, as well as representatives from academia, civil society and the arts.",
+        "source_url": "https://www.oecd.org/en/events/ai-action-summit.html",
+        "type": "read"
+      },
+      {
+        "id": "R11",
+        "content": "Found 17 matching section(s). Top 5:\n[1]\nThe artificial intelligence (AI) revolution is transforming our lives and societies, while also presenting unprecedented challenges that we must face together. To ensure that these technologies benefit the entire population, the [Paris Peace Forum](https://parispeaceforum.org/fr/) (PPF) has launched an AI Project Call to support international initiatives that promote citizen well-being and the ethical use of artificial intelligence. This call is part of the [AI Action Summit](https://www.elysee.fr/en/sommet-pour-l-action-sur-l-ia) to be held in Paris on February 10 and 11, 2025.",
+        "source_url": "https://www.inria.cl/en/ai-action-summit-oceania-project-selected-be-presented-summit-paris",
+        "type": "read"
+      },
+      {
+        "id": "R10",
+        "content": "[5]\nThe **Artificial Intelligence (AI) Action Summit** (French: _Sommet pour l'action sur l'intelligence artificielle_ or _Sommet pour l'action sur l'IA_, SAIA) was held at the [Grand Palais](https://en.wikipedia.org/wiki/Grand_Palais \"Grand Palais\") in [Paris](https://en.wikipedia.org/wiki/Paris \"Paris\"), France, from 10 to 11 February 2025.[[1]](https://en.wikipedia.org/wiki/AI_Action_Summit#cite_note-1)[[2]](https://en.wikipedia.org/wiki/AI_Action_Summit#cite_note-2)[[3]](https://en.wikipedia.org/wiki/AI_Action_Summit#cite_note-3) The summit was co-chaired by French President [Emmanuel Macron](https://en.wikipedia.org/wiki/Emmanuel_Macron \"Emmanuel Macron\") and Indian Prime Minister [Narendra Modi](https://en.wikipedia.org/wiki/Narendra_Modi \"Narendra Modi\").[[4]](https://en.wikipedia.org/wiki/AI_Action_Summit#cite_note-:1-4)[[5]](https://en.wikipedia.org/wiki/AI_Action_Summit#cite_note-5)[[6]](https://en.wikipedia.org/wiki/AI_Action_Summit#cite_note-6)[[7]](https://en.wikipedia.org/wiki/AI_Action_Summit#cite_note-7) The 2025 AI Action Summit followed the 2023 [AI Safety Summit](https://en.wikipedia.org/wiki/AI_Safety_Summit_2023 \"AI Safety Summit 2023\") hosted at Bletchley Park in the UK, and the 2024 [AI Seoul Summit](https://en.wikipedia.org/wiki/AI_Seoul_Summit_2024 \"AI Seoul Summit 2024\") in South Korea.[[8]](https://en.wikipedia.org/wiki/AI_Action_Summit#cite_note-8) This series of AI summits continued with the [AI Impact Summit](https://en.wikipedia.org/wiki/India_AI_Impact_Summit_2026 \"India AI Impact Summit 2026\") in Delhi, which was hosted by India in February 2026.[[9]](https://en.wikipedia.org/wiki/AI_Action_Summit#cite_note-9)[[10]](https://en.wikipedia.org/wiki/AI_Action_Summit#cite_note-10)",
+        "source_url": "https://en.wikipedia.org/wiki/AI_Action_Summit",
+        "type": "read"
+      },
+      {
+        "id": "R8",
+        "content": "[3]\n| 2025 AI Action Summit |\n| --- |\n| [![Image 1](https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Logo_Sommet_pour_l%27action_sur_l%27intelligence_artificielle.svg/250px-Logo_Sommet_pour_l%27action_sur_l%27intelligence_artificielle.svg.png)](https://en.wikipedia.org/wiki/File:Logo_Sommet_pour_l%27action_sur_l%27intelligence_artificielle.svg) |\n| [![Image 2](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/President_of_France_Mr._Emmanuel_Macron_welcomes_Prime_Minister_of_Bharat_Shri_Narendra_Damodardas_Modi_at_the_AI_Action_Summit_in_France.jpg/250px-President_of_France_Mr._Emmanuel_Macron_welcomes_Prime_Minister_of_Bharat_Shri_Narendra_Damodardas_Modi_at_the_AI_Action_Summit_in_France.jpg)](https://en.wikipedia.org/wiki/File:President_of_France_Mr._Emmanuel_Macron_welcomes_Prime_Minister_of_Bharat_Shri_Narendra_Damodardas_Modi_at_the_AI_Action_Summit_in_France.jpg) President Macron of France with Prime Minister Modi of India |\n| Host country | France and India |\n| Date | 10\u201311 February 2025 |\n| Venues | [Grand Palais](https://en.wikipedia.org/wiki/Grand_Palais \"Grand Palais\"), Paris |\n| Follows | [AI Seoul Summit](https://en.wikipedia.org/wiki/AI_Seoul_Summit_2024 \"AI Seoul Summit 2024\") |\n| Precedes | [AI Impact Summit](https://en.wikipedia.org/wiki/AI_Impact_Summit \"AI Impact Summit\") |\n| Website | [elysee.fr](https://www.elysee.fr/en/sommet-pour-l-action-sur-l-ia) |",
+        "source_url": "https://en.wikipedia.org/wiki/AI_Action_Summit",
+        "type": "read"
+      },
+      {
+        "id": "S7",
+        "content": "6 Feb 2025\u00b7France will host the AI Action Summit on 10\u201311 Feb 2025 at the Grand Palais, bringing together global leaders. The OECD will actively ...",
+        "source_url": "https://www.oecd.org/en/events/ai-action-summit.html",
+        "type": "search"
+      },
+      {
+        "id": "S5",
+        "content": "This call is part of theAIActionSummitto be held in Paris onFebruary10 and 11,2025. Through a public call, the Forum received more than 770 applications from 111 countries, with projects focused on applying AI to address global challenges such as improvements in health...",
+        "source_url": "https://www.inria.cl/en/ai-action-summit-oceania-project-selected-be-presented-summit-paris",
+        "type": "search"
+      },
+      {
+        "id": "S6",
+        "content": "AI Action Summit ; Host country, France and India ; Date, 10\u201311 February 2025 ; Venues, Grand Palais, Paris ; Follows, AI Seoul Summit ; Precedes, AI Impact Summit.Background\u00b7Proceedings\u00b7Investments\u00b7Reactions",
+        "source_url": "https://en.wikipedia.org/wiki/AI_Action_Summit",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "AI Action Summit took place on 10\u201311 February 2025",
+      "OECD says France hosted it at the Grand Palais, Paris",
+      "Inria says the summit was to be held in Paris on February 10 and 11, 2025",
+      "Paris"
+    ],
+    "num_hops": 1,
+    "judge_score": 0.9800000000000001
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "Which country signed a peace agreement with Rwanda in Washington in 2025 to help end conflict in eastern Congo?",
+          "max_results": 5
+        },
+        "result": "[S1] 2025 DRC\u2013Rwanda peace agreement - Wikipedia\n    https://en.wikipedia.org/wiki/2025_DRC\u2013Rwanda_peace_agreement\n    The Democratic Republic of theCongo\u2013Rwandapeaceagreement, officially theWashingtonAccords for Peace and Prosperity, is a peace treaty intended to end the conflict between the Democratic Republic of theCongo(DRC) andRwanda, signed on June 27,2025, inWashington, D.C., United States.\n\n[S2] Signing of the Washington Accords for Peace and Prosperity ...\n    https://www.state.gov/rele",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"Which country signed a peace agreement with Rwanda in Washington in 2025 to help end conflict in eastern Congo?\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 1,
+        "type": "tool_call",
+        "tool": "submit_answer",
+        "args": {
+          "passage_ids": [
+            "S1",
+            "S3",
+            "S4",
+            "S5"
+          ]
+        },
+        "result": "Answer submitted: S1, S3, S4, S5",
+        "generation_text": "<think>\n</think>\n\n\nsubmit_answer([\"S1\", \"S3\", \"S4\", \"S5\"])<|im_end|>"
+      }
+    ],
+    "snippet_store": {
+      "S1": "2025 DRC\u2013Rwanda peace agreement - Wikipedia https://en.wikipedia.org/wiki/2025_DRC\u2013Rwanda_peace_agreement The Democratic Republic of theCongo\u2013Rwandapeaceagreement, officially theWashingtonAccords for Peace and Prosperity, is a peace treaty intended to end the conflict between the Democratic Republic of theCongo(DRC) andRwanda, signed on June 27,2025, inWashington, D.C., United States.",
+      "S2": "Signing of the Washington Accords for Peace and Prosperity ... https://www.state.gov/releases/office-of-the-spokesperson/2025/12/signing-of-the-washington-accords-for-peace-and-prosperity-between-the-democratic-republic-of-the-congo-and-rwanda Dec 4,2025\u00b7On December 4, President Donald J. Trump hosted the signing of theWashingtonAccords forPeaceand Prosperity between the Democratic Republic of theCongo(DRC) and the Republic ofRwanda.",
+      "S3": "Congo and Rwanda sign US-mediated peace deal | AP News https://apnews.com/article/congo-rwanda-drc-peace-deal-m23-trump-5e5b52100729ad6587a6f267c6c79ae0 The Democratic Republic of Congoand Rwanda have signed a peace deal facilitated by the U.S. to help end the decades-long fighting in eastern Congo.",
+      "S4": "Rwanda, Congo sign peace deal in US to end fighting, attract ... https://www.reuters.com/world/africa/rwanda-democratic-republic-congo-set-sign-peace-agreement-washington-2025-06-27/ Jun 27,2025\u00b7WASHINGTON/PARIS/KINSHASA, June 27 (Reuters) -Rwandaand Democratic Republic ofCongosigneda U.S.-brokeredpeaceagreementon Friday, raising hopes for an end to fighting that has...",
+      "S5": "DRC and Rwanda sign 'Washington Accord' peace deal https://www.thenationalnews.com/news/us/2025/06/27/congo-and-rwanda-to-sign-peace-deal-in-washington/ Jun 27,2025\u00b7Rwanda andthe Democratic Republic of Congo(DRC) signed a US-brokered peace agreement in Washington on Friday, ending three decades of conflict and ushering in billions in foreign investment to the region."
+    },
+    "num_iterations": 2,
+    "submitted": true,
+    "submitted_ids": {
+      "passage_ids": [
+        "S1",
+        "S3",
+        "S4",
+        "S5"
+      ]
+    },
+    "latency_seconds": 2.8,
+    "gen_time_seconds": 1.6,
+    "tool_time_seconds": 1.2,
+    "question": "Which country signed a peace agreement with Rwanda in Washington in 2025 to help end conflict in eastern Congo?",
+    "gold_answer": "Democratic Republic of Congo",
+    "gold_passages": [
+      {
+        "id": "S3",
+        "content": "WASHINGTON/PARIS/KINSHASA,June27 (Reuters) -Rwandaand Democratic Republic ofCongosigneda U.S.-brokeredpeaceagreementon Friday, raising hopes ...",
+        "source_url": "https://www.reuters.com/world/africa/rwanda-democratic-republic-congo-set-sign-peace-agreement-washington-2025-06-27/",
+        "type": "search"
+      },
+      {
+        "id": "S2",
+        "content": "WASHINGTON/KINSHASA/DAKAR,June18 (Reuters) -Rwandaand Democratic Republic ofCongotechnical teams initialed a draftpeaceagreementthat is ...",
+        "source_url": "https://www.reuters.com/world/africa/rwanda-drc-initial-peace-agreement-ahead-next-weeks-signing-2025-06-18/",
+        "type": "search"
+      },
+      {
+        "id": "S4",
+        "content": "IntheWashingtonagreement, the two Africancountriespledged to implement a 2024 deal that would see Rwandan troops withdraw fromeasternCongo...",
+        "source_url": "https://www.reuters.com/world/africa/rwanda-congo-agree-outline-economic-framework-part-peace-deal-2025-08-01/",
+        "type": "search"
+      },
+      {
+        "id": "S1",
+        "content": "...Congo\u2013Rwandapeaceagreement, officially theWashingtonAccords forPeaceand Prosperity , is apeacetreaty intended toendthe conflict between ...",
+        "source_url": "https://en.wikipedia.org/wiki/Washington_Accord",
+        "type": "search"
+      },
+      {
+        "id": "S5",
+        "content": "President Donald Trump gathered the leaders of the Democratic Republic ofCongoandRwandato sign apeacedealinWashingtonon Thursday even as ...",
+        "source_url": "https://www.reuters.com/world/africa/trump-hosts-congo-rwanda-leaders-latest-push-peace-2025-12-04/",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "Reuters reported Rwanda and the Democratic Republic of Congo initialed a draft peace agreement ahead of signing in Washington [S2]",
+      "Reuters reported Rwanda and the Democratic Republic of Congo signed the U.S.-brokered peace agreement in Washington on June 27, 2025 [S3]",
+      "Democratic Republic of Congo"
+    ],
+    "num_hops": 1,
+    "judge_score": 0.9800000000000001
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "Which company acquired Wiz in 2025?",
+          "max_results": 5
+        },
+        "result": "[S1] Assaf Rappaport - Wikipedia\n    https://en.wikipedia.org/wiki/Assaf_Rappaport\n    On 18 March2025, Alphabet announced it had entered into an agreement toacquireWizfor $32 billion in cash, subject to regulatory approvals.[2] The deal, if finalized, would be the largest in Google\u2019s history, as well as the largestacquisitionof an Israeli technologycompany.[1][3]Wizis...\n\n[S2] Google announces agreement toacquireWiz\n    https://blog.google/company-news/inside-google/company-announcements/google",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"Which company acquired Wiz in 2025?\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 1,
+        "type": "tool_call",
+        "tool": "submit_answer",
+        "args": {
+          "passage_ids": [
+            "S1",
+            "S4",
+            "S5",
+            "S3",
+            "S2"
+          ]
+        },
+        "result": "Answer submitted: S1, S4, S5, S3, S2",
+        "generation_text": "<think>\n</think>\n\n\nsubmit_answer([\"S1\", \"S4\", \"S5\", \"S3\", \"S2\"])<|im_end|>"
+      }
+    ],
+    "snippet_store": {
+      "S1": "Assaf Rappaport - Wikipedia https://en.wikipedia.org/wiki/Assaf_Rappaport On 18 March2025, Alphabet announced it had entered into an agreement toacquireWizfor $32 billion in cash, subject to regulatory approvals.[2] The deal, if finalized, would be the largest in Google\u2019s history, as well as the largestacquisitionof an Israeli technologycompany.[1][3]Wizis...",
+      "S2": "Google announces agreement toacquireWiz https://blog.google/company-news/inside-google/company-announcements/google-agreement-acquire-wiz/ Google signed a definitive agreement toacquireWiz. This deal will make it easier forcompaniesto protect themselves across major clouds.",
+      "S3": "Google Seals $32 Billion Deal for Cyber Start-UpWiz(Published2025) https://www.nytimes.com/2025/03/18/technology/google-alphabet-wiz-deal.html TheWizacquisitionaligns with a plan to make Google Cloud a bigger player in cybersecurity. Under Thomas Kurian, the unit\u2019s chief executive, Google Cloud bought two cybersecurity firms in 2022 \u2014 Mandiant for $5.4 billion and Siemplify for a reported $500 million.",
+      "S4": "Confirmed: Google buysWizfor $32B to beef up in cloud... | TechCrunch https://techcrunch.com/2025/03/18/google-is-buying-wiz-for-32b-to-beef-up-in-cloud-security/ Thecompany's parentcompanyAlphabet is buyingWiz, the cloud security startup, for $32 billion.",
+      "S5": "Throwback to Google\u2019s $32 Billion Bet onWizand the Future of Cloud... https://www.linkedin.com/pulse/throwback-googles-32-billion-bet-wiz-future-cloud-security-secchi-h1nce In the fast-moving world of tech, a singleacquisitioncan rewrite the rules of the game. In March2025, Google made such a move, paying $32 billion toacquireWiz, a rising star in cloud security. This was not just the largest deal in thecompany\u2019s history; it was a statement."
+    },
+    "num_iterations": 2,
+    "submitted": true,
+    "submitted_ids": {
+      "passage_ids": [
+        "S1",
+        "S4",
+        "S5",
+        "S3",
+        "S2"
+      ]
+    },
+    "latency_seconds": 3.8,
+    "gen_time_seconds": 1.4,
+    "tool_time_seconds": 2.4,
+    "question": "Which company acquired Wiz in 2025?",
+    "gold_answer": "Google",
+    "gold_passages": [
+      {
+        "id": "S6",
+        "content": "18 Mar 2025\u00b7(March 18, 2025)\u2014Google LLC today announced it has signed a definitive agreement to acquire Wiz, Inc., a leading cloud security platform ...",
+        "source_url": "https://blog.google/company-news/inside-google/company-announcements/google-agreement-acquire-wiz/",
+        "type": "search"
+      },
+      {
+        "id": "S2",
+        "content": "Once closed,Wizwill join Google Cloud. Thisacquisitionrepresents an investment by Google Cloud to accelerate two large and growing trends in the AI era: improved cloud security and the ability to use multiple clouds (multicloud).",
+        "source_url": "https://blog.google/company-news/inside-google/company-announcements/google-agreement-acquire-wiz/",
+        "type": "search"
+      },
+      {
+        "id": "S9",
+        "content": "18 Mar 2025\u00b7Today we have reached yet another milestone on our journey - we have signed a deal to be acquired by Google. The deal is subject to ...",
+        "source_url": "https://www.wiz.io/blog/wiz-joining-google",
+        "type": "search"
+      },
+      {
+        "id": "S3",
+        "content": "March 18,2025. Google agreed to buyWiz, a fast-growing cybersecurity start-up, for $32 billion in thecompany\u2019s biggest push to strengthen its cloud-computing business and expand beyond the search engine and consumer internet services that made it a household name.",
+        "source_url": "https://www.nytimes.com/2025/03/18/technology/google-alphabet-wiz-deal.html",
+        "type": "search"
+      },
+      {
+        "id": "S5",
+        "content": "Google is making the biggestacquisitioninits history. Thecompany's parentcompanyAlphabet is buyingWiz, the cloud security startup, for $32 billion.",
+        "source_url": "https://techcrunch.com/2025/03/18/google-is-buying-wiz-for-32b-to-beef-up-in-cloud-security/",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "In March 2025, Google announced an agreement to acquire Wiz",
+      "Google LLC signed a definitive agreement to acquire Wiz, Inc. on March 18, 2025",
+      "Google"
+    ],
+    "num_hops": 1,
+    "judge_score": 0.9800000000000001
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "Who won the men's singles title at the 2025 Australian Open?",
+          "max_results": 5
+        },
+        "result": "[S1] 2025 Australian Open - Men's singles - Wikipedia\n    https://en.wikipedia.org/wiki/2025_Australian_Open_\u2013_Men's_singles\n    2025AustralianOpen-Men'ssingles... Defending champion Jannik Sinner [1] defeated Alexander Zverev in the final, 6-3, 7-6 (7-4), 6-3 to win themen'ssinglestennistitleatthe2025AustralianOpen. [2] It was his secondAustralianOpentitleand third majortitleoverall.\n\n[S2] Who are all the champions from AO 2025? - Australian Open\n    https://ausopen.com/articles/news/who-are-al",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"Who won the men's singles title at the 2025 Australian Open?\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 1,
+        "type": "tool_call",
+        "tool": "submit_answer",
+        "args": {
+          "passage_ids": [
+            "S1",
+            "S3",
+            "S4",
+            "S5"
+          ]
+        },
+        "result": "Answer submitted: S1, S3, S4, S5",
+        "generation_text": "<think>\n</think>\n\n\nsubmit_answer([\"S1\", \"S3\", \"S4\", \"S5\"])<|im_end|>"
+      }
+    ],
+    "snippet_store": {
+      "S1": "2025 Australian Open - Men's singles - Wikipedia https://en.wikipedia.org/wiki/2025_Australian_Open_\u2013_Men's_singles 2025AustralianOpen-Men'ssingles... Defending champion Jannik Sinner [1] defeated Alexander Zverev in the final, 6-3, 7-6 (7-4), 6-3 to win themen'ssinglestennistitleatthe2025AustralianOpen. [2] It was his secondAustralianOpentitleand third majortitleoverall.",
+      "S2": "Who are all the champions from AO 2025? - Australian Open https://ausopen.com/articles/news/who-are-all-champions-ao-2025 TheAustralianOpenis over for another year. With the addition of the boys' and girls' wheelchairsinglesand doubles events at AO2025, an impressive 19 trophies have been awarded. Here's a list of all the trophy winners, whose names will be added to theAustralianOpenHonour Roll.",
+      "S3": "Jannik Sinner beats Alexander Zverev for 2nd straight Australian Open ... https://apnews.com/article/australian-open-men-final-sinner-zverev-df0c51779000913e5c6a19725e085829 Jannik Sinner of Italy eats a banana during themen'ssinglesfinal against Alexander Zverev of Germany at theAustralianOpentennis championship in Melbourne, Australia, Sunday, Jan. 26,2025.",
+      "S4": "Jannik Sinner cements hard-court dominance with 2025 Australian Open title https://www.usopen.org/en_US/news/articles/2025-01-26/jannik_sinner_cements_hardcourt_dominance_with_2025_australian_open_title.html Jannik Sinnerwonhis third straight hard-court Grand Slamtitleatthe2025AustralianOpen, beating Alexander Zverev in Sunday'smen'ssinglesfinal.",
+      "S5": "Australian Open 2025: Jannik Sinner & Madison Keys Win Men's and Women ... https://affairscloud.com/australian-open-2025-jannik-sinner-madison-keys-win-mens-and-womens-singles-title/ Jannik Sinner of ItalywontheMen'sSinglestitlewhile Madison Keys of United States of America (USA)wontheWomen'sSinglestitleattheAustralianOpen(AO)2025held at Melbourne Park, Melbourne, Australia. This was the 113th edition of theAustralianOpen,the57th in theOpenEra, and the first major of2025and was held from 12th January to 26th January2025. Note: i. Five Indian ..."
+    },
+    "num_iterations": 2,
+    "submitted": true,
+    "submitted_ids": {
+      "passage_ids": [
+        "S1",
+        "S3",
+        "S4",
+        "S5"
+      ]
+    },
+    "latency_seconds": 2.6,
+    "gen_time_seconds": 1.4,
+    "tool_time_seconds": 1.2,
+    "question": "Who won the men's singles title at the 2025 Australian Open?",
+    "gold_answer": "Jannik Sinner",
+    "gold_passages": [
+      {
+        "id": "R1",
+        "content": "Found 1 matching section(s). Top 1:\n[1]\nThe last ball has been struck, the courts are once again quiet, and the crowds have departed. The Australian Open is over for another year. With the addition of the boys' and girls' wheelchair singles and doubles events at AO 2025, an impressive 19 trophies have been awarded. Here's a list of all the trophy winners, whose names will be added to the Australian Open Honour Roll. Men's singles No.1 seed Jannik Sinner secured a second successive Australian Open title with a 6-3 7-6(4) 6-3 win over No.2 seed German Alexander Zverev. READ MORE: Jannik's back - Sinner successfully defends [...] 6-3 7-6(4). READ MORE: Cooper hails 'inspiration' of new AO junior wheelchair events Boys' wheelchair doubles The Brazil-USA pairing of Luiz Calixto and Charlie Cooper beat Belgium's Alexander Lantermann and Aussie Benjamin Wenzel 6-3 6-0 to lift the inaugural AO boys' wheelchair doubles trophy. READ MORE: Cooper hails 'inspiration' of new AO junior wheelchair events Girls' wheelchair doubles Belgium's Luna Gryp and Vitoria Miranda of Brazil took the first AO girls' wheelchair doubles title with a 6-1 6-1 victory over American Sabina Czauz and partner Ailina Mosko of Latvia. READ MORE: Cooper hails 'inspiration' of new AO junior wheelchair events",
+        "source_url": "https://ausopen.com/articles/news/who-are-all-champions-ao-2025",
+        "type": "read"
+      },
+      {
+        "id": "S3",
+        "content": "TheAustralianOpenis over for another year. With the addition of the boys' and girls' wheelchairsinglesand doubles events at AO2025, an impressive 19 trophies have been awarded. Here's a list of all the trophywinners, whose names will be added to theAustralianOpenHonour Roll.",
+        "source_url": "https://ausopen.com/articles/news/who-are-all-champions-ao-2025",
+        "type": "search"
+      },
+      {
+        "id": "S14",
+        "content": "AustralianOpen:JannikSinnerbeats ... There was not a lot separatingJannikSinnerand Alexander Zverev heading into theAustralianOpenfinal.",
+        "source_url": "https://www.abc.net.au/news/2025-01-26/australian-open-live-jannik-sinner-vs-alexander-zverev/104859786",
+        "type": "search"
+      },
+      {
+        "id": "S1",
+        "content": "2025AustralianOpen-Men'ssingles... Defending champion Jannik Sinner [1] defeated Alexander Zverev in the final, 6-3, 7-6 (7-4), 6-3 to win themen'ssinglestennis title at the2025AustralianOpen. [2] It was his secondAustralianOpentitle and third major title overall.",
+        "source_url": "https://en.wikipedia.org/wiki/2025_Australian_Open_\u2013_Men's_singles",
+        "type": "search"
+      },
+      {
+        "id": "S5",
+        "content": "Top seed Jannik Sinner triumphed in straight sets over a volatile Alexander Zverev in theAustralianOpenmen'ssinglesfinal to clinch his third grand slam title on Sunday night. Italy's Sinner successfully defended hisAustralianOpencrown in a 6-3, 7-6 (4), 6-3 victory over Germany's Zverev on Rod Laver Arena, raking in more silverware as well as $3.5 million to take the total of his ...",
+        "source_url": "https://www.nine.com.au/sport/tennis/australian-open-2025-final-mens-singles-jannik-sinner-alexander-zverev-result-20250126-p5l7cu.html",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "Australian Open official champions page lists the 2025 men's singles champion as Jannik Sinner",
+      "He beat Alexander Zverev 6-3 7-6(4) 6-3",
+      "Jannik Sinner"
+    ],
+    "num_hops": 1,
+    "judge_score": 0.9800000000000001
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "no_tool_call",
+        "text": "<think>\n</think>\n\n\nsearch(\"ICC Champions Trophy 2025 winner\", 5)<|im_end|>"
+      }
+    ],
+    "snippet_store": {},
+    "num_iterations": 1,
+    "submitted": false,
+    "submitted_ids": null,
+    "latency_seconds": 0.5,
+    "gen_time_seconds": 0.5,
+    "tool_time_seconds": 0.0,
+    "question": "Who won the ICC Champions Trophy in 2025?",
+    "gold_answer": "India",
+    "gold_passages": [
+      {
+        "id": "S8",
+        "content": "9 Mar 2025\u00b7Rohit Sharma led from the front as India won a captivating ICC Men's Champions Trophy final by four wickets against New Zealand.",
+        "source_url": "https://www.icc-cricket.com/media-releases/rohit-leads-india-to-icc-men-s-champions-trophy-glory",
+        "type": "search"
+      },
+      {
+        "id": "S6",
+        "content": "9 Mar 2025\u00b7India won the ICC Champions Trophy 2025 Final in Dubai, beating New Zealand by four wickets. They made 254/6, with KL Rahul and Ravindra Jadeja seeing the ...",
+        "source_url": "https://www.icc-cricket.com/news/live-india-and-new-zealand-on-crossroads-in-the-champions-trophy-final",
+        "type": "search"
+      },
+      {
+        "id": "S7",
+        "content": "21 Mar 2025\u00b7ICC Champions Trophy, 2025: India triumph over New Zealand to win tournament | Match Highlights | Champions Trophy 2025",
+        "source_url": "https://www.icc-cricket.com/tournaments/champions-trophy-2025",
+        "type": "search"
+      },
+      {
+        "id": "S13",
+        "content": "Sun 9 Mar2025,ICCMen'sChampionsTrophy-Final.17:15 GMT 9March2025. Well, all of thetrophypresentations are now complete, as Rohit Sharma and India celebrate on the stage with gold confetti and fireworks flying all over the outfield in Dubai.",
+        "source_url": "https://www.bbc.com/sport/cricket/live/c1lv2p7nnmzt",
+        "type": "search"
+      },
+      {
+        "id": "S2",
+        "content": "People watch theICCMen'sChampionsTrophyfinal between India and New Zealand on a street in Mumbai, India, March 9,2025.REUTERS/Francis Mascarenhas.",
+        "source_url": "https://www.aljazeera.com/sports/liveblog/2025/3/9/live-india-vs-new-zealand-icc-champions-trophy-2025-final-commentary-stream-score-pitch-weather-teams",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "ICC official report says India beat New Zealand by four wickets in the 2025 final",
+      "ICC tournament page says India triumphed over New Zealand to win the tournament",
+      "Therefore, the 2025 ICC Champions Trophy winner was India"
+    ],
+    "num_hops": 1,
+    "judge_score": 0.0
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "AI Action Summit February 2025 host city",
+          "max_results": 5
+        },
+        "result": "[S1] AI Action Summit - Wikipedia\n    https://en.wikipedia.org/wiki/AI_Action_Summit\n    The Artificial Intelligence (AI)ActionSummit(French: Sommet pour l'action sur l'intelligence artificielle or Sommet pour l'action sur l'IA, SAIA) was held at the Grand Palais in Paris, France, from 10 to 11February2025. [1][2][3] Thesummitwas co-chaired by French President Emmanuel Macron and Indian Prime Minister Narendra Modi. [4][5][6][7] The2025AIActionSummitfollowed the 2023 ...\n\n[S2] AI Action Summit i",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"AI Action Summit February 2025 host city\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 1,
+        "type": "tool_call",
+        "tool": "submit_answer",
+        "args": {
+          "passage_ids": [
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S5"
+          ]
+        },
+        "result": "Answer submitted: S1, S2, S3, S4, S5",
+        "generation_text": "<think>\n</think>\n\n\nsubmit_answer([\"S1\", \"S2\", \"S3\", \"S4\", \"S5\"])<|im_end|>"
+      }
+    ],
+    "snippet_store": {
+      "S1": "AI Action Summit - Wikipedia https://en.wikipedia.org/wiki/AI_Action_Summit The Artificial Intelligence (AI)ActionSummit(French: Sommet pour l'action sur l'intelligence artificielle or Sommet pour l'action sur l'IA, SAIA) was held at the Grand Palais in Paris, France, from 10 to 11February2025. [1][2][3] Thesummitwas co-chaired by French President Emmanuel Macron and Indian Prime Minister Narendra Modi. [4][5][6][7] The2025AIActionSummitfollowed the 2023 ...",
+      "S2": "AI Action Summit in Paris | French-American Cultural Foundation https://frenchamericancultural.org/2025/02/17/ai-action-summit-2025-paris-at-the-forefront-of-global-ai-innovation/ AIActionSummit2025in Paris, France. Photo by Judith Litvine. Paris, often called the Silicon Valley of Europe, hosted the Artificial Intelligence (AI)ActionSummitonFebruary10-11,2025, at the iconic Grand Palais. This global gathering brought together Heads of State and Government, leaders of international organizations, CEOs, academics, non-governmental organizations, artists, and ...",
+      "S3": "Artificial Intelligence Action Summit - \u00c9lys\u00e9e https://www.elysee.fr/en/sommet-pour-l-action-sur-l-ia AIactionsummitFor almost a week, fromFebruary6 to 11,2025, Paris hosted numerous events aimed at strengthening internationalactiontowards artificial intelligence serving the general interest. The week was punctuated by scientific days, a cultural weekend, an internationalsummitat the Grand Palais, numerous parallel events, and a day for businesses.",
+      "S4": "AI Action Summit (10 & 11 February 2025) - France Diplomatie https://www.diplomatie.gouv.fr/en/french-foreign-policy/digital-diplomacy/news/article/ai-action-summit-10-11-feb-2025 On 10 and 11February2025, Paris will become the artificial intelligence (AI) capital of the world on the occasion of theAIActionSummit. This event will bring together heads of State and Government, international organizations and companies of all sizes, representatives from academia, researchers, non-governmental organizations, artists and other members of civil society from across the globe.",
+      "S5": "AI Action Summit (10 and 11 February 2025) - France ONU https://onu.delegfrance.org/ai-action-summit-10-and-11-february-2025 On 10 and 11February2025, Paris will become the artificial intelligence (AI) capital of the world on the occasion of theAIActionSummit."
+    },
+    "num_iterations": 2,
+    "submitted": true,
+    "submitted_ids": {
+      "passage_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ]
+    },
+    "latency_seconds": 3.6,
+    "gen_time_seconds": 1.4,
+    "tool_time_seconds": 2.2,
+    "question": "Which city hosted the AI Action Summit in February 2025?",
+    "gold_answer": "Paris",
+    "gold_passages": [
+      {
+        "id": "S3",
+        "content": "AIactionsummitFor almost a week, fromFebruary6 to 11,2025, Parishostednumerous events aimed at strengthening internationalactiontowards artificial intelligence serving the general interest. The week was punctuated by scientific days, a cultural weekend, an internationalsummitat the Grand Palais, numerous parallel events, and a day for businesses.",
+        "source_url": "https://www.elysee.fr/en/sommet-pour-l-action-sur-l-ia",
+        "type": "search"
+      },
+      {
+        "id": "S4",
+        "content": "On 10 and 11February2025, Paris will become the artificial intelligence (AI) capital of the world on the occasion of theAIActionSummit. This event will bring together heads of State and Government, international organizations and companies of all sizes, representatives from academia, researchers, non-governmental organizations, artists and other members of civil society from across the globe.",
+        "source_url": "https://www.diplomatie.gouv.fr/en/french-foreign-policy/digital-diplomacy/news/article/ai-action-summit-10-11-feb-2025",
+        "type": "search"
+      },
+      {
+        "id": "S2",
+        "content": "French President Emmanuel Macron delivers a speech on the first day of the Artificial Intelligence (AI)ActionSummitat the Grand Palais in Paris, France,February10,2025.REUTERS/Benoit ...",
+        "source_url": "https://www.reuters.com/technology/artificial-intelligence/details-110-billion-euros-investment-pledges-frances-ai-summit-2025-02-10/",
+        "type": "search"
+      },
+      {
+        "id": "S1",
+        "content": "The Artificial Intelligence (AI)ActionSummit(French: Sommet pour l'action sur l'intelligence artificielle or Sommet pour l'action sur l'IA, SAIA) was held at the Grand Palais in Paris, France, from 10 to 11February2025. [1][2][3] Thesummitwas co-chaired by French President Emmanuel Macron and Indian Prime Minister Narendra Modi. [4][5][6][7] The2025AIActionSummitfollowed the 2023 ...",
+        "source_url": "https://en.wikipedia.org/wiki/AI_Action_Summit",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "The AI Action Summit took place on 10\u201311 February 2025",
+      "Official French government pages say Paris hosted the summit",
+      "Paris"
+    ],
+    "num_hops": 1,
+    "judge_score": 0.9800000000000001
+  },
+  {
+    "trajectory": [
+      {
+        "iteration": 0,
+        "type": "tool_call",
+        "tool": "search",
+        "args": {
+          "query": "2025 South Korean presidential election winner inauguration date",
+          "max_results": 5
+        },
+        "result": "[S1] 2025 South Korean presidential election - Wikipedia\n    https://en.wikipedia.org/wiki/2025_South_Korean_presidential_election\n    The president ofSouthKorea is elected via a single-round plurality voting system. Presidents are limited to a single five-year term, with no possibility of re-election. [1] In regularly scheduledpresidentialelections, thewinnertakes office two months afterElectionDay. However, in a snapelection, thewinnertakes office the moment the NationalElectionCommission chai",
+        "generation_text": "<think>\n</think>\n\n\nsearch(\"2025 South Korean presidential election winner inauguration date\", max_results=5)<|im_end|>"
+      },
+      {
+        "iteration": 1,
+        "type": "tool_call",
+        "tool": "submit_answer",
+        "args": {
+          "passage_ids": [
+            "S5",
+            "S2",
+            "S3"
+          ]
+        },
+        "result": "Answer submitted: S5, S2, S3",
+        "generation_text": "<think>\n</think>\n\n\nsubmit_answer([\"S5\", \"S2\", \"S3\"])<|im_end|>"
+      }
+    ],
+    "snippet_store": {
+      "S1": "2025 South Korean presidential election - Wikipedia https://en.wikipedia.org/wiki/2025_South_Korean_presidential_election The president ofSouthKorea is elected via a single-round plurality voting system. Presidents are limited to a single five-year term, with no possibility of re-election. [1] In regularly scheduledpresidentialelections, thewinnertakes office two months afterElectionDay. However, in a snapelection, thewinnertakes office the moment the NationalElectionCommission chair certifies the ...",
+      "S2": "Understanding South Korea's 2025 Presidential Election - A New Chapter ... https://sosandaily.blogspot.com/2025/06/understanding-south-koreas-2025.html SouthKorea has entered a new political era with the conclusion of its2025presidentialelection, held on June 3,2025. Theelection, watched closely both at home and abroad, resulted in a pivotal victory for Lee Jae-myung, the candidate of the liberal Democratic Party of Korea. This post offers international readers a clear and concise understanding of theelectionprocess, the major players ...",
+      "S3": "South Korea Elects New President - Human Rights Watch https://www.hrw.org/news/2025/06/04/south-korea-elects-new-president SouthKorea's NationalElectionCommittee announced on June 4,2025, that Lee Jae-myung from Democratic Party won the country'spresidentialelections.",
+      "S4": "Lee Jae-myung Elected President of South Korea https://www.nytimes.com/live/2025/06/03/world/south-korea-presidential-election Lee Jae-myung of the center-left Democratic Party won theSouthKoreanpresidentialelectionon Wednesday, riding a wave of anger against former President Yoon Suk Yeol and his People Power Party ...",
+      "S5": "Presidential election in South Korea 2025 - statistics & facts https://www.statista.com/topics/13493/presidential-election-in-south-korea-2025/ On June 3,2025,SouthKorea elected the main liberal party's Lee Jae-myung as its new president to serve the country for the next five years, beginning June 4,2025."
+    },
+    "num_iterations": 2,
+    "submitted": true,
+    "submitted_ids": {
+      "passage_ids": [
+        "S5",
+        "S2",
+        "S3"
+      ]
+    },
+    "latency_seconds": 3.2,
+    "gen_time_seconds": 1.1,
+    "tool_time_seconds": 2.0,
+    "question": "On what date was the winner of the 2025 South Korean presidential election inaugurated as president?",
+    "gold_answer": "4 June 2025",
+    "gold_passages": [
+      {
+        "id": "S16",
+        "content": "4 Jun 2025\u00b7South Korea has elected liberal Lee Jae-myung as president to lead the country through a tumultuous period that will require negotiating trade tariffs with the ...",
+        "source_url": "https://www.reuters.com/world/china/south-koreas-president-lee-jae-myung-takes-office-2025-06-04/",
+        "type": "search"
+      },
+      {
+        "id": "R5",
+        "content": "[2]\n[Lee Jae Myung](https://en.wikipedia.org/wiki/Lee_Jae_Myung \"Lee Jae Myung\") assumed office as the 14th [president of South Korea](https://en.wikipedia.org/wiki/President_of_South_Korea \"President of South Korea\") on 4 June 2025 and formed a cabinet after winning the [2025 presidential election](https://en.wikipedia.org/wiki/2025_South_Korean_presidential_election \"2025 South Korean presidential election\").[[1]](https://en.wikipedia.org/wiki/Cabinet_of_Lee_Jae_Myung#cite_note-:0-1)[[2]](https://en.wikipedia.org/wiki/Cabinet_of_Lee_Jae_Myung#cite_note-:1-2)[[3]](https://en.wikipedia.org/wiki/Cabinet_of_Lee_Jae_Myung#cite_note-:2-3)",
+        "source_url": "https://en.wikipedia.org/wiki/Cabinet_of_Lee_Jae_Myung",
+        "type": "read"
+      },
+      {
+        "id": "S17",
+        "content": "4 Jun 2025\u00b7Lee faces the most daunting set of challenges for a South Korean leader in nearly three decades, ranging from healing a country scarred by ...",
+        "source_url": "https://www.reuters.com/world/asia-pacific/south-koreas-liberal-new-president-lee-jae-myung-vows-economic-revival-judgement-2025-06-03/",
+        "type": "search"
+      },
+      {
+        "id": "S21",
+        "content": "2 Jun 2025\u00b7South Korea's new President Lee Jae-myung has taken the oath of office. He stressed the need for reconciliation and the restoration of democracy.",
+        "source_url": "https://www.dw.com/en/south-koreas-lee-jae-myung-sworn-in-as-new-president/live-72767996",
+        "type": "search"
+      },
+      {
+        "id": "R2",
+        "content": "[3]\nFollowing his inauguration, Lee Jae Myung delivered a statement titled \"Message to the People after the Oath of Office\" on 4 June 2025. He pledged to become \"a president for everyone, embracing and serving all citizens regardless of whom they supported\", and vowed to restore dialogue, compromise, and a politics of coexistence and national unity.[[128]](https://en.wikipedia.org/wiki/2025_South_Korean_presidential_election#cite_note-128)",
+        "source_url": "https://en.wikipedia.org/wiki/2025_South_Korean_presidential_election",
+        "type": "read"
+      },
+      {
+        "id": "S6",
+        "content": "Early presidential elections were held in South Korea on 3 June 2025. Democratic Party nominee and former opposition leader Lee Jae Myung defeated the ...Electoral system\u00b7Nominations\u00b7Campaign developments",
+        "source_url": "https://en.wikipedia.org/wiki/2025_South_Korean_presidential_election",
+        "type": "search"
+      }
+    ],
+    "sub_answers": [
+      "Winner: Lee Jae-myung",
+      "Took office/was sworn in as president on 4 June 2025",
+      "4 June 2025"
+    ],
+    "num_hops": 2,
+    "judge_score": 0.29000000000000004
+  }
+]
