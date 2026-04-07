@@ -149,7 +149,7 @@ class RemoteGRPOTrainer(GRPOTrainer):
                         result = self._dispatch_tool(name, args)
                     elif name == "read":
                         result = self._dispatch_tool(name, args)
-                    elif name == "submit_ranking":
+                    elif name == "submit_answer":
                         result = self._dispatch_tool(name, args)
                     else:
                         result = f"Unknown tool: {name}"
@@ -238,8 +238,8 @@ class RemoteGRPOTrainer(GRPOTrainer):
             return env.search(**args)
         elif name == "read":
             return env.read(**args)
-        elif name == "submit_ranking":
-            return env.submit_ranking(**args)
+        elif name == "submit_answer":
+            return env.submit_answer(**args)
         return f"Unknown tool: {name}"
 
 

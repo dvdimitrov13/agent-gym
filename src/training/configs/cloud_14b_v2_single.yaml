@@ -6,8 +6,8 @@ dataset: "data/train_trl_v2_curriculum.jsonl"
 per_device_train_batch_size: 2
 gradient_accumulation_steps: 2
 num_generations: 4
-max_completion_length: 512
-max_tool_calling_iterations: 5
+max_completion_length: 1024
+max_tool_calling_iterations: 8
 
 # GRPO (length-biased, SID-1 style)
 loss_type: "grpo"
@@ -15,8 +15,9 @@ beta: 0.0
 temperature: 0.7
 learning_rate: 1e-5
 
-# Single epoch (curriculum baked into the dataset)
+# 1000 total steps (600 done + 400 more = ~2 extra epochs)
 num_train_epochs: 1
+max_steps: 1300
 logging_steps: 1
 save_steps: 50
 
@@ -36,27 +37,12 @@ use_v2_env: true
 use_v2_rewards: true
 use_tito: true
 
-# Curriculum schedule (consecutive per difficulty):
-#   Steps  0-29:  1-hop × 2 epochs, 512 tokens, 5 iters
-#   Steps 30-69:  2-hop × 2 epochs, 768 tokens, 7 iters
-#   Steps 70-99:  3-hop × 2 epochs, 1024 tokens, 10 iters
-#   Steps 100-199: mixed (shuffled), 1024 tokens, 10 iters
-# Completion + thinking budget scale together
-length_schedule:
-  - [0, 512]
-  - [30, 768]
-  - [70, 1024]
+# No curriculum — already past all transitions, use final values
+# max_completion_length: 1024, max_tool_calling_iterations: 10
+# Thinking: soft nudge at 256, no hard cap (reward annealing handles it)
 
-# Thinking budget: [step, soft_nudge_start, hard_cap]
-thinking_schedule:
-  - [0, 128, 256]
-  - [30, 192, 320]
-  - [70, 256, 384]
-
-tool_iter_schedule:
-  - [0, 5]
-  - [30, 7]
-  - [70, 10]
+# Resume from checkpoint-600
+resume_from_checkpoint: "checkpoints/qwen3-14b-grpo-v2/checkpoint-1100"
 
 # Output
 output_dir: "checkpoints/qwen3-14b-grpo-v2"

@@ -64,6 +64,9 @@ def main():
     dtype = get_dtype()
     use_vllm = config.get("use_vllm", False)
 
+    # Reduce CUDA memory fragmentation
+    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
     # Setup logging
     logging.basicConfig(
         level=logging.INFO,
@@ -154,9 +157,10 @@ def main():
     use_v2 = config.get("use_v2_rewards", False)
     if use_v2:
         from src.rewards.llm_judge_reward import llm_judge_reward
-        reward_funcs = [llm_judge_reward, efficiency_reward, format_reward]
-        grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.5]
-        # Thinking multiplier applied as scalar in TiToGRPOTrainer._calculate_rewards
+        reward_funcs = [llm_judge_reward]
+        grpo_kwargs["reward_weights"] = [1.0]
+        # Format validity + thinking length applied as multiplicative scalers
+        # in TiToGRPOTrainer._calculate_rewards
     else:
         reward_funcs = [retrieval_reward, efficiency_reward, truncation_reward]
         grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.3]
@@ -208,8 +212,9 @@ def main():
     elif use_tito:
         # Single-GPU with TI/TO: token-space tool calling
         from src.training.tito_trainer import TiToGRPOTrainer, TrajectoryLoggingCallback
-        logger.info("Creating TiToGRPOTrainer (single GPU, TI/TO)...")
-        trainer = TiToGRPOTrainer(**trainer_kwargs)
+        disable_thinking = config.get("disable_thinking", False)
+        logger.info(f"Creating TiToGRPOTrainer (single GPU, TI/TO, thinking={'OFF' if disable_thinking else 'ON'})...")
+        trainer = TiToGRPOTrainer(**trainer_kwargs, disable_thinking=disable_thinking)
         trainer.add_callback(TrajectoryLoggingCallback(every_n_steps=10))
     else:
         # Single-GPU standard: TRL handles everything
@@ -237,13 +242,31 @@ def main():
         trainer.training_step = _filtered_training_step
         logger.info("Zero variance filtering enabled")
 
+    # OOM-safe training step: catch CUDA OOM, skip batch, clear cache
+    _orig_step = trainer.training_step
+    _oom_skips = [0]
+
+    def _oom_safe_training_step(model, inputs, num_items_in_batch=None):
+        try:
+            return _orig_step(model, inputs, num_items_in_batch)
+        except torch.cuda.OutOfMemoryError:
+            _oom_skips[0] += 1
+            torch.cuda.empty_cache()
+            logger.warning(f"OOM caught — skipped batch ({_oom_skips[0]} total skips)")
+            device = next(model.parameters()).device
+            return torch.tensor(0.0, device=device, requires_grad=True)
+
+    trainer.training_step = _oom_safe_training_step
+    logger.info("OOM-safe training step enabled")
+
     # Curriculum scheduling (SID-1 style): progressively increase difficulty
     length_stages = config.get("length_schedule")  # e.g. [[0, 256], [100, 512], [200, 1024]]
     tool_iter_stages = config.get("tool_iter_schedule")  # e.g. [[0, 3], [100, 6], [200, 10]]
 
     thinking_stages = config.get("thinking_schedule")  # e.g. [[0, 128, 256], [30, 192, 320]]
+    temp_stages = config.get("temperature_schedule")  # e.g. [[0, 1.0], [250, 0.7], [300, 0.5]]
 
-    if length_stages or tool_iter_stages or thinking_stages:
+    if length_stages or tool_iter_stages or thinking_stages or temp_stages:
         class _CurriculumCallback(TrainerCallback):
             def on_step_begin(self, args, state, control, **kwargs):
                 step = state.global_step
@@ -265,6 +288,15 @@ def main():
                         trainer.max_tool_calling_iterations = current_iters
                         logger.info(f"Curriculum: step {step} → max_tool_calling_iterations={current_iters}")
 
+                if temp_stages:
+                    current_temp = temp_stages[0][1]
+                    for stage_step, stage_temp in temp_stages:
+                        if step >= stage_step:
+                            current_temp = stage_temp
+                    if trainer.args.temperature != current_temp:
+                        trainer.args.temperature = current_temp
+                        logger.info(f"Curriculum: step {step} → temperature={current_temp}")
+
                 if thinking_stages and hasattr(trainer, '_thinking_processor') and trainer._thinking_processor:
                     current_soft = thinking_stages[0][1]
                     current_hard = thinking_stages[0][2]
@@ -281,7 +313,7 @@ def main():
                         logger.info(f"Curriculum: step {step} → thinking soft={current_soft} hard={current_hard}")
 
         trainer.add_callback(_CurriculumCallback())
-        logger.info(f"Curriculum: length={length_stages}, tool_iters={tool_iter_stages}, thinking={thinking_stages}")
+        logger.info(f"Curriculum: length={length_stages}, tool_iters={tool_iter_stages}, thinking={thinking_stages}, temp={temp_stages}")
 
     # Train (resume from checkpoint if specified)
     resume_from = config.get("resume_from_checkpoint")

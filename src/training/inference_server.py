@@ -145,8 +145,8 @@ def generate_tito(req: TiToGenerateRequest):
             return env.search(**args)
         elif name == "read":
             return env.read(**args)
-        elif name == "submit_ranking":
-            return env.submit_ranking(**args)
+        elif name == "submit_answer":
+            return env.submit_answer(**args)
         return f"Unknown tool: {name}"
 
     all_completion_ids = []

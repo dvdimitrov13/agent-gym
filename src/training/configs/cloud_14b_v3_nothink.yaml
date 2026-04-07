@@ -1,0 +1,59 @@
+# V3: No thinking, tighter token budgets
+model_name: "Qwen/Qwen3-14B"
+dataset: "data/train_trl_v2_curriculum.jsonl"
+
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 2
+num_generations: 4
+max_completion_length: 384
+max_tool_calling_iterations: 4
+
+# GRPO
+loss_type: "dapo"
+beta: 0.0
+temperature: 1.0
+learning_rate: 1e-5
+
+num_train_epochs: 1
+max_steps: 600
+logging_steps: 1
+save_steps: 50
+
+# LoRA
+use_lora: true
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+lora_target_modules: "all-linear"
+
+bf16: true
+gradient_checkpointing: true
+mask_truncated_completions: false
+# no resume — fresh start
+
+# V2
+use_v2_env: true
+use_v2_rewards: true
+use_tito: true
+disable_thinking: true
+
+# Curriculum
+# Curriculum: 1-hop (0-29), 2-hop (30-69), 3-hop+ (70+)
+# Dataset: ~200 examples × 3 sorted epochs = steps 0-199 sorted, 200-600 shuffled
+length_schedule:
+  - [0, 384]
+  - [30, 512]
+  - [70, 768]
+
+tool_iter_schedule:
+  - [0, 4]
+  - [30, 5]
+  - [70, 6]
+
+temperature_schedule:
+  - [0, 1.0]
+  - [200, 0.7]
+  - [400, 0.5]
+
+# Output
+output_dir: "checkpoints/qwen3-14b-grpo-v3"

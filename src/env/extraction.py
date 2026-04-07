@@ -5,7 +5,7 @@ import trafilatura
 JINA_READER_URL = "https://r.jina.ai/"
 
 
-def _extract_with_jina(url: str, timeout: int = 15) -> str | None:
+def _extract_with_jina(url: str, timeout: int = 10) -> str | None:
     """Use Jina Reader API to get clean Markdown. Returns None on failure."""
     try:
         resp = requests.get(
@@ -20,10 +20,12 @@ def _extract_with_jina(url: str, timeout: int = 15) -> str | None:
     return None
 
 
-def _extract_with_trafilatura(url: str) -> str | None:
+def _extract_with_trafilatura(url: str, timeout: int = 10) -> str | None:
     """Use trafilatura as local fallback. Returns None on failure."""
     try:
-        downloaded = trafilatura.fetch_url(url)
+        config = trafilatura.settings.use_config()
+        config.set("DEFAULT", "DOWNLOAD_TIMEOUT", str(timeout))
+        downloaded = trafilatura.fetch_url(url, config=config)
         if downloaded is None:
             return None
         text = trafilatura.extract(downloaded, include_links=False, include_tables=True)
