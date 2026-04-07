@@ -91,7 +91,7 @@ def _extract_trajectory(completion: list[dict], completion_idx: int = -1) -> tup
 
                 if name == "submit_answer":
                     has_submit = True
-                    passage_ids = args.get("passage_ids", [])
+                    passage_ids = args.get("passage_ids", []) if isinstance(args, dict) else args
                     trajectory_lines.append(f"→ submit_answer({passage_ids})")
                 elif name == "search":
                     query = args.get("query", "?")
@@ -113,7 +113,7 @@ def _extract_trajectory(completion: list[dict], completion_idx: int = -1) -> tup
 
                         if name == "submit_answer" and not has_submit:
                             has_submit = True
-                            passage_ids = args.get("passage_ids", [])
+                            passage_ids = args.get("passage_ids", []) if isinstance(args, dict) else args
                             trajectory_lines.append(f"→ submit_answer({passage_ids})")
                         elif name == "search":
                             query = args.get("query", "?")

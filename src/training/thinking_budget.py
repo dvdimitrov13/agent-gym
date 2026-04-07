@@ -50,13 +50,14 @@ class ThinkingBudgetProcessor(LogitsProcessor):
         for i in range(batch_size):
             last_token = input_ids[i, -1].item()
 
-            # After </think>, strongly boost <tool_call> but don't force it
+            # After </think>, hard-force \n then soft boost <tool_call>
             if self._just_ended_think.get(i) == "need_newline":
-                scores[i, self.newline_id] += 10.0
+                scores[i, :] = float('-inf')
+                scores[i, self.newline_id] = 0
                 self._just_ended_think[i] = "need_tool_call"
                 continue
             elif self._just_ended_think.get(i) == "need_tool_call":
-                scores[i, self.tool_call_id] += 10.0
+                scores[i, self.tool_call_id] += 15.0
                 self._just_ended_think[i] = None
                 continue
 
@@ -75,20 +76,18 @@ class ThinkingBudgetProcessor(LogitsProcessor):
                     self._just_ended_think[i] = "need_newline"
                     continue
 
-            # Count and cap thinking tokens
+            # Count thinking tokens — soft nudge only, no hard cap
+            # The reward multiplier handles length penalty (annealing to 0)
             if self._in_think.get(i, False):
                 self._think_tokens[i] = self._think_tokens.get(i, 0) + 1
 
-                if self._think_tokens[i] >= self.max_thinking_tokens:
-                    # Hard close: force </think>
-                    scores[i, :] = float('-inf')
-                    scores[i, self.think_end_id] = 0
-                elif self._think_tokens[i] >= self.soft_nudge_start:
-                    # Soft nudge, progressively stronger toward hard cap
+                if self._think_tokens[i] >= self.soft_nudge_start:
+                    # Soft nudge: progressively boost </think> logit
                     remaining = self.max_thinking_tokens - self.soft_nudge_start
                     progress = (self._think_tokens[i] - self.soft_nudge_start) / max(remaining, 1)
-                    # Boost scales from +2 at 50% to +15 at 100%
-                    boost = 2.0 + 13.0 * progress
+                    # Boost scales from +2 at soft_nudge to +15 at max_thinking_tokens
+                    # Beyond max_thinking_tokens, caps at +15
+                    boost = min(2.0 + 13.0 * progress, 15.0)
                     scores[i, self.think_end_id] += boost
 
         return scores

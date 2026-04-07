@@ -67,39 +67,67 @@ class TiToGRPOTrainer(GRPOTrainer):
     def __init__(self, *args, thinking_budget: int = 256, **kwargs):
         # Remove custom kwargs before passing to parent
         kwargs.pop("force_submit_until_step", None)
-        kwargs.pop("disable_thinking", None)
+        self.disable_thinking = kwargs.pop("disable_thinking", False)
         super().__init__(*args, **kwargs)
         _init_token_ids(self.processing_class)
 
-        # Thinking budget: cap <think> blocks at N tokens via LogitsProcessor
-        self.thinking_budget = thinking_budget
-        if thinking_budget > 0:
+        if self.disable_thinking:
+            # No thinking: prepend <think>\n</think>\n, then force tool call
+            from src.training.thinking_budget import ThinkingBudgetProcessor
+            self._thinking_processor = ThinkingBudgetProcessor(
+                self.processing_class, max_thinking_tokens=1,
+                force_tool_after_think=True,
+            )
+            logger.info("TiToGRPOTrainer: TI/TO enabled, thinking DISABLED")
+        elif thinking_budget > 0:
+            # Thinking with soft nudge
             from src.training.thinking_budget import ThinkingBudgetProcessor
             self._thinking_processor = ThinkingBudgetProcessor(
                 self.processing_class, max_thinking_tokens=thinking_budget,
             )
-            logger.info(f"TiToGRPOTrainer: TI/TO enabled, thinking budget={thinking_budget} tokens")
+            self._thinking_processor.set_budget(256, 384)
+            logger.info(f"TiToGRPOTrainer: TI/TO enabled, thinking soft=256 max=384 (no hard cap)")
         else:
             self._thinking_processor = None
             logger.info("TiToGRPOTrainer: TI/TO enabled, no thinking budget")
 
     def _calculate_rewards(self, inputs, prompts, completions, completion_ids_list):
-        """Override to set snippet store and apply thinking multiplier."""
+        """Override: reward = format_scale * thinking_scale * judge_score.
+
+        Judge is the only TRL reward function. Format validity and thinking
+        length act as multiplicative scalers (0-1).
+        """
         import torch
         from src.rewards.thinking_reward import thinking_multiplier
         from src.rewards.llm_judge_reward import set_snippet_store
+        from src.rewards.format_reward import _extract_submit_ids
 
-        # Set snippet store so judge reward can find passage content
+        # Set snippet store so judge can find passage content
         if hasattr(self, '_snippet_store'):
             set_snippet_store(self._snippet_store)
 
-        # Let TRL compute rewards normally
+        # Let TRL compute judge rewards
         rewards_per_func = super()._calculate_rewards(inputs, prompts, completions, completion_ids_list)
 
-        # Apply thinking multiplier to each rollout's total
+        # Apply format validity and thinking as multiplicative scalers
         for i, completion in enumerate(completions):
-            mult = thinking_multiplier(completion)
-            rewards_per_func[i, :] *= mult
+            # Format scale: fraction of submitted IDs that exist in snippet store
+            fmt_scale = 1.0
+            ids = _extract_submit_ids(completion)
+            if ids is not None and hasattr(self, '_snippet_store') and i in self._snippet_store:
+                available = set(self._snippet_store[i].keys())
+                if ids:
+                    valid = sum(1 for pid in ids if pid in available)
+                    fmt_scale = valid / len(ids)
+                else:
+                    fmt_scale = 0.0
+            elif ids is None:
+                fmt_scale = 0.0  # no submit at all
+
+            # Thinking scale (1.0 when thinking disabled)
+            think_scale = 1.0 if self.disable_thinking else thinking_multiplier(completion)
+
+            rewards_per_func[i, :] *= fmt_scale * think_scale
 
         return rewards_per_func
 
@@ -126,16 +154,19 @@ class TiToGRPOTrainer(GRPOTrainer):
                 base = unwrapped
 
             original_generate = base.generate
-            think_prefix_ids = self.processing_class.encode("<think>\n", add_special_tokens=False)
+            if self.disable_thinking:
+                think_prefix_ids = self.processing_class.encode("<think>\n</think>\n", add_special_tokens=False)
+            else:
+                think_prefix_ids = self.processing_class.encode("<think>\n", add_special_tokens=False)
 
             def patched_generate(*args, **kwargs):
                 existing = kwargs.get('logits_processor', [])
                 if not isinstance(existing, list):
                     existing = list(existing) if existing else []
-                processor.reset(assume_in_think=True)
+                processor.reset(assume_in_think=not self.disable_thinking)
                 kwargs['logits_processor'] = existing + [processor]
 
-                # Prepend <think>\n to input_ids to guarantee thinking mode
+                # Prepend think prefix to input_ids
                 inp = kwargs.get('input_ids', args[0] if args else None)
                 if inp is not None:
                     prefix = torch.tensor([think_prefix_ids], device=inp.device).expand(inp.shape[0], -1)
@@ -298,8 +329,12 @@ class TiToGRPOTrainer(GRPOTrainer):
         Prepends <think> to each prompt to guarantee thinking mode entry.
         ThinkingBudgetProcessor then caps thinking and forces <tool_call>.
         """
-        # Prepend <think>\n to each prompt so model enters thinking mode
-        think_prefix = tokenizer.encode("<think>\n", add_special_tokens=False)
+        # Prepend think prefix
+        if self.disable_thinking:
+            # Empty think block: <think>\n</think>\n — model goes straight to tool call
+            think_prefix = tokenizer.encode("<think>\n</think>", add_special_tokens=False)
+        else:
+            think_prefix = tokenizer.encode("<think>\n", add_special_tokens=False)
         prompts_with_think = [p + think_prefix for p in prompts]
 
         max_len = max(len(p) for p in prompts_with_think)
@@ -325,7 +360,7 @@ class TiToGRPOTrainer(GRPOTrainer):
             pad_token_id=pad_id,
         )
         if self._thinking_processor is not None:
-            self._thinking_processor.reset(assume_in_think=True)
+            self._thinking_processor.reset(assume_in_think=not self.disable_thinking)
             gen_kwargs["logits_processor"] = [self._thinking_processor]
 
         # Must set eval mode during generation — LoRA dropout in train mode
