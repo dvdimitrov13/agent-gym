@@ -36,7 +36,7 @@ The model learns when to search, when to read for more detail, and when to submi
 
 3. **Token-space tool calling (TI/TO) matters.** Staying in token space during multi-turn tool calling avoids the byte-to-token mismatches that [SID-1 found cause training instability](https://www.sid.ai/research/sid-1-technical-report).
 
-4. **Thinking helps tool-use decisions.** Disabling `<think>` blocks dropped submit rate from 91% to 59%. The model needs internal reasoning to decide *when* to use tools vs answer from memory.
+4. **Thinking helps tool-use decisions but costs 4-5x latency.** Disabling `<think>` blocks dropped submit rate from 91% to 59%, but reduced inference latency from 15s to 3.3s per query (2-iteration). Making no-thinking work reliably is a key research direction.
 
 5. **Prompt engineering provides significant lift even after RL.** Improved tool descriptions raised CP-600's submit rate from 55% to 82% without additional training.
 
@@ -128,7 +128,8 @@ python scripts/run_eval_completions.py \
 
 ## Future Work
 
-- **Re-enable thinking with DAPO** — V3 showed DAPO works but no-thinking hurt submit rates. Combine thinking + DAPO + temp annealing for V4.
+- **Solve no-thinking submit rate** — V3's 4-5x latency advantage makes no-thinking highly desirable for production. The 59% submit rate needs to improve — possible approaches include longer curriculum on easy questions, format reward floor to prevent vanishing gradients, or SFT warmup on submit_answer before RL.
+- **Re-enable thinking with DAPO** — As a baseline comparison, combine thinking + DAPO + temp annealing for V4 to isolate whether DAPO or no-thinking caused V3's lower eval scores.
 - **Partial credit for intermediate hops** — GRPO is trajectory-level; per-hop credit assignment ([MT-GRPO](https://arxiv.org/abs/2505.11821)) could improve multi-hop learning.
 - **Off-policy scaling** — Our OLMo-3-style async architecture is validated; scale to multiple actors with [OAPL](https://arxiv.org/abs/2603.10535) for principled staleness management.
 - **SPEC-RL** — [Speculative decoding for RL](https://arxiv.org/abs/2509.23232) promises 2.88x speedup with zero extra VRAM.

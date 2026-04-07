@@ -352,15 +352,17 @@ The jump from 1-hop (0.617) to 2-hop (0.721) shows the model quickly learned the
 
 4. **Base model is surprisingly capable when it submits** — 0.826 judge average on submitted questions. The base model already knows how to search well; the RL training primarily teaches it to *consistently* use tools rather than answering from memory.
 
-### Latency (V2 CP-1200, Blackwell GPU)
+### Latency Comparison (Blackwell GPU)
 
-| Iterations | Avg Total | Generation | Tool Execution |
-|-----------|-----------|------------|----------------|
-| 1 | 8.0s | 8.0s (100%) | 0.0s |
-| 2 | 15.0s | 13.2s (88%) | 1.8s (12%) |
-| 3 | 25.5s | 21.9s (86%) | 3.6s (14%) |
+| Iterations | V2 (with thinking) | V3 (no thinking) | Speedup |
+|-----------|-------------------|------------------|---------|
+| 1 | 8.0s | 0.7s | 11x |
+| 2 | 15.0s | 3.3s | 4.5x |
+| 3 | 25.5s | 6.0s | 4.3x |
 
-Generation dominates latency (86-100%). Tool execution (web search + page reading) is fast relative to autoregressive decoding.
+Disabling thinking yields a **4-5x latency improvement** on tool-using queries (2-3 iterations). The thinking tokens dominate generation time in V2 — the model spends most of its token budget reasoning before acting. V3 skips this entirely, going straight to tool calls.
+
+This latency advantage is a strong motivation for further work on no-thinking training. If the submit rate issue can be solved (through better reward design, curriculum, or prompt engineering), the no-thinking approach would offer the same quality at a fraction of the inference cost.
 
 ---
 
