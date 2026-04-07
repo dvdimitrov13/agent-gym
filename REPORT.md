@@ -177,10 +177,10 @@ Reward improved from 0.60 to 0.71 over training. Gradient norms grew as the mode
 
 **Eval results (CP-600):**
 
-| Model | Submit Rate | Judge (all) | Judge (submitted) |
-|-------|-----------|-------------|-------------------|
-| Base Qwen3-14B | 12/22 (55%) | 0.450 | 0.826 |
-| V3 CP-600 | 13/22 (59%) | 0.485 | 0.820 |
+| Model | Submit Rate | Judge Score |
+|-------|-----------|-------------|
+| Base Qwen3-14B | 12/22 (55%) | 0.450 |
+| V3 CP-600 | 13/22 (59%) | 0.485 |
 
 V3 showed marginal improvement over base (+4% submit rate, +8% judge avg). When the model submitted, quality was high (0.82), but on 9/22 questions it answered from memory without using tools (1 iteration, no submit).
 
@@ -333,20 +333,20 @@ The jump from 1-hop (0.617) to 2-hop (0.721) shows the model quickly learned the
 
 ### Results Across All Runs
 
-| Model | Submit Rate | Judge (all) | Judge (submitted) | vs Gold |
-|-------|-----------|-------------|-------------------|---------|
-| Gold passages | 22/22 (100%) | 0.895 | 0.895 | 100% |
-| Base Qwen3-14B | 12/22 (55%) | 0.450 | 0.826 | 50% |
-| V1 CP-600 (additive) | 12/22 (55%) | 0.450 | — | 50% |
-| V1 CP-600 (improved prompt) | 18/22 (82%) | 0.587 | — | 66% |
-| **V2 CP-1200 (multiplicative)** | **20/22 (91%)** | **0.655** | **~0.72** | **73%** |
-| V3 CP-600 (DAPO, no think) | 13/22 (59%) | 0.485 | 0.820 | 54% |
+| Model | Submit Rate | Judge Score | vs Gold |
+|-------|-----------|-------------|---------|
+| Gold passages | 22/22 (100%) | 0.895 | 100% |
+| Base Qwen3-14B | 12/22 (55%) | 0.450 | 50% |
+| V1 CP-600 (additive) | 12/22 (55%) | 0.450 | 50% |
+| V1 CP-600 (improved prompt) | 18/22 (82%) | 0.587 | 66% |
+| **V2 CP-1200 (multiplicative)** | **20/22 (91%)** | **0.655** | **73%** |
+| V3 CP-600 (DAPO, no think) | 13/22 (59%) | 0.485 | 54% |
 
 ### Key Findings
 
 1. **V2 CP-1200 is the best model overall** — 91% submit rate with 0.655 judge average. The combination of thinking + multiplicative rewards + 1200 steps produced the most reliable tool-using agent.
 
-2. **V3 has higher per-submission quality but lower submit rate** — When V3 submits, it scores 0.820 (vs V2's ~0.72). But it only submits on 59% of questions. Disabling thinking hurt the model's ability to decide when to use tools.
+2. **Disabling thinking hurt submit rate** — V3 only submits on 59% of questions vs V2's 91%. Without `<think>` blocks, the model can't plan whether to search or answer from memory.
 
 3. **Prompt engineering matters significantly** — V1 CP-600 jumped from 55% to 82% submit rate just by improving the system prompt, without any additional training.
 
