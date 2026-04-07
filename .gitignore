@@ -13,16 +13,15 @@ build/
 /env/
 
 # Data & models (large files)
-data/*.jsonl
-data/*.json
+data/
 checkpoints/
 *.pt
 *.bin
 *.safetensors
 
-# Results (keep JSON baselines, ignore large files)
-results/*.log
-results/*.csv
+# Logs
+logs/
+*.log
 
 # Weights & Biases
 wandb/
@@ -38,5 +37,3 @@ Thumbs.db
 # Cache
 .cache/
 search_cache/
-scripts/monitor.sh
-scripts/setup_dual_env.sh
