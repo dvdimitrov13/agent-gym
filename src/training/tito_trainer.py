@@ -1,7 +1,8 @@
 """TiToGRPOTrainer — single-GPU trainer with token-space tool calling.
 
-Overrides TRL's _tool_call_loop to splice tool results in token space
-instead of re-templating (TI/TO approach from SID-1).
+Overrides TRL's GRPOTrainer to splice tool results in token space instead of
+re-templating (TI/TO approach from SID-1). This avoids byte-to-token mismatches
+that cause training instability.
 
 Key behaviors:
   - submit_answer immediately terminates a trajectory (no extra generation)
@@ -9,12 +10,17 @@ Key behaviors:
   - Thinking tokens stripped from carried-forward context
   - GPU memory logged each round
   - Only NEW tokens searched for tool calls (prevents re-detection bug)
+  - Multiplicative reward: judge_score × format_scale × thinking_scale
 """
+
+from __future__ import annotations
 
 import json
 import logging
 import os
+import re
 import time
+from typing import Any
 
 import torch
 from trl import GRPOTrainer
@@ -29,11 +35,18 @@ from src.training.tito import (
 logger = logging.getLogger(__name__)
 
 
-def _parse_result_snippets(result_text: str, store: dict):
-    """Parse snippet IDs and content from a tool result into the store."""
-    import re
-    current_id = None
-    current_text = []
+def _parse_result_snippets(result_text: str, store: dict[str, str]) -> None:
+    """Parse snippet IDs ([S1], [R2], etc.) and their content from a tool result.
+
+    Populates *store* in-place with ``{snippet_id: content_text}`` entries.
+    Used by the reward function to verify submitted passage IDs exist.
+
+    Args:
+        result_text: Raw text returned by a search/read tool call.
+        store: Mutable dict to populate with parsed snippets.
+    """
+    current_id: str | None = None
+    current_text: list[str] = []
     for line in result_text.split("\n"):
         m = re.match(r'^\[([SR]\d+)\]', line)
         if m:
@@ -54,7 +67,10 @@ def _parse_result_snippets(result_text: str, store: dict):
 
 
 def _find_tc_end(cids: list[int]) -> int:
-    """Find position after </tool_call> in token list."""
+    """Find the position immediately after ``</tool_call>`` in a token list.
+
+    Searches backwards from the end. Returns ``len(cids)`` if not found.
+    """
     for j in range(len(cids) - 1, -1, -1):
         if cids[j] == _TOOL_CALL_END_ID:
             return j + 1
@@ -62,9 +78,19 @@ def _find_tc_end(cids: list[int]) -> int:
 
 
 class TiToGRPOTrainer(GRPOTrainer):
-    """GRPOTrainer with token-space tool calling (TI/TO)."""
+    """GRPOTrainer with token-space tool calling (TI/TO).
 
-    def __init__(self, *args, thinking_budget: int = 256, **kwargs):
+    Extends TRL's GRPOTrainer to handle multi-turn tool calling by splicing
+    tool results directly in token space, avoiding lossy decode/re-encode
+    round-trips. Applies multiplicative reward scaling where the LLM judge
+    score is scaled by format validity and thinking length.
+
+    Args:
+        thinking_budget: Max thinking tokens before soft nudge. Set 0 to disable.
+        disable_thinking: If True, prepend empty think block and force tool calls.
+    """
+
+    def __init__(self, *args: Any, thinking_budget: int = 256, **kwargs: Any) -> None:
         # Remove custom kwargs before passing to parent
         kwargs.pop("force_submit_until_step", None)
         self.disable_thinking = kwargs.pop("disable_thinking", False)
@@ -381,8 +407,16 @@ class TiToGRPOTrainer(GRPOTrainer):
             results.append(list(think_prefix) + new_tokens)
         return results
 
-    def _dispatch_tito_tool(self, name, args):
-        """Dispatch a tool call."""
+    def _dispatch_tito_tool(self, name: str, args: dict[str, Any] | list) -> str:
+        """Dispatch a tool call to the search environment.
+
+        Args:
+            name: Tool name (``search``, ``read``, or ``submit_answer``).
+            args: Tool arguments parsed from the model's JSON output.
+
+        Returns:
+            Tool result as a string.
+        """
         if self.tools:
             for tool in self.tools:
                 if getattr(tool, '__name__', None) == name:

@@ -1,22 +1,40 @@
-"""Thinking budget processor — caps thinking and forces tool calls.
+"""ThinkingBudgetProcessor — LogitsProcessor that controls thinking length.
 
-Two behaviors:
-1. Caps <think> blocks at max_thinking_tokens
-2. After ANY </think>, forces <tool_call> as the next token
+Modifies generation logits to:
+  1. Soft-nudge ``</think>`` as thinking approaches the token budget
+  2. Hard-force ``\\n`` immediately after ``</think>``
+  3. Soft-boost ``<tool_call>`` after the newline
 
-This guarantees the model always calls a tool after thinking,
-never produces a text response.
+This guarantees the model transitions from thinking to tool calling,
+preventing open-ended text responses.
 """
+
+from __future__ import annotations
 
 import torch
 from transformers import LogitsProcessor, PreTrainedTokenizerBase
 
 
 class ThinkingBudgetProcessor(LogitsProcessor):
-    """Cap thinking at N tokens and force tool call after thinking ends."""
+    """LogitsProcessor that caps thinking length and forces tool calls.
 
-    def __init__(self, tokenizer: PreTrainedTokenizerBase, max_thinking_tokens: int = 256,
-                 force_tool_after_think: bool = True):
+    After ``</think>``, forces a newline then soft-boosts ``<tool_call>``
+    by +15 logits. During thinking, progressively boosts ``</think>``
+    from +2 to +15 as the token count approaches the budget.
+
+    Args:
+        tokenizer: Tokenizer for resolving special token IDs.
+        max_thinking_tokens: Hard budget for thinking tokens.
+        force_tool_after_think: If True, force ``\\n`` + boost ``<tool_call>``
+            after every ``</think>``.
+    """
+
+    def __init__(
+        self,
+        tokenizer: PreTrainedTokenizerBase,
+        max_thinking_tokens: int = 256,
+        force_tool_after_think: bool = True,
+    ) -> None:
         self.max_thinking_tokens = max_thinking_tokens
         self.soft_nudge_start = max_thinking_tokens // 2  # default: half of max
         self.force_tool_after_think = force_tool_after_think
@@ -29,16 +47,18 @@ class ThinkingBudgetProcessor(LogitsProcessor):
         self._think_tokens = {}
         self._just_ended_think = {}  # True = last token was </think> or \n after it
 
-    def set_budget(self, soft_nudge_start: int, hard_cap: int):
-        """Update thinking budget (called by curriculum callback)."""
+    def set_budget(self, soft_nudge_start: int, hard_cap: int) -> None:
+        """Update thinking budget. Called by the curriculum callback."""
         self.soft_nudge_start = soft_nudge_start
         self.max_thinking_tokens = hard_cap
 
-    def reset(self, assume_in_think: bool = True):
-        """Reset state. If assume_in_think=True, start as if <think> was just generated.
-        This is needed because we prepend <think> to the prompt, so the model
-        starts generating inside a think block but the processor doesn't see
-        the prepended token."""
+    def reset(self, assume_in_think: bool = True) -> None:
+        """Reset per-sequence state for a new generation batch.
+
+        Args:
+            assume_in_think: If True, assume generation starts inside a
+                ``<think>`` block (because we prepend it to the prompt).
+        """
         self._in_think = {}
         self._think_tokens = {}
         self._just_ended_think = {}

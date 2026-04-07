@@ -1,26 +1,47 @@
-"""Format reward — did the trajectory end with a valid submit_answer?
+"""Format reward — validates submit_answer passage IDs against the snippet store.
 
-Checks that submitted IDs actually exist in the snippet store (i.e., were
-retrieved during the trajectory). This teaches the model to reference real
-passages rather than hallucinating IDs.
+Used as a multiplicative scaler on the judge reward. Checks that submitted
+IDs actually exist in the snippet store (i.e., were retrieved during the
+trajectory). This prevents the model from hallucinating passage IDs.
 
-  0.0 — no submit_answer call, or submitted IDs don't exist in snippet store
-  valid/total — partial credit proportional to how many IDs are real
-  1.0 — all submitted IDs exist in the snippet store
+Scoring:
+  - 0.0 — no submit_answer call, or submitted IDs don't exist
+  - valid/total — partial credit proportional to valid IDs
+  - 1.0 — all submitted IDs reference real retrieved passages
 """
 
+from __future__ import annotations
+
+import json
 import re
+from typing import Any
 
-# Module-level snippet store, set by TiToGRPOTrainer before reward calculation
-_snippet_store = None
+# Module-level snippet store, set by TiToGRPOTrainer before reward calculation.
+_snippet_store: dict[int, dict[str, str]] | None = None
 
-def set_format_snippet_store(store):
+
+def set_format_snippet_store(store: dict[int, dict[str, str]] | None) -> None:
+    """Set the snippet store for format reward validation.
+
+    Args:
+        store: Mapping of completion index to ``{snippet_id: content}``.
+    """
     global _snippet_store
     _snippet_store = store
 
 
-def _extract_submit_ids(completion: list[dict]) -> list[str] | None:
-    """Extract passage_ids from submit_answer call. Returns None if no submit."""
+def _extract_submit_ids(completion: list[dict[str, Any]]) -> list[str] | None:
+    """Extract passage IDs from a submit_answer tool call in the completion.
+
+    Handles three formats: structured tool_calls, ``<tool_call>`` JSON blocks,
+    and raw text ``submit_answer([...])`` calls.
+
+    Args:
+        completion: List of message dicts from a single rollout.
+
+    Returns:
+        List of passage ID strings, or None if no submit_answer was called.
+    """
     for msg in completion:
         if msg.get("role") != "assistant":
             continue
@@ -70,10 +91,18 @@ def _extract_submit_ids(completion: list[dict]) -> list[str] | None:
 
 
 def format_reward(
-    completions: list[list[dict]],
-    **kwargs,
+    completions: list[list[dict[str, Any]]],
+    **kwargs: Any,
 ) -> list[float]:
-    rewards = []
+    """Score format validity for each completion.
+
+    Args:
+        completions: List of rollout message lists.
+
+    Returns:
+        List of scores in [0, 1], one per completion.
+    """
+    rewards: list[float] = []
     for idx, completion in enumerate(completions):
         ids = _extract_submit_ids(completion)
         if ids is None:

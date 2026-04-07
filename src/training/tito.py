@@ -17,6 +17,8 @@ Qwen3 template boundaries:
   Next assistant turn starts:   <|im_start|>assistant\n
 """
 
+from __future__ import annotations
+
 import json
 import logging
 import re
@@ -26,21 +28,26 @@ from transformers import PreTrainedTokenizerBase
 
 logger = logging.getLogger(__name__)
 
-# Qwen3 special token IDs (set on first call via tokenizer)
-_TOOL_CALL_START_ID = None   # <tool_call>
-_TOOL_CALL_END_ID = None     # </tool_call>
-_THINK_START_ID = None       # <think>
-_THINK_END_ID = None         # </think>
-_IM_END_ID = None            # <|im_end|>
-_EOS_ID = None               # eos_token_id
+# Qwen3 special token IDs — initialized lazily via _init_token_ids().
+_TOOL_CALL_START_ID: int | None = None
+_TOOL_CALL_END_ID: int | None = None
+_THINK_START_ID: int | None = None
+_THINK_END_ID: int | None = None
+_IM_END_ID: int | None = None
+_EOS_ID: int | None = None
 
-# Pre-computed splice sequences (set on first call)
-_TOOL_RESULT_PREFIX_IDS = None  # <|im_end|>\n<|im_start|>user\n<tool_response>\n
-_TOOL_RESULT_SUFFIX_IDS = None  # \n</tool_response><|im_end|>\n<|im_start|>assistant\n
+# Pre-computed splice sequences for tool result insertion.
+_TOOL_RESULT_PREFIX_IDS: list[int] | None = None
+_TOOL_RESULT_SUFFIX_IDS: list[int] | None = None
 
 
-def _init_token_ids(tokenizer: PreTrainedTokenizerBase):
-    """Initialize special token IDs from the tokenizer (called once)."""
+def _init_token_ids(tokenizer: PreTrainedTokenizerBase) -> None:
+    """Initialize special token IDs from the tokenizer.
+
+    Called once at trainer/server startup. Maps Qwen3 special tokens to their
+    integer IDs and pre-computes the splice sequences used to insert tool
+    results into the token stream.
+    """
     global _TOOL_CALL_START_ID, _TOOL_CALL_END_ID, _THINK_START_ID, _THINK_END_ID
     global _IM_END_ID, _EOS_ID
     global _TOOL_RESULT_PREFIX_IDS, _TOOL_RESULT_SUFFIX_IDS

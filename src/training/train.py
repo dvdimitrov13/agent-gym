@@ -8,11 +8,14 @@ Usage:
     python -m src.training.train --config src/training/configs/cloud_14b_v3_nothink.yaml
 """
 
+from __future__ import annotations
+
 import argparse
 import logging
 import os
 import json
 import time
+from typing import Any, Callable
 
 import yaml
 import torch
@@ -27,14 +30,30 @@ from src.utils.device import get_device, get_dtype
 logger = logging.getLogger(__name__)
 
 
-def load_config(path: str) -> dict:
+def load_config(path: str) -> dict[str, Any]:
+    """Load a YAML config file.
+
+    Args:
+        path: Path to the YAML config file.
+
+    Returns:
+        Parsed config as a dictionary.
+    """
     with open(path) as f:
         return yaml.safe_load(f)
 
 
 def load_dataset(path: str) -> Dataset:
-    """Load JSONL dataset into HuggingFace Dataset."""
-    examples = []
+    """Load a JSONL dataset into a HuggingFace Dataset.
+
+    Args:
+        path: Path to the JSONL file. Each line is a JSON object with at
+            minimum a ``prompt`` field in TRL conversational format.
+
+    Returns:
+        HuggingFace Dataset ready for GRPOTrainer.
+    """
+    examples: list[dict[str, Any]] = []
     with open(path) as f:
         for line in f:
             if line.strip():

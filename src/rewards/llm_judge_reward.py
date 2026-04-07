@@ -7,30 +7,38 @@ The judge sees the full trajectory: search queries, results, and
 the final submitted passages.
 """
 
+from __future__ import annotations
+
 import json
 import logging
 import os
 import re
+from typing import Any
 
 from openai import OpenAI
 
 logger = logging.getLogger(__name__)
 
-_client = None
+_client: OpenAI | None = None
 _MODEL = "gpt-4.1-mini"
 
-# Snippet store set by TiToGRPOTrainer after each _tool_call_loop
+# Snippet store set by TiToGRPOTrainer after each _tool_call_loop.
 # Maps: completion_idx → {snippet_id → content}
-_snippet_store = None
+_snippet_store: dict[int, dict[str, str]] | None = None
 
 
-def set_snippet_store(store: dict):
-    """Called by TiToGRPOTrainer to provide snippet content for reward."""
+def set_snippet_store(store: dict[int, dict[str, str]] | None) -> None:
+    """Set the snippet store so the judge can look up submitted passage content.
+
+    Args:
+        store: Mapping of completion index to ``{snippet_id: content}``.
+    """
     global _snippet_store
     _snippet_store = store
 
 
-def _get_client():
+def _get_client() -> OpenAI | None:
+    """Lazily initialize the OpenAI client from the environment."""
     global _client
     if _client is None:
         api_key = os.environ.get("OPENAI_API_KEY")
@@ -64,10 +72,20 @@ Respond with ONLY this JSON:
 {{"relevance": N, "completeness": N, "source_quality": N}}"""
 
 
-def _extract_trajectory(completion: list[dict], completion_idx: int = -1) -> tuple[str, str, bool]:
-    """Extract trajectory summary, submitted passages text, and whether submit was called.
+def _extract_trajectory(
+    completion: list[dict[str, Any]], completion_idx: int = -1
+) -> tuple[str, str, bool]:
+    """Extract a human-readable trajectory summary from a completion.
 
-    Returns (trajectory_text, passages_text, has_submit).
+    Parses tool calls (structured, XML, and raw text formats) and tool
+    responses to build a trajectory summary and submitted passages text.
+
+    Args:
+        completion: List of message dicts from a single rollout.
+        completion_idx: Index into the global snippet store for this completion.
+
+    Returns:
+        Tuple of (trajectory_text, passages_text, has_submit).
     """
     trajectory_lines = []
     snippets = {}
@@ -162,8 +180,18 @@ def _extract_trajectory(completion: list[dict], completion_idx: int = -1) -> tup
     return trajectory_text, passages_text, has_submit
 
 
-def _judge_single(client, question: str, trajectory_text: str, passages_text: str) -> float:
-    """Score a single retrieval using LLM judge. Returns 0-1."""
+def _judge_single(client: OpenAI, question: str, trajectory_text: str, passages_text: str) -> float:
+    """Score a single retrieval trajectory using the LLM judge.
+
+    Args:
+        client: OpenAI client instance.
+        question: The user's original question.
+        trajectory_text: Human-readable summary of search actions taken.
+        passages_text: Content of submitted passages.
+
+    Returns:
+        Weighted score in [0, 1]: 50% relevance + 30% completeness + 20% source quality.
+    """
     try:
         response = client.chat.completions.create(
             model=_MODEL,
@@ -197,13 +225,24 @@ def _judge_single(client, question: str, trajectory_text: str, passages_text: st
 
 
 def llm_judge_reward(
-    completions: list[list[dict]],
-    **kwargs,
+    completions: list[list[dict[str, Any]]],
+    **kwargs: Any,
 ) -> list[float]:
-    """Score retrieval quality using LLM judge.
+    """Score retrieval quality using an LLM judge (GPT 4.1 mini).
 
-    Extracts full trajectory + submitted passages from each completion.
-    Returns 0-1 per completion.
+    For each completion, extracts the full trajectory (search queries, tool
+    results) and submitted passages, then asks the judge to score relevance,
+    completeness, and source quality. Returns a weighted score in [0, 1].
+
+    This is the primary reward function. Format validity and thinking length
+    are applied as multiplicative scalers by TiToGRPOTrainer.
+
+    Args:
+        completions: List of rollout message lists, one per generation.
+        **kwargs: Dataset columns forwarded by TRL (must include ``prompts``).
+
+    Returns:
+        List of reward scores in [0, 1], one per completion.
     """
     client = _get_client()
     if client is None:

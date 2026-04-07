@@ -10,11 +10,17 @@ Used by TiToGRPOTrainer to scale the aggregated reward per rollout.
 NOT a standard additive TRL reward — applied as post-processing.
 """
 
+from __future__ import annotations
+
 import re
+from typing import Any
 
 
-def _count_think_tokens_approx(completion: list[dict]) -> int:
-    """Count approximate tokens in <think> blocks (chars ÷ 4)."""
+def _count_think_tokens_approx(completion: list[dict[str, Any]]) -> int:
+    """Estimate the number of tokens inside ``<think>`` blocks.
+
+    Uses a chars/4 heuristic since exact tokenization is expensive.
+    """
     total_chars = 0
     for msg in completion:
         if msg.get("role") != "assistant":
@@ -31,22 +37,35 @@ def _count_think_tokens_approx(completion: list[dict]) -> int:
 _target = 256
 
 
-def set_thinking_thresholds(soft: int, hard: int):
-    """Update target to match current curriculum stage.
+def set_thinking_thresholds(soft: int, hard: int) -> None:
+    """Update the thinking target to match the current curriculum stage.
 
-    For backwards compatibility, takes soft/hard but only uses soft as target.
+    Args:
+        soft: Soft nudge start (used as the penalty-free target).
+        hard: Hard cap (unused — kept for API compatibility with curriculum callback).
     """
     global _target
     _target = soft
 
 
-def thinking_multiplier(completion: list[dict]) -> float:
-    """Compute thinking multiplier for a single completion.
+def thinking_multiplier(completion: list[dict[str, Any]]) -> float:
+    """Compute the thinking-length multiplier for a single completion.
 
-    ≤ target:               1.0
-    target → target+128:    linear 1.0 → 0.5
-    target+128 → target+256: linear 0.5 → 0.0
-    > target+256:           0.0
+    Used as a multiplicative scaler on the judge reward. The model is free
+    to think as long as it wants, but reward decays to zero for excessive
+    thinking.
+
+    Schedule:
+        - ≤ target: 1.0 (no penalty)
+        - target → target+128: linear 1.0 → 0.5
+        - target+128 → target+256: linear 0.5 → 0.0
+        - > target+256: 0.0
+
+    Args:
+        completion: List of message dicts from a single rollout.
+
+    Returns:
+        Multiplier in [0.0, 1.0].
     """
     tokens = _count_think_tokens_approx(completion)
     if tokens <= _target:
