@@ -186,7 +186,6 @@ def main():
     logger.info(f"Environment: {'SearchEnvironmentV2 (snippet IDs)' if use_v2_env else 'SearchEnvironment'}")
 
     # Create trainer
-    inference_server = config.get("inference_server_url")
     use_tito = config.get("use_tito", False)
     t0 = time.time()
 
@@ -200,16 +199,7 @@ def main():
         peft_config=peft_config,
     )
 
-    if inference_server:
-        # Dual-GPU: remote inference server
-        from src.training.remote_grpo import RemoteGRPOTrainer
-        logger.info(f"Creating RemoteGRPOTrainer (server: {inference_server}, tito: {use_tito})...")
-        trainer = RemoteGRPOTrainer(
-            **trainer_kwargs,
-            inference_server_url=inference_server,
-            use_tito=use_tito,
-        )
-    elif use_tito:
+    if use_tito:
         # Single-GPU with TI/TO: token-space tool calling
         from src.training.tito_trainer import TiToGRPOTrainer, TrajectoryLoggingCallback
         disable_thinking = config.get("disable_thinking", False)
