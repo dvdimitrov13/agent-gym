@@ -405,10 +405,10 @@ class TiToGRPOTrainer(GRPOTrainer):
 class TrajectoryLoggingCallback(TrainerCallback):
     """Log a full decoded trajectory every N steps for diagnostics."""
 
-    def __init__(self, every_n_steps=10, log_dir="/root/trajectories"):
+    def __init__(self, every_n_steps=10, log_dir=None):
         self.every_n_steps = every_n_steps
-        self.log_dir = log_dir
-        os.makedirs(log_dir, exist_ok=True)
+        self.log_dir = log_dir or os.path.join(os.getcwd(), "trajectories")
+        os.makedirs(self.log_dir, exist_ok=True)
 
     def on_log(self, args, state, control, logs=None, **kwargs):
         step = state.global_step

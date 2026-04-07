@@ -1,18 +1,11 @@
 #!/usr/bin/env python3
-"""M6: GRPO training with tool-calling via TRL.
+"""GRPO training with tool-calling via TRL.
 
-Supports two modes:
-1. Simple: single GPU, model.generate() for rollouts (slow but simple)
-2. Pipeline: vLLM server on GPU 0, trainer on GPU 1 (fast, decoupled)
-
-Requires TRL from git main for Qwen3 chat template support.
+Single-GPU TI/TO training with multiplicative rewards (judge × format × thinking).
+For off-policy dual-GPU training, see scripts/train_offpolicy.py.
 
 Usage:
-    # Simple mode (single GPU)
-    python -m src.training.train --config src/training/configs/cloud_14b.yaml
-
-    # Pipeline mode (2 GPUs — launch via script)
-    bash scripts/train_pipeline.sh
+    python -m src.training.train --config src/training/configs/cloud_14b_v3_nothink.yaml
 """
 
 import argparse
@@ -28,12 +21,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, TrainerCallback
 from trl import GRPOConfig, GRPOTrainer
 from peft import LoraConfig
 
-from src.env.search_env import SearchEnvironment
 from src.env.search_env_v2 import SearchEnvironmentV2
-from src.rewards import (
-    retrieval_reward, efficiency_reward, truncation_reward,
-    ndcg_reward, format_reward,
-)
 from src.utils.device import get_device, get_dtype
 
 logger = logging.getLogger(__name__)
@@ -62,7 +50,6 @@ def main():
     config = load_config(args.config)
     device = get_device()
     dtype = get_dtype()
-    use_vllm = config.get("use_vllm", False)
 
     # Reduce CUDA memory fragmentation
     os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
@@ -79,7 +66,6 @@ def main():
     logger.info(f"Device: {device}, dtype: {dtype}")
     logger.info(f"Model: {config['model_name']}")
     logger.info(f"Dataset: {config['dataset']}")
-    logger.info(f"Mode: {'pipeline (vLLM server)' if use_vllm else 'simple (model.generate)'}")
     logger.info(f"max_completion_length: {config.get('max_completion_length')}")
     logger.info(f"max_tool_calling_iterations: {config.get('max_tool_calling_iterations')}")
 
@@ -90,24 +76,13 @@ def main():
         tokenizer.pad_token = tokenizer.eos_token
 
     # Load model
-    if use_vllm:
-        # Pipeline mode: vLLM server handles generation, we just need the model for training
-        # Pass model name as string — TRL loads it for training only
-        logger.info("Pipeline mode — model loaded by TRL for training, vLLM serves generation")
-        model = config["model_name"]
+    logger.info("Loading model...")
+    load_kwargs = dict(dtype=dtype, attn_implementation="sdpa")
+    if device == "cuda":
+        load_kwargs["device_map"] = "auto"
     else:
-        # Simple mode: load model for both generation and training
-        logger.info("Loading model...")
-        load_kwargs = dict(dtype=dtype, attn_implementation="sdpa")
-        if device == "cuda":
-            load_kwargs["device_map"] = "auto"
-        else:
-            load_kwargs["device_map"] = device
-        model = AutoModelForCausalLM.from_pretrained(config["model_name"], **load_kwargs)
-
-        if config.get("torch_compile", False) and device == "cuda":
-            logger.info("Applying torch.compile...")
-            model = torch.compile(model)
+        load_kwargs["device_map"] = device
+    model = AutoModelForCausalLM.from_pretrained(config["model_name"], **load_kwargs)
 
     # LoRA
     peft_config = None
@@ -153,37 +128,19 @@ def main():
         report_to="none",
     )
 
-    # V2 reward/env selection
-    use_v2 = config.get("use_v2_rewards", False)
-    if use_v2:
-        from src.rewards.llm_judge_reward import llm_judge_reward
-        reward_funcs = [llm_judge_reward]
-        grpo_kwargs["reward_weights"] = [1.0]
-        # Format validity + thinking length applied as multiplicative scalers
-        # in TiToGRPOTrainer._calculate_rewards
-    else:
-        reward_funcs = [retrieval_reward, efficiency_reward, truncation_reward]
-        grpo_kwargs["reward_weights"] = [1.0, 0.5, 0.3]
-
-    # vLLM server mode settings
-    if use_vllm:
-        grpo_kwargs["use_vllm"] = True
-        grpo_kwargs["vllm_mode"] = config.get("vllm_mode", "server")
-        grpo_kwargs["vllm_server_host"] = config.get("vllm_server_host", "0.0.0.0")
-        grpo_kwargs["vllm_server_port"] = config.get("vllm_server_port", 8000)
-        grpo_kwargs["vllm_server_timeout"] = config.get("vllm_server_timeout", 300)
+    # Reward: LLM judge (format + thinking applied as multiplicative scalers in TiToGRPOTrainer)
+    from src.rewards.llm_judge_reward import llm_judge_reward
+    reward_funcs = [llm_judge_reward]
+    grpo_kwargs["reward_weights"] = [1.0]
 
     grpo_config = GRPOConfig(**grpo_kwargs)
 
     logger.info(f"Reward functions: {[f.__name__ for f in reward_funcs]}")
     logger.info(f"Reward weights: {grpo_config.reward_weights}")
-    logger.info(f"Zero variance filtering: {config.get('zero_variance_filtering', False)}")
 
     # Environment factory
-    use_v2_env = config.get("use_v2_env", False)
     def env_factory():
-        return SearchEnvironmentV2() if use_v2_env else SearchEnvironment()
-    logger.info(f"Environment: {'SearchEnvironmentV2 (snippet IDs)' if use_v2_env else 'SearchEnvironment'}")
+        return SearchEnvironmentV2()
 
     # Create trainer
     use_tito = config.get("use_tito", False)

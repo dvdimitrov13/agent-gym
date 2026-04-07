@@ -4,9 +4,8 @@
 Runs on GPU 0. Continuously generates TI/TO rollouts in background threads,
 serves completed rollouts to the trainer on GPU 1 via HTTP.
 
-Key difference from inference_server.py: ASYNC. The server doesn't wait
-for the trainer — it keeps generating rollouts into a buffer. The trainer
-pulls completed rollouts when ready.
+Continuously generates TI/TO rollouts in background threads and serves
+completed rollouts to the trainer via HTTP. The trainer pulls when ready.
 
 Architecture (OLMo-3 / PipelineRL style):
   Trainer (GPU 1) → /submit_prompts → prompt_queue
