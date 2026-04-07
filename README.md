@@ -70,9 +70,11 @@ Three training runs explored different configurations:
 
 | Run | Steps | Loss | Thinking | Reward | Best Judge |
 |-----|-------|------|----------|--------|-----------|
-| V1 | 1-600 | GRPO | Enabled | Additive (judge+efficiency+format) | 0.450 |
+| V1 | 1-600 | GRPO | Enabled | Additive (judge+efficiency+format) | 0.587* |
 | **V2** | **600-1200** | **GRPO** | **Enabled** | **Multiplicative (judge×format×thinking)** | **0.655** |
 | V3 | 1-600 | DAPO | Disabled | Multiplicative | 0.485 |
+
+*V1 CP-600 evaluated with improved prompt (original prompt scored 0.450, same as base).
 
 Training dynamics are visualized in interactive charts: [Reward Trajectory](results/fig_reward_trajectory.html) | [Gradient Norms](results/fig_gradient_norms.html) | [Tool Usage](results/fig_tool_usage.html)
 
