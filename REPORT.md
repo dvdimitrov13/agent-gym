@@ -30,8 +30,8 @@ All training runs were conducted on [Vast.ai](https://vast.ai) GPU instances:
 | Phase | GPU | VRAM | Cost/hr | Architecture |
 |-------|-----|------|---------|-------------|
 | V1 (Steps 1-600) | 2× RTX A6000 | 96GB total | ~$0.61 | Async dual-GPU: rollout server (GPU 0) + trainer (GPU 1) |
-| V2 (Steps 600-1200) | Blackwell RTX PRO 6000 WS | 98GB | ~$0.83 | Single-GPU TI/TO |
-| V3 (Steps 1-600) | Blackwell RTX PRO 6000 WS | 98GB | ~$0.82 | Single-GPU, DAPO + no thinking + curriculum |
+| V2 (Steps 600-1200) | RTX PRO 6000 WS (Blackwell) | 96GB | ~$0.83 | Single-GPU TI/TO |
+| V3 (Steps 1-600) | RTX PRO 6000 WS (Blackwell) | 96GB | ~$0.82 | Single-GPU, DAPO + no thinking + curriculum |
 
 ### Framework Stack
 - **TRL 1.0** (HuggingFace) — GRPOTrainer with `environment_factory` for tool-calling RL
@@ -103,7 +103,7 @@ Inspired by [OLMo-3](https://arxiv.org/abs/2512.13961) and [PipelineRL](https://
 This asynchronous architecture means GPU 0 keeps generating while GPU 1 trains — no idle time waiting for the other.
 
 ### V2-V3: Single-GPU TI/TO
-For the Blackwell RTX PRO 6000 (98GB), we consolidated to a single GPU. The large VRAM fits model + LoRA + gradient checkpointing comfortably, and eliminates HTTP overhead and weight sync complexity.
+For the RTX PRO 6000 WS (Blackwell) (96GB), we consolidated to a single GPU. The large VRAM fits model + LoRA + gradient checkpointing comfortably, and eliminates HTTP overhead and weight sync complexity.
 
 ### TiToGRPOTrainer Implementation
 Subclasses TRL's `GRPOTrainer`, overriding:
@@ -135,7 +135,7 @@ Key design decisions:
 
 ### V2: Steps 600-1200 (Single-GPU, Multiplicative Rewards)
 
-**Architecture change:** Moved to single Blackwell GPU (98GB). The large VRAM made dual-GPU unnecessary.
+**Architecture change:** Moved to single RTX PRO 6000 WS (96GB). The large VRAM made dual-GPU unnecessary.
 
 **Reward:** Switched to multiplicative — `reward = judge × format_scale × thinking_scale` (see Section 7 for why).
 
@@ -288,7 +288,7 @@ For V3, we disabled thinking entirely by prepending `<think>\n</think>` to every
 | Optimization | Result |
 |-------------|--------|
 | **Async dual-GPU (OLMo-3 style)** | GPU 0 generates rollouts while GPU 1 trains — no idle time. ~2 min/step vs ~5 min with sequential single-GPU |
-| **Single Blackwell GPU (98GB)** | Fits everything in one GPU, eliminates HTTP overhead and weight sync |
+| **Single RTX PRO 6000 WS (96GB)** | Fits everything in one GPU, eliminates HTTP overhead and weight sync |
 | **SDPA attention** | Default in transformers 5.x, free speedup for attention computation |
 | **Completion length curriculum** | Start at 384 tokens (1-hop), grow to 768 (3-hop). Shorter early steps train faster |
 | **OOM-safe training step** | Wraps backward pass in try/except for `torch.cuda.OutOfMemoryError`, skips batch and clears cache instead of crashing |
@@ -373,7 +373,7 @@ The jump from 1-hop (0.617) to 2-hop (0.721) shows the model quickly learned the
 
 4. **Base model is surprisingly capable when it submits** — 0.826 judge average on submitted questions. The base model already knows how to search well; the RL training primarily teaches it to *consistently* use tools rather than answering from memory.
 
-### Latency Comparison (Blackwell GPU)
+### Latency Comparison (RTX PRO 6000 WS)
 
 | Iterations | V2 (with thinking) | V3 (no thinking) | Speedup |
 |-----------|-------------------|------------------|---------|
@@ -430,9 +430,7 @@ GRPO is a trajectory-level bandit — no per-step credit assignment, no critic, 
 Multiply efficiency and thinking rewards by the judge score: `efficiency_final = efficiency × judge`. Rationale: process quality (efficient steps, good thinking) only matters if the outcome is good — don't reward efficient failures. Our training logs showed 29% of steps had high efficiency but low retrieval quality, meaning we were rewarding the wrong behavior.
 
 ### Off-Policy Training for Hardware Utilization
-Our V1 async dual-GPU architecture (OLMo-3 style) demonstrated the viability of decoupling generation from training. Further exploration should focus on: scaling to more than 2 GPUs (multiple actors feeding a single learner), managing rollout staleness as the policy diverges from the behavior policy, and implementing in-flight weight updates (OLMo-3's key innovation where actors receive new weights mid-generation without invalidating the KV cache). This would enable efficient utilization of heterogeneous GPU setups — cheap inference GPUs generating rollouts while expensive training GPUs focus solely on gradient updates.
-
-A particularly promising direction is **OAPL** (Optimal Advantage-based Policy Optimization with Lagged Inference policy, Ritter et al., 2026), which formalizes large-batch iterative off-policy RL. OAPL explicitly addresses the staleness problem by combining A*PO-style advantage estimation with KL regularization against a reference policy, preventing the training policy from diverging too far from the lagged inference policy used for rollout generation. Unlike our current β=0 setup (no KL penalty), OAPL's KL-regularized objective provides principled stability guarantees as the lag between generation and training increases — a critical property when scaling to multiple asynchronous actors.
+Our V1 async dual-GPU architecture (OLMo-3 style, 2× RTX A6000) demonstrated the viability of decoupling generation from training. GPU 0 generates rollouts continuously while GPU 1 trains — no idle time. Further exploration should focus on managing rollout staleness as the policy diverges from the behavior policy, and implementing in-flight weight updates (OLMo-3's key innovation where actors receive new weights mid-generation without invalidating the KV cache).
 
 ### SFT Warmup for No-Thinking Training
 
@@ -498,8 +496,8 @@ Several compatibility issues we encountered represent contribution opportunities
 | Item | Estimated Cost |
 |------|---------------|
 | V1 training (600 steps, 2×A6000) | ~$12 |
-| V2 training (600 steps, Blackwell) | ~$15 |
-| V3 training (600 steps, Blackwell) | ~$12 (in progress) |
+| V2 training (600 steps, RTX PRO 6000 WS) | ~$15 |
+| V3 training (600 steps, RTX PRO 6000 WS) | ~$12 |
 | LLM judge calls (all runs) | ~$2 |
 | Idle compute (debugging, waiting) | ~$10 |
 | **Total** | **~$51** |

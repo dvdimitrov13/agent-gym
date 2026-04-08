@@ -45,7 +45,7 @@ The model learns when to search, when to read for more detail, and when to submi
 ```
 Single-GPU Training (V2/V3):
 ┌──────────────────────────────────────────────────┐
-│  TiToGRPOTrainer (single Blackwell GPU, 98GB)    │
+│  TiToGRPOTrainer (single RTX PRO 6000 WS, 96GB)    │
 │                                                   │
 │  Generate → Tool Call Loop (TI/TO) → Reward       │
 │     │            │                      │         │
