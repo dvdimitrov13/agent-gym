@@ -495,9 +495,11 @@ Several compatibility issues we encountered represent contribution opportunities
 
 | Item | Estimated Cost |
 |------|---------------|
-| V1 training (600 steps, 2×A6000) | ~$12 |
+| Sonnet dataset generation (API) | ~$18 |
+| GPT 5.4 dataset generation (API) | ~$12 |
+| V1 training (600 steps, 2×A6000) | ~$13 |
 | V2 training (600 steps, RTX PRO 6000 WS) | ~$15 |
 | V3 training (600 steps, RTX PRO 6000 WS) | ~$12 |
 | LLM judge calls (all runs) | ~$2 |
-| Idle compute (debugging, waiting) | ~$10 |
-| **Total** | **~$51** |
+| Idle compute (debugging, waiting) | ~$20 |
+| **Total** | **~$92** |

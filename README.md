@@ -152,7 +152,7 @@ python scripts/run_eval_completions.py \
 
 ## Cost
 
-Total project cost: **~$51** (3 training runs + eval + debugging on Vast.ai).
+Total project cost: **~$92** (data generation + 3 training runs + eval + debugging on Vast.ai).
 
 ---
 
