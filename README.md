@@ -76,7 +76,11 @@ Three training runs explored different configurations:
 
 *V1 CP-600 evaluated with improved prompt (original prompt scored 0.450, same as base).
 
-Training dynamics are visualized in interactive charts: [Reward Trajectory](results/fig_reward_trajectory.html) | [Gradient Norms](results/fig_gradient_norms.html) | [Tool Usage](results/fig_tool_usage.html)
+Training dynamics across all three runs:
+
+![Reward Trajectory](results/fig_reward_trajectory.png)
+![Gradient Norms](results/fig_gradient_norms.png)
+![Tool Usage](results/fig_tool_usage.png)
 
 ## Project Structure
 

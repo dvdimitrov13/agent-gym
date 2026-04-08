@@ -211,9 +211,17 @@ This result is the strongest argument for investing in no-thinking training: the
 
 The three runs are compared in the following interactive charts:
 
-- **[Reward Trajectory](results/fig_reward_trajectory.html)** — V1 uses additive rewards (>1.0 scale), V2/V3 use multiplicative (0-1 scale). V2 and V3 converge to similar reward levels (~0.71) but through different mechanisms.
-- **[Gradient Norms](results/fig_gradient_norms.html)** — V3 (DAPO) shows steadily increasing gradient norms as training progresses, unlike V1/V2 (GRPO) which are more stable.
-- **[Tool Usage](results/fig_tool_usage.html)** — V3 ramps tool usage from 2.7 to 4.1 calls/step, showing the model learned to search more thoroughly over training.
+**Reward Trajectory** — V1 uses additive rewards (>1.0 scale), V2/V3 use multiplicative (0-1 scale). V2 and V3 converge to similar reward levels (~0.71) but through different mechanisms.
+
+![Reward Trajectory](results/fig_reward_trajectory.png)
+
+**Gradient Norms** — V3 (DAPO) shows steadily increasing gradient norms as training progresses, unlike V1/V2 (GRPO) which are more stable.
+
+![Gradient Norms](results/fig_gradient_norms.png)
+
+**Tool Usage** — V3 ramps tool usage from 2.7 to 4.1 calls/step, showing the model learned to search more thoroughly over training.
+
+![Tool Usage](results/fig_tool_usage.png)
 
 ---
 
