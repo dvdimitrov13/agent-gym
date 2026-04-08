@@ -182,9 +182,30 @@ Reward improved from 0.60 to 0.71 over training. Gradient norms grew as the mode
 | Base Qwen3-14B | 12/22 (55%) | 0.450 |
 | V3 CP-600 | 13/22 (59%) | 0.485 |
 
-V3 showed marginal improvement over base (+4% submit rate, +8% judge avg). When the model submitted, quality was high (0.82), but on 9/22 questions it answered from memory without using tools (1 iteration, no submit).
+V3 showed marginal improvement over base (+4% submit rate, +8% judge avg). Critically, **V3's low overall score is driven by format failures, not reasoning quality.** When the model successfully submitted, its judge score was 0.820 — essentially identical to the base model's 0.826 on submitted questions. The 9 failed questions all failed at the first generation step: the model emitted raw Python syntax (`search("query", 5)`) instead of the required `<tool_call>` XML format, causing the parser to reject the output and score it as zero.
 
-**Analysis:** Disabling thinking removed the model's ability to plan before acting. Without `<think>`, the model couldn't internally reason about whether to search or answer directly — it defaulted to memory on harder questions. V2's thinking-enabled approach (91% submit rate) was significantly more reliable at triggering tool use, even though per-submission quality was slightly lower.
+**Head-to-head comparison:** On the 11 questions where both V2 CP-1200 and V3 CP-600 successfully submitted, retrieval quality is virtually identical:
+
+| Model | Judge (11 overlapping questions) |
+|-------|--------------------------------|
+| V2 CP-1200 (with thinking) | 0.793 |
+| V3 CP-600 (no thinking) | 0.798 |
+
+The 8 questions where V2 submitted but V3 didn't span all difficulty levels (1-hop through 3-hop), and V2's own scores on those range from 0.23 to 1.00 — confirming that V3's failures are not correlated with question difficulty. The model simply falls into an invalid syntax path on those questions, regardless of how hard they are.
+
+**Caveat:** The 11-question overlap skews easier:
+
+| Hops | Overlap (both submitted) | Full eval set |
+|------|-------------------------|---------------|
+| 1-hop | 5 (45%) | 8 (36%) |
+| 2-hop | 4 (36%) | 9 (41%) |
+| 3-hop | 2 (18%) | 5 (23%) |
+
+The parity in judge scores is encouraging, but a larger and more balanced eval set is needed to confirm that no-thinking retrieval quality truly matches thinking-enabled on harder multi-hop questions.
+
+**Analysis:** The problem is mechanical, not cognitive. Without `<think>` blocks, the model can't internally deliberate on output format before committing tokens. It probabilistically falls into an alternative syntax path that the tool parser doesn't recognize. This is a cold-start format problem — the model was never shown tool-call demonstrations (pure RL), so it has no supervised prior on the correct XML structure. The RL training's `+15` logit boost for `<tool_call>` helped marginally (59% vs 55% submit rate) but wasn't enough to eliminate the alternative syntax path entirely.
+
+This result is the strongest argument for investing in no-thinking training: the capability is already there — V3 matches V2's retrieval quality when it submits — only the format reliability needs to be solved. An SFT warmup phase to lock in the `<tool_call>` syntax before RL (see Section 13) would directly address this, potentially achieving V2-level quality at 4-5x lower latency.
 
 ### Training Comparison
 
@@ -346,7 +367,7 @@ The jump from 1-hop (0.617) to 2-hop (0.721) shows the model quickly learned the
 
 1. **V2 CP-1200 is the best model overall** — 91% submit rate with 0.655 judge average. The combination of thinking + multiplicative rewards + 1200 steps produced the most reliable tool-using agent.
 
-2. **Disabling thinking hurt submit rate** — V3 only submits on 59% of questions vs V2's 91%. Without `<think>` blocks, the model can't plan whether to search or answer from memory.
+2. **Disabling thinking hurt submit rate, but not retrieval quality** — V3 only submits on 59% of questions vs V2's 91%, but when it does submit, quality is nearly identical (0.820 vs V2's judge scores). The gap is driven by format failures — the model emits invalid tool-call syntax on 41% of questions — not by degraded reasoning.
 
 3. **Prompt engineering matters significantly** — V1 CP-600 jumped from 55% to 82% submit rate just by improving the system prompt, without any additional training.
 
@@ -362,7 +383,7 @@ The jump from 1-hop (0.617) to 2-hop (0.721) shows the model quickly learned the
 
 Disabling thinking yields a **4-5x latency improvement** on tool-using queries (2-3 iterations). The thinking tokens dominate generation time in V2 — the model spends most of its token budget reasoning before acting. V3 skips this entirely, going straight to tool calls.
 
-This latency advantage is a strong motivation for further work on no-thinking training. If the submit rate issue can be solved (through better reward design, curriculum, or prompt engineering), the no-thinking approach would offer the same quality at a fraction of the inference cost.
+This latency advantage is a strong motivation for further work on no-thinking training. Since V3's low scores are driven by format failures (41% invalid tool-call syntax) rather than degraded reasoning — submitted questions score 0.820, matching the base model — the path to production-quality no-thinking inference is solving a mechanical format problem, not a fundamental capability gap. An SFT warmup phase on tool-call format demonstrations combined with a format reward floor (see Section 13) would directly address the root cause.
 
 ---
 
@@ -413,8 +434,38 @@ Our V1 async dual-GPU architecture (OLMo-3 style) demonstrated the viability of 
 
 A particularly promising direction is **OAPL** (Optimal Advantage-based Policy Optimization with Lagged Inference policy, Ritter et al., 2026), which formalizes large-batch iterative off-policy RL. OAPL explicitly addresses the staleness problem by combining A*PO-style advantage estimation with KL regularization against a reference policy, preventing the training policy from diverging too far from the lagged inference policy used for rollout generation. Unlike our current β=0 setup (no KL penalty), OAPL's KL-regularized objective provides principled stability guarantees as the lag between generation and training increases — a critical property when scaling to multiple asynchronous actors.
 
+### SFT Warmup for No-Thinking Training
+
+V3's format failure analysis (Section 6) reveals a cold-start problem: without thinking, the model probabilistically falls into invalid tool-call syntax because pure RL never demonstrated the correct format. A short SFT warmup phase before RL could solve this directly.
+
+[R1-Searcher++](https://arxiv.org/abs/2505.17005) validates this approach — it uses an SFT cold-start for "preliminary format learning" followed by RL for dynamic search strategy discovery. The key insight: SFT teaches the mechanical `<tool_call>` XML syntax and `submit_answer` structure (a narrow, well-defined skill), while RL teaches *when* and *what* to search (the open-ended strategic behavior). These are complementary, not competing.
+
+The warmup should be minimal — ~50-100 steps on format demonstrations — to avoid narrowing exploration during the subsequent RL phase. The demonstrations need only show correct tool-call syntax, not optimal search strategies. Combined with a format reward floor (below), this would address both the cold-start problem (SFT teaches format) and the gradient signal problem (floor maintains learning pressure on format-invalid trajectories).
+
+### Decomposed Multi-Judge Reward
+
+Our current reward uses a single LLM judge call that scores relevance, completeness, and source quality simultaneously. This holistic approach is simple but produces noisy, entangled scores — the judge must weigh multiple criteria in one pass, and the model receives a single blended signal that doesn't indicate *which* aspect to improve.
+
+A more principled design decomposes the reward into three parallel LLM judge calls, each evaluating one orthogonal criterion:
+
+1. **Retrieval NDCG** — The judge sees the question and all retrieved snippets, then selects only passages that truly answer the question as the ideal submission. NDCG between the model's actual `submit_answer` and this ideal set scores submission quality. If the model searched poorly and found nothing relevant, the ideal set is empty and any submission scores 0 — so search quality is implicitly captured. If the model found good passages but submitted the wrong IDs, NDCG is low.
+
+2. **Trajectory efficiency** — The judge sees the question and full trajectory (queries issued, pages read, iterations used). Scores how direct the search strategy was — redundant queries, unnecessary reads, and wasted iterations lower the score.
+
+3. **Source quality** — The judge sees the submitted passages and their source URLs. Scores authoritativeness (official sites, major news outlets score higher than blogs/forums).
+
+All three calls fire in parallel, so latency matches the current single-call setup. Cost triples (~$0.003/rollout) but remains negligible. The final reward stays multiplicative:
+
+```
+reward = NDCG(ideal, actual) × efficiency_scale × source_quality_scale
+```
+
+This design is backed by **Rubrics as Rewards (RaR)** ([arxiv 2507.17746](https://arxiv.org/abs/2507.17746)), which found that decomposing LLM judge evaluation into separate criteria-specific calls achieves **31% improvement on HealthBench** over holistic single-call judging. RaR also found that decomposed rewards **reduce judge variance**, particularly with smaller judge models — the structured per-criterion prompts act as anchors that prevent noisy holistic scoring. The NDCG component is separately validated by **Rec-R1** ([arxiv 2503.24289](https://arxiv.org/abs/2503.24289)), which uses NDCG@K directly as a GRPO reward signal and found it stabilizes convergence compared to sparser metrics.
+
 ### Vanishing Gradient Floor
-When format_scale=0 (model submits invalid IDs), the judge reward gets zero gradient — the model can't learn *what* to improve. Adding a floor `max(format_scale, 0.01)` would maintain a small gradient signal even on fully invalid submissions. Recommended but not yet implemented.
+When format_scale=0 (model emits invalid tool-call syntax), the entire reward is zeroed — the judge score gets no gradient, so the model can't learn *what* to improve about its retrieval strategy. This is especially damaging for no-thinking training, where 41% of V3 trajectories hit this zero.
+
+Adding a floor `max(format_scale, 0.01)` would maintain a small gradient signal even on format-invalid submissions. The [Progressive Reward Shaping (PRS)](https://arxiv.org/abs/2512.07478) paper addresses this exact problem in GRPO — binary format rewards cause gradient death when all samples in a group fail format (advantage = 0, no learning). PRS suggests graduated partial credit (e.g., has tool call but wrong structure = 0.3, completely wrong = 0.01, correct format = 1.0) for richer gradient signal. Even the simple floor approach would prevent complete gradient death on the 41% of V3 trajectories that currently contribute nothing to learning.
 
 ### Open-Source Contributions
 Several compatibility issues we encountered represent contribution opportunities:
@@ -437,6 +488,10 @@ Several compatibility issues we encountered represent contribution opportunities
 | [OLMo-3](https://arxiv.org/abs/2512.13961) | Off-policy GRPO with PipelineRL, DAPO loss |
 | [PipelineRL](https://arxiv.org/abs/2509.19128) | Async actor-learner architecture |
 | [SPEC-RL](https://arxiv.org/abs/2509.23232) | Speculative decoding for RL — 2.88× speedup |
+| [R1-Searcher++](https://arxiv.org/abs/2505.17005) | SFT cold-start + RL for search — format warmup |
+| [PRS](https://arxiv.org/abs/2512.07478) | Progressive reward shaping — gradient floor for format failures |
+| [RaR](https://arxiv.org/abs/2507.17746) | Decomposed multi-criteria LLM judge rewards — 31% gain over holistic |
+| [Rec-R1](https://arxiv.org/abs/2503.24289) | NDCG@K as GRPO reward signal — stabilizes convergence |
 
 ## Appendix B: Cost Summary
 
