@@ -24,7 +24,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, TrainerCallback
 from trl import GRPOConfig, GRPOTrainer
 from peft import LoraConfig
 
-from src.env.search_env_v2 import SearchEnvironmentV2
+from src.env.search_env import SearchEnvironment
 from src.utils.device import get_device, get_dtype
 
 logger = logging.getLogger(__name__)
@@ -159,7 +159,7 @@ def main():
 
     # Environment factory
     def env_factory():
-        return SearchEnvironmentV2()
+        return SearchEnvironment(use_cache=False)
 
     # Create trainer
     use_tito = config.get("use_tito", False)

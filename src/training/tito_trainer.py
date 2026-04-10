@@ -425,8 +425,8 @@ class TiToGRPOTrainer(GRPOTrainer):
                     except Exception as e:
                         return f"Error: {e}"
 
-        from src.env.search_env_v2 import SearchEnvironmentV2
-        env = SearchEnvironmentV2()
+        from src.env.search_env import SearchEnvironment
+        env = SearchEnvironment(use_cache=False)
         if name == "search":
             return env.search(**args)
         elif name == "read":

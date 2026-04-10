@@ -211,7 +211,7 @@ def _actor_worker():
         _encode_tool_result, strip_thinking_tokens,
         _TOOL_CALL_END_ID,
     )
-    from src.env.search_env_v2 import SearchEnvironmentV2
+    from src.env.search_env import SearchEnvironment
 
     def _parse_result_snippets(result_text, store):
         """Parse snippet IDs ([S1], [R2], etc.) and content from tool result."""
@@ -237,7 +237,7 @@ def _actor_worker():
             store[current_id] = " ".join(current_text)
 
     _init_token_ids(_tokenizer)
-    env = SearchEnvironmentV2()
+    env = SearchEnvironment(use_cache=False)
 
     logger.info("Actor worker started")
 

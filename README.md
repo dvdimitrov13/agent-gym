@@ -95,8 +95,7 @@ src/
 │   ├── offpolicy_trainer.py  # Off-policy trainer (GPU 1)
 │   └── configs/              # Training YAML configs
 ├── env/
-│   ├── search_env.py         # Base search environment
-│   └── search_env_v2.py      # V2 with snippet IDs + submit_answer
+│   └── search_env.py         # Search environment with snippet IDs + submit_answer
 ├── rewards/
 │   ├── llm_judge_reward.py   # GPT 4.1 mini judge (primary reward)
 │   ├── format_reward.py      # Snippet ID validation (multiplicative scaler)

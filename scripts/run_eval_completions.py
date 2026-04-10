@@ -32,7 +32,7 @@ from src.training.tito import (
     _init_token_ids, _find_tool_call, _parse_tool_call_json,
     _encode_tool_result, strip_thinking_tokens, _TOOL_CALL_END_ID,
 )
-from src.env.search_env_v2 import SearchEnvironmentV2
+from src.env.search_env import SearchEnvironment
 
 
 class EvalToolForceProcessor:
@@ -194,7 +194,7 @@ def run_single_eval(model, tokenizer, question_text, thinking_processor=None,
     """Run a single question through the tool-calling loop. Returns trajectory."""
     _eval_start_time = time.time()
     _init_token_ids(tokenizer)
-    env = SearchEnvironmentV2()
+    env = SearchEnvironment(use_cache=False)
     device = next(model.parameters()).device
 
     prompt_ids = build_prompt(tokenizer, question_text)
