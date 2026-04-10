@@ -1,0 +1,6 @@
+# Ensure GitHub detects this as a Python project
+*.py linguist-language=Python
+
+# Mark generated files so they don't count toward language stats
+results/*.png linguist-generated=true
+results/**/*.json linguist-generated=true

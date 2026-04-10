@@ -37,6 +37,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Generated HTML (Plotly dashboards, etc.)
+*.html
+
 # Cache
 .cache/
 search_cache/
