@@ -5,6 +5,7 @@ import time
 from rapidfuzz import fuzz
 
 from src.config import CACHE_DIR, DEFAULT_SEARCH_MAX_RESULTS
+from src.env.base import BaseSearchEnvironment
 from src.env.cache import SearchCache
 from src.env.extraction import fetch_and_extract
 from src.env.providers.base import SearchProvider
@@ -40,7 +41,7 @@ def _trim_paragraph(paragraph: str) -> str:
     return " ".join(words[:CONTEXT_WORDS]) + " [...] " + " ".join(words[-CONTEXT_WORDS:])
 
 
-class SearchEnvironment:
+class SearchEnvironment(BaseSearchEnvironment):
     """Web search environment for TRL's environment_factory protocol.
 
     Two tools:
